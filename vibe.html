@@ -1,0 +1,2758 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vibe 💫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   VIBE — TO'LIQ DIZAYN
+   ============================================ */
+:root,[data-theme="light"]{
+  --primary:#0284c7; --primary-light:#38bdf8; --primary-dark:#0369a1;
+  --accent:#6366f1;
+  --bg:#ffffff; --bg-secondary:#f0f9ff; --bg-tertiary:#e0f2fe;
+  --bg-hover:#bae6fd; --bg-chat:#f0f9ff;
+  --text:#0c1a2e; --text-secondary:#475569; --text-muted:#94a3b8;
+  --border:#bae6fd; --border-light:#e0f2fe;
+  --shadow-sm:0 1px 2px rgba(2,132,199,.08);
+  --shadow:0 4px 12px rgba(2,132,199,.12);
+  --shadow-lg:0 12px 32px rgba(2,132,199,.18);
+  --msg-sent:linear-gradient(135deg,#0284c7,#6366f1);
+  --msg-received:#ffffff; --msg-received-text:#0c1a2e;
+}
+[data-theme="dark"]{
+  --primary:#38bdf8; --primary-light:#7dd3fc; --primary-dark:#0284c7;
+  --accent:#818cf8;
+  --bg:#0a1628; --bg-secondary:#0f2040; --bg-tertiary:#162d4a;
+  --bg-hover:#1e3a5f; --bg-chat:#0a1628;
+  --text:#e2f0ff; --text-secondary:#93c5fd; --text-muted:#4a7fa5;
+  --border:#1e3a5f; --border-light:#162d4a;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.4);
+  --shadow:0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.5);
+  --msg-sent:linear-gradient(135deg,#0284c7,#6366f1);
+  --msg-received:#162d4a; --msg-received-text:#e2f0ff;
+}
+:root{ --sidebar-width:360px; --header-height:64px; }
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ height:100%; font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:14px; color:var(--text); background:var(--bg-secondary);
+  overflow:hidden; -webkit-font-smoothing:antialiased; transition:background .3s,color .3s; }
+button{ cursor:pointer; border:none; background:none; font-family:inherit; color:inherit; }
+input,textarea{ font-family:inherit; border:none; outline:none; color:var(--text); }
+.hidden{ display:none !important; }
+
+/* ============================================ LOGIN ============================================ */
+.login-screen{
+  position:fixed; inset:0; z-index:100;
+  display:flex; align-items:center; justify-content:center; padding:20px;
+  background:var(--bg-secondary); overflow:hidden;
+}
+.login-bg{
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at 20% 30%,rgba(2,132,199,.12) 0%,transparent 55%),
+             radial-gradient(ellipse at 80% 70%,rgba(99,102,241,.12) 0%,transparent 55%);
+}
+.login-card{
+  position:relative; background:var(--bg); border-radius:24px; padding:40px 32px;
+  max-width:420px; width:100%;
+  box-shadow:0 20px 60px rgba(2,132,199,.2);
+  animation:slideUp .4s ease;
+}
+@keyframes slideUp{ from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.login-logo{ text-align:center; margin-bottom:16px; }
+.login-logo svg{ filter:drop-shadow(0 4px 16px rgba(2,132,199,.4)); animation:logoPulse 3s ease-in-out infinite; }
+@keyframes logoPulse{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 4px 16px rgba(2,132,199,.4))}
+  50%{transform:scale(1.06);filter:drop-shadow(0 8px 28px rgba(99,102,241,.5))}
+}
+.login-title{
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:800;
+  text-align:center; margin-bottom:6px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.login-subtitle{ color:var(--text-secondary); text-align:center; margin-bottom:28px; font-size:14px; }
+.login-form{ text-align:left; }
+.login-label{ display:block; font-weight:600; font-size:12px; color:var(--text-secondary);
+  margin-bottom:6px; margin-top:16px; text-transform:uppercase; letter-spacing:.5px; }
+.login-input{
+  width:100%; padding:13px 16px; background:var(--bg-tertiary);
+  border-radius:12px; font-size:15px; transition:all .2s;
+}
+.login-input:focus{ background:var(--bg-hover); box-shadow:0 0 0 2px var(--primary-light); }
+
+/* Country picker */
+.country-phone-row{ display:flex; gap:8px; align-items:stretch; }
+.country-select-btn{
+  display:flex; align-items:center; gap:6px; padding:13px 14px;
+  background:var(--bg-tertiary); border-radius:12px; font-size:15px; font-weight:600;
+  white-space:nowrap; transition:all .2s; flex-shrink:0; cursor:pointer;
+  color:var(--text);
+}
+.country-select-btn:hover{ background:var(--bg-hover); box-shadow:0 0 0 2px var(--primary-light); }
+.country-select-btn svg{ width:14px; height:14px; color:var(--text-muted); }
+.country-dropdown{
+  position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:999;
+  background:var(--bg); border-radius:14px; box-shadow:var(--shadow-lg);
+  border:1px solid var(--border); max-height:260px; overflow-y:auto;
+}
+.country-dropdown::-webkit-scrollbar{ width:6px; }
+.country-dropdown::-webkit-scrollbar-thumb{ background:var(--border); border-radius:3px; }
+.country-option{
+  display:flex; align-items:center; gap:10px; padding:11px 16px;
+  cursor:pointer; font-size:14px; transition:background .15s;
+}
+.country-option:hover{ background:var(--bg-hover); }
+.country-option .flag{ font-size:18px; }
+.country-option .cname{ flex:1; font-weight:500; color:var(--text); }
+.country-option .ccode{ color:var(--text-muted); font-size:13px; }
+.phone-field-wrap{ flex:1; position:relative; }
+.phone-hint{ font-size:12px; color:var(--text-muted); margin-top:8px; text-align:center; }
+.login-btn{
+  width:100%; margin-top:24px; padding:14px; border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:white; font-size:16px; font-weight:700; display:flex; align-items:center;
+  justify-content:center; gap:8px; transition:all .2s;
+  box-shadow:0 4px 16px rgba(2,132,199,.35); font-family:'Inter',sans-serif;
+}
+.login-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(2,132,199,.45); }
+.login-btn:active{ transform:translateY(0); }
+.login-btn svg{ width:18px; height:18px; }
+.login-step{ animation:slideUp .35s ease; }
+.reg-back{
+  display:flex; align-items:center; gap:6px; color:var(--primary);
+  font-size:14px; font-weight:600; cursor:pointer; border:none; background:none;
+  font-family:inherit; padding:4px 0; margin-bottom:4px;
+}
+.reg-back svg{ width:18px; height:18px; }
+
+/* Avatar picker */
+.avatar-tabs{ display:flex; gap:8px; margin:8px 0 12px; }
+.avatar-tab-btn{
+  flex:1; padding:10px; border-radius:10px; font-size:13px; font-weight:600;
+  cursor:pointer; background:var(--bg-tertiary); color:var(--text-secondary);
+  border:2px solid transparent; transition:all .2s;
+}
+.avatar-tab-btn.active{
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:white; box-shadow:0 4px 12px rgba(2,132,199,.3);
+}
+.avatar-picker{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:8px; }
+.avatar-option{
+  aspect-ratio:1; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:22px; font-weight:600; color:white;
+  cursor:pointer; transition:all .2s; border:3px solid transparent;
+}
+.avatar-option.selected{ border-color:var(--primary); transform:scale(1.12); box-shadow:0 4px 12px rgba(2,132,199,.4); }
+.photo-upload-area{ display:block; cursor:pointer; width:100%; }
+.photo-preview{
+  width:100%; height:150px; border:2px dashed var(--primary-light);
+  border-radius:14px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:linear-gradient(135deg,rgba(2,132,199,.04),rgba(99,102,241,.04));
+  transition:all .2s; overflow:hidden; position:relative;
+}
+.photo-preview:hover{ border-color:var(--primary); background:linear-gradient(135deg,rgba(2,132,199,.08),rgba(99,102,241,.08)); }
+.photo-preview img{ width:100%; height:100%; object-fit:cover; border-radius:12px; }
+.photo-preview-overlay{
+  position:absolute; inset:0; background:rgba(0,0,0,.4);
+  display:flex; align-items:center; justify-content:center;
+  border-radius:12px; opacity:0; transition:opacity .2s;
+}
+.photo-preview:hover .photo-preview-overlay{ opacity:1; }
+.photo-preview-overlay span{ color:white; font-size:13px; font-weight:600; }
+
+/* ============================================ APP ============================================ */
+.app{ display:flex; height:100vh; background:var(--bg); }
+.sidebar{
+  width:var(--sidebar-width); background:var(--bg);
+  border-right:1px solid var(--border); display:flex; flex-direction:column; position:relative;
+}
+.sidebar-header{
+  height:var(--header-height); padding:0 16px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--border-light); flex-shrink:0;
+  background:linear-gradient(135deg,rgba(2,132,199,.06),rgba(99,102,241,.06));
+}
+.logo{ display:flex; align-items:center; gap:10px; }
+.logo-icon{
+  width:38px; height:38px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:11px; display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow);
+}
+.logo-icon svg{ width:22px; height:22px; }
+.logo-text h1{
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:19px; font-weight:800;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  line-height:1;
+}
+.logo-text span{ font-size:10px; color:var(--text-muted); font-weight:500;
+  letter-spacing:1px; text-transform:uppercase; }
+.icon-btn{ width:40px; height:40px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; color:var(--text-secondary); transition:all .2s; }
+.icon-btn:hover{ background:var(--bg-hover); color:var(--primary); }
+.icon-btn svg{ width:20px; height:20px; }
+.tabs{ display:flex; border-bottom:1px solid var(--border-light); flex-shrink:0; }
+.tab{
+  flex:1; padding:12px 8px; display:flex; flex-direction:column;
+  align-items:center; gap:4px; color:var(--text-muted); font-size:11px;
+  font-weight:500; transition:all .2s; border-bottom:2px solid transparent;
+}
+.tab:hover{ color:var(--primary); background:var(--bg-hover); }
+.tab.active{
+  color:var(--primary); border-bottom-color:var(--primary);
+  background:linear-gradient(180deg,transparent,var(--bg-hover));
+}
+.tab svg{ width:18px; height:18px; }
+.tab-content{ flex:1; display:none; flex-direction:column; overflow:hidden; position:relative; }
+.tab-content.active{ display:flex; }
+.search-bar{ padding:12px 16px; position:relative; border-bottom:1px solid var(--border-light); flex-shrink:0; }
+.search-bar .search-icon{ position:absolute; left:28px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--text-muted); }
+.search-bar input{ width:100%; padding:10px 16px 10px 42px; background:var(--bg-tertiary); border-radius:12px; font-size:14px; transition:all .2s; }
+.search-bar input:focus{ background:var(--bg-hover); box-shadow:0 0 0 2px var(--primary-light); }
+.search-bar input::placeholder{ color:var(--text-muted); }
+
+/* Stories */
+.stories-bar{ padding:12px 16px; display:flex; gap:12px; overflow-x:auto; border-bottom:1px solid var(--border-light); flex-shrink:0; scrollbar-width:none; }
+.stories-bar::-webkit-scrollbar{ display:none; }
+.story-item{ display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; flex-shrink:0; }
+.story-avatar-wrap{ width:56px; height:56px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg,var(--primary),var(--accent)); transition:transform .2s; position:relative; }
+.story-item:hover .story-avatar-wrap{ transform:scale(1.05); }
+.story-avatar-wrap.viewed{ background:var(--border); }
+.story-avatar-wrap.add-story{ background:var(--bg-tertiary); }
+.story-avatar{ width:100%; height:100%; border-radius:50%; border:2.5px solid var(--bg); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:600; color:white; overflow:hidden; }
+.story-plus{ position:absolute; bottom:0; right:0; width:18px; height:18px; background:var(--primary); border:2px solid var(--bg); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.story-plus svg{ width:10px; height:10px; color:white; }
+.story-name{ font-size:11px; color:var(--text); max-width:60px; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Chats list */
+.chats-list,.contacts-list{ flex:1; overflow-y:auto; padding:4px 0; }
+.chats-list::-webkit-scrollbar,.contacts-list::-webkit-scrollbar{ width:6px; }
+.chats-list::-webkit-scrollbar-thumb,.contacts-list::-webkit-scrollbar-thumb{ background:var(--border); border-radius:3px; }
+.chat-item,.contact-item{ display:flex; align-items:center; gap:12px; padding:12px 16px; cursor:pointer; transition:background .15s; position:relative; }
+.chat-item:hover,.contact-item:hover{ background:var(--bg-hover); }
+.chat-item.active{ background:linear-gradient(90deg,var(--bg-hover),transparent); }
+.chat-item.active::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--primary); border-radius:0 2px 2px 0; }
+.chat-item.pinned{ background:linear-gradient(135deg,rgba(2,132,199,.04),rgba(99,102,241,.04)); }
+.chat-avatar{ width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:600; color:white; flex-shrink:0; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; }
+.chat-avatar svg{ width:24px; height:24px; }
+.chat-avatar.saved-avatar{ background:linear-gradient(135deg,var(--primary),var(--accent)); }
+.online-dot{ position:absolute; bottom:2px; right:2px; width:13px; height:13px; background:#22c55e; border:2px solid var(--bg); border-radius:50%; }
+.chat-info{ flex:1; min-width:0; }
+.chat-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.chat-name{ font-weight:600; font-size:15px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-time{ font-size:12px; color:var(--text-muted); flex-shrink:0; margin-left:8px; }
+.chat-bottom{ display:flex; justify-content:space-between; align-items:center; }
+.chat-preview{ font-size:13px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+.chat-badge{ background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; font-size:11px; font-weight:600; padding:2px 7px; border-radius:10px; margin-left:8px; flex-shrink:0; }
+.empty-state{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center; color:var(--text-muted); }
+.empty-state-icon{ font-size:48px; margin-bottom:12px; opacity:.5; }
+.empty-state p{ font-size:14px; }
+.fab{ position:absolute; bottom:24px; right:24px; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-lg); transition:all .2s; z-index:10; }
+.fab:hover{ transform:scale(1.08) rotate(5deg); box-shadow:0 12px 30px rgba(2,132,199,.5); }
+.fab svg{ width:22px; height:22px; }
+
+/* Settings */
+.settings-profile{ padding:20px 16px; display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--border-light); background:linear-gradient(135deg,rgba(2,132,199,.05),rgba(99,102,241,.05)); }
+.settings-profile-avatar{ width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:600; color:white; box-shadow:var(--shadow); flex-shrink:0; overflow:hidden; }
+.settings-profile-info{ flex:1; min-width:0; }
+.settings-profile-name{ font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; font-weight:700; color:var(--text); }
+.settings-profile-sub{ font-size:12px; color:var(--primary); font-weight:600; margin-top:2px; }
+.settings-profile-bio{ font-size:12px; color:var(--text-secondary); margin-top:2px; }
+.settings-section{ flex:1; overflow-y:auto; padding:8px 0; }
+.settings-title{ font-size:11px; font-weight:600; color:var(--text-muted); padding:14px 16px 6px; text-transform:uppercase; letter-spacing:1px; }
+.settings-item{ width:100%; display:flex; align-items:center; gap:14px; padding:12px 16px; transition:background .15s; text-align:left; }
+.settings-item:hover{ background:var(--bg-hover); }
+.settings-icon{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.settings-icon svg{ width:20px; height:20px; }
+.settings-info{ flex:1; min-width:0; }
+.settings-name{ display:block; font-weight:500; font-size:15px; color:var(--text); }
+.settings-desc{ display:block; font-size:12px; color:var(--text-secondary); margin-top:2px; }
+.settings-arrow{ width:18px; height:18px; color:var(--text-muted); flex-shrink:0; }
+.settings-item.logout .settings-name{ color:#ef4444; }
+.toggle{ width:44px; height:24px; background:var(--bg-tertiary); border-radius:12px; position:relative; transition:all .2s; flex-shrink:0; }
+.toggle.active{ background:linear-gradient(135deg,var(--primary),var(--accent)); }
+.toggle-circle{ position:absolute; top:2px; left:2px; width:20px; height:20px; background:white; border-radius:50%; transition:transform .2s; box-shadow:var(--shadow-sm); }
+.toggle.active .toggle-circle{ transform:translateX(20px); }
+
+/* Chat window */
+.chat-window{ flex:1; display:flex; flex-direction:column; background:var(--bg-chat); position:relative; overflow:hidden; }
+.welcome-screen{ flex:1; display:flex; align-items:center; justify-content:center; padding:40px; }
+.welcome-content{ text-align:center; max-width:400px; }
+.welcome-icon{ font-size:72px; margin-bottom:20px; animation:float 3s ease-in-out infinite; }
+@keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.welcome-content h2{ font-family:'Plus Jakarta Sans',sans-serif; font-size:26px; font-weight:700; margin-bottom:10px; background:linear-gradient(135deg,var(--primary),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.welcome-content p{ color:var(--text-secondary); font-size:15px; line-height:1.6; margin-bottom:20px; }
+.welcome-btn{ padding:12px 24px; background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; border-radius:12px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px; transition:all .2s; box-shadow:var(--shadow); }
+.welcome-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.welcome-btn svg{ width:18px; height:18px; }
+.chat-view{ position:absolute; inset:0; display:flex; flex-direction:column; }
+.chat-header{ height:var(--header-height); padding:0 16px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); background:var(--bg); flex-shrink:0; }
+.back-btn{ display:none; }
+.chat-header-avatar{ width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:600; color:white; flex-shrink:0; overflow:hidden; }
+.chat-header-info{ flex:1; min-width:0; cursor:pointer; }
+.chat-header-name{ display:block; font-weight:600; font-size:15px; color:var(--text); }
+.chat-header-status{ display:block; font-size:12px; color:var(--text-secondary); }
+.chat-header-status.online{ color:#22c55e; }
+.messages-area{ flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:4px; }
+.messages-area::-webkit-scrollbar{ width:6px; }
+.messages-area::-webkit-scrollbar-thumb{ background:var(--border); border-radius:3px; }
+.message-day{ text-align:center; font-size:12px; color:var(--text-muted); background:var(--bg-tertiary); padding:4px 12px; border-radius:12px; align-self:center; margin:8px 0; }
+.message{ max-width:70%; padding:8px 14px; border-radius:18px; font-size:14.5px; line-height:1.4; word-wrap:break-word; position:relative; animation:msgSlide .25s ease; }
+@keyframes msgSlide{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.message.sent{ background:var(--msg-sent); color:white; align-self:flex-end; border-bottom-right-radius:4px; }
+.message.received{ background:var(--msg-received); color:var(--msg-received-text); align-self:flex-start; border-bottom-left-radius:4px; box-shadow:var(--shadow-sm); }
+.message-meta{ display:flex; align-items:center; gap:4px; font-size:11px; margin-top:2px; opacity:.85; justify-content:flex-end; }
+.message.received .message-meta{ color:var(--text-muted); }
+.message-meta svg{ width:14px; height:14px; }
+.message-meta .read{ color:#7dd3fc; }
+.typing{ display:flex; gap:4px; padding:12px 16px; background:var(--msg-received); border-radius:18px; border-bottom-left-radius:4px; align-self:flex-start; box-shadow:var(--shadow-sm); width:fit-content; }
+.typing-dot{ width:7px; height:7px; background:var(--text-muted); border-radius:50%; animation:typingBounce 1.4s infinite; }
+.typing-dot:nth-child(2){ animation-delay:.2s; }
+.typing-dot:nth-child(3){ animation-delay:.4s; }
+@keyframes typingBounce{ 0%,60%,100%{transform:translateY(0);opacity:.5} 30%{transform:translateY(-6px);opacity:1} }
+.message-input-area{ padding:12px 16px; background:var(--bg); border-top:1px solid var(--border); display:flex; align-items:flex-end; gap:8px; flex-shrink:0; }
+.message-input{ flex:1; padding:10px 16px; background:var(--bg-tertiary); border-radius:20px; font-size:14.5px; resize:none; max-height:120px; min-height:40px; line-height:1.4; transition:background .2s; }
+.message-input:focus{ background:var(--bg-hover); }
+.send-btn{ width:40px; height:40px; background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; box-shadow:var(--shadow); }
+.send-btn:hover{ transform:scale(1.08); box-shadow:0 8px 20px rgba(2,132,199,.4); }
+.send-btn:active{ transform:scale(.95); }
+.send-btn svg{ width:18px; height:18px; }
+
+/* Modallar */
+.modal{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:50; padding:20px; animation:fadeIn .2s ease; }
+@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+.modal-card{ background:var(--bg); border-radius:20px; max-width:440px; width:100%; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 25px 60px rgba(0,0,0,.25); animation:modalUp .3s ease; }
+@keyframes modalUp{ from{opacity:0;transform:translateY(20px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
+.modal-header{ padding:20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border-light); }
+.modal-header h2{ font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:var(--text); }
+.modal-body{ padding:20px; overflow-y:auto; }
+.modal-label{ display:block; font-weight:600; font-size:12px; color:var(--text-secondary); margin-bottom:8px; margin-top:16px; text-transform:uppercase; letter-spacing:.5px; }
+.modal-label:first-child{ margin-top:0; }
+.modal-input{ width:100%; padding:12px 14px; background:var(--bg-tertiary); border-radius:10px; font-size:14px; transition:all .2s; }
+.modal-input:focus{ background:var(--bg-hover); box-shadow:0 0 0 2px var(--primary-light); }
+.modal-footer{ padding:16px 20px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid var(--border-light); }
+.btn{ padding:10px 20px; border-radius:10px; font-size:14px; font-weight:600; transition:all .2s; }
+.btn-secondary{ background:var(--bg-tertiary); color:var(--text); }
+.btn-secondary:hover{ background:var(--bg-hover); }
+.btn-primary{ background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; box-shadow:var(--shadow); }
+.btn-primary:hover{ transform:translateY(-1px); box-shadow:var(--shadow-lg); }
+
+/* Profile edit modal */
+.profile-photo-edit{ position:relative; width:90px; height:90px; margin:0 auto 20px; cursor:pointer; }
+.profile-photo-edit .pf-img{ width:90px; height:90px; border-radius:50%; object-fit:cover; display:block; }
+.profile-photo-edit .pf-avatar{ width:90px; height:90px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:700; color:white; }
+.profile-photo-edit .pf-edit-btn{ position:absolute; bottom:0; right:0; width:28px; height:28px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; border:2.5px solid var(--bg); transition:transform .2s; }
+.profile-photo-edit:hover .pf-edit-btn{ transform:scale(1.1); }
+.profile-photo-edit .pf-edit-btn svg{ width:14px; height:14px; color:white; }
+.bio-counter{ font-size:11px; color:var(--text-muted); text-align:right; margin-top:4px; }
+.bio-counter.warn{ color:#f97316; }
+.username-prefix{ position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--primary); font-weight:700; font-size:15px; pointer-events:none; }
+.username-wrap{ position:relative; }
+.username-wrap .modal-input{ padding-left:26px; }
+
+/* Story creator */
+.story-create-card{ max-width:360px; }
+.story-type-tabs{ display:flex; gap:8px; margin-bottom:16px; }
+.story-type-btn{ flex:1; padding:10px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; background:var(--bg-tertiary); color:var(--text-secondary); border:2px solid transparent; transition:all .2s; }
+.story-type-btn.active{ background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; }
+.story-preview{ width:100%; aspect-ratio:9/14; border-radius:16px; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; padding:20px; margin-bottom:16px; overflow:hidden; position:relative; }
+.story-preview img,.story-preview video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:16px; }
+.story-text-input{ width:100%; height:100%; background:transparent; color:white; font-size:24px; font-weight:700; text-align:center; resize:none; font-family:'Plus Jakarta Sans',sans-serif; text-shadow:0 2px 8px rgba(0,0,0,.3); z-index:1; position:relative; }
+.story-text-input::placeholder{ color:rgba(255,255,255,.7); }
+.story-media-placeholder{ text-align:center; color:rgba(255,255,255,.8); pointer-events:none; }
+.story-media-placeholder svg{ width:48px; height:48px; margin-bottom:8px; opacity:.9; }
+.story-media-placeholder p{ font-size:14px; font-weight:600; }
+.bg-picker{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:8px; }
+.bg-option{ aspect-ratio:1; border-radius:10px; cursor:pointer; border:3px solid transparent; transition:all .2s; }
+.bg-option.selected{ border-color:var(--primary); transform:scale(1.1); }
+
+/* Story viewer */
+.story-viewer{ position:fixed; inset:0; z-index:100; display:flex; flex-direction:column; animation:fadeIn .3s ease; }
+.story-viewer-bg{ position:absolute; inset:0; z-index:-1; }
+.story-viewer-progress{ height:3px; background:rgba(255,255,255,.3); margin:14px 16px 0; border-radius:2px; overflow:hidden; }
+.story-viewer-bar{ height:100%; background:white; width:0; transition:width .1s linear; }
+.story-viewer-header{ padding:14px 16px; display:flex; align-items:center; justify-content:space-between; }
+.story-viewer-user{ display:flex; align-items:center; gap:10px; }
+.story-viewer-avatar{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:600; color:white; border:2px solid white; overflow:hidden; }
+.story-viewer-name{ display:block; color:white; font-weight:600; font-size:14px; text-shadow:0 1px 4px rgba(0,0,0,.5); }
+.story-viewer-time{ display:block; color:rgba(255,255,255,.8); font-size:11px; }
+.story-close{ background:rgba(0,0,0,.3); color:white; }
+.story-close:hover{ background:rgba(0,0,0,.5); }
+.story-viewer-content{ flex:1; display:flex; align-items:center; justify-content:center; padding:20px; }
+.story-viewer-text{ font-family:'Plus Jakarta Sans',sans-serif; font-size:34px; font-weight:700; color:white; text-align:center; text-shadow:0 4px 12px rgba(0,0,0,.4); line-height:1.3; max-width:580px; }
+.story-viewer-media{ max-width:100%; max-height:100%; border-radius:12px; object-fit:contain; }
+
+/* Story reply bar */
+.story-reply-bar{
+  padding:12px 16px; display:flex; align-items:center; gap:10px;
+  background:rgba(0,0,0,.35); backdrop-filter:blur(8px);
+}
+.story-reply-emojis{ display:flex; gap:6px; }
+.story-emoji-btn{ font-size:22px; cursor:pointer; transition:transform .15s; padding:4px; border-radius:50%; }
+.story-emoji-btn:hover{ transform:scale(1.3); background:rgba(255,255,255,.15); }
+.story-reply-input-wrap{ flex:1; display:flex; align-items:center; gap:8px; }
+.story-reply-input{ flex:1; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); border-radius:20px; padding:8px 14px; color:white; font-size:13px; backdrop-filter:blur(4px); }
+.story-reply-input::placeholder{ color:rgba(255,255,255,.6); }
+.story-reply-send{ width:34px; height:34px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.story-reply-send svg{ width:16px; height:16px; color:white; }
+.story-reaction-toast{ position:absolute; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.7); color:white; padding:8px 16px; border-radius:20px; font-size:14px; animation:toastSlide .3s ease; pointer-events:none; }
+
+/* Yangi kontakt modal */
+.nc-card{ background:var(--bg); border-radius:16px; padding:28px 24px 20px; width:340px; max-width:95vw; box-shadow:0 20px 60px rgba(0,0,0,.25); animation:modalUp .28s ease; }
+[data-theme="dark"] .nc-card{ background:#0f2040; }
+.nc-title{ font-size:18px; font-weight:700; color:var(--text); margin-bottom:20px; font-family:'Plus Jakarta Sans',sans-serif; }
+.nc-avatar-preview{ width:72px; height:72px; border-radius:50%; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:28px; font-weight:700; color:white; transition:all .3s; }
+.nc-fields{ display:flex; flex-direction:column; }
+.nc-field-row{ display:flex; align-items:flex-start; gap:16px; padding:4px 0; }
+.nc-field-icon{ width:24px; flex-shrink:0; padding-top:20px; color:var(--text-muted); display:flex; align-items:center; justify-content:center; }
+.nc-field-icon svg{ width:20px; height:20px; }
+.nc-field-inputs{ flex:1; display:flex; flex-direction:column; }
+.nc-field-group{ position:relative; padding-top:20px; margin-bottom:4px; }
+.nc-input{ width:100%; background:transparent; border:none; outline:none; font-size:15px; color:var(--text); padding:4px 0 8px; font-family:'Inter',sans-serif; transition:all .2s; }
+.nc-label{ position:absolute; top:20px; left:0; font-size:15px; color:var(--text-muted); pointer-events:none; transition:all .2s ease; font-family:'Inter',sans-serif; }
+.nc-input:focus ~ .nc-label,.nc-input:not(:placeholder-shown) ~ .nc-label{ top:2px; font-size:11px; color:var(--primary); font-weight:600; letter-spacing:.3px; }
+.nc-line{ height:1px; background:var(--border); transition:all .2s; }
+.nc-field-group:focus-within .nc-line{ height:2px; background:var(--primary); }
+.nc-phone-wrap{ display:flex; align-items:center; gap:8px; padding:4px 0 8px; }
+.nc-phone-code{ font-size:15px; color:var(--text-muted); font-weight:500; white-space:nowrap; flex-shrink:0; }
+.nc-phone-input{ padding:0!important; width:100%; }
+.nc-phone-label{ top:2px!important; font-size:11px!important; color:var(--text-muted); font-weight:500; }
+.nc-field-group:focus-within .nc-phone-label{ color:var(--primary)!important; }
+.nc-footer{ display:flex; justify-content:flex-end; gap:8px; margin-top:24px; padding-top:8px; }
+.nc-btn-cancel{ padding:8px 20px; font-size:14px; font-weight:600; color:var(--text-secondary); background:transparent; border-radius:8px; cursor:pointer; border:none; font-family:'Inter',sans-serif; transition:all .15s; }
+.nc-btn-cancel:hover{ color:var(--text); background:var(--bg-tertiary); }
+.nc-btn-create{ padding:8px 24px; font-size:14px; font-weight:700; color:white; background:linear-gradient(135deg,var(--primary),var(--accent)); border-radius:8px; cursor:pointer; border:none; font-family:'Inter',sans-serif; transition:all .2s; box-shadow:0 4px 12px rgba(2,132,199,.3); }
+.nc-btn-create:hover{ transform:translateY(-1px); box-shadow:0 6px 20px rgba(2,132,199,.4); }
+
+/* Toast */
+.toast-container{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; gap:8px; z-index:200; pointer-events:none; }
+.toast{ padding:12px 20px; background:var(--text); color:var(--bg); border-radius:12px; font-size:14px; font-weight:500; box-shadow:var(--shadow-lg); animation:toastSlide .3s ease; pointer-events:auto; }
+@keyframes toastSlide{ from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{ width:100%; position:absolute; inset:0; z-index:5; }
+  .chat-window{ position:absolute; inset:0; z-index:10; display:none; }
+  .app.chat-open .sidebar{ display:none; }
+  .app.chat-open .chat-window{ display:flex; }
+  .back-btn{ display:flex!important; }
+  .message{ max-width:85%; }
+}
+
+/* ============================================
+   ASOSIY MENYU (3 ta chiziqcha)
+   ============================================ */
+.main-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  background: var(--bg);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--border);
+  z-index: 999;
+  overflow: hidden;
+  animation: menuPop 0.2s ease;
+}
+
+@keyframes menuPop {
+  from { opacity: 0; transform: scale(0.92) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.menu-item span:first-child { font-size: 18px; width: 22px; text-align: center; flex-shrink: 0; }
+.menu-item:hover { background: var(--bg-hover); }
+.menu-item.logout { color: #ef4444; }
+.menu-item.logout:hover { background: rgba(239,68,68,.08); }
+
+.menu-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 4px 0;
+}
+
+/* ============================================
+   GURUH / KANAL MODALLAR
+   ============================================ */
+.gc-modal-card {
+  background: var(--bg); border-radius: 20px;
+  max-width: 480px; width: 100%; max-height: 90vh;
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0,0,0,.25);
+  animation: modalUp .3s ease;
+}
+
+/* Yaratish modal — yuqori banner */
+.gc-banner {
+  padding: 28px 24px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex; align-items: center; gap: 16px;
+}
+.gc-icon-wrap {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(255,255,255,.2); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 28px; cursor: pointer; border: 2px dashed rgba(255,255,255,.5);
+  flex-shrink: 0; transition: background .2s; position: relative;
+}
+.gc-icon-wrap:hover { background: rgba(255,255,255,.3); }
+.gc-icon-wrap input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.gc-banner-inputs { flex: 1; }
+.gc-name-input {
+  width: 100%; background: transparent; border: none; outline: none;
+  font-size: 18px; font-weight: 700; color: white;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.gc-name-input::placeholder { color: rgba(255,255,255,.6); }
+.gc-desc-input {
+  width: 100%; background: transparent; border: none; outline: none;
+  font-size: 13px; color: rgba(255,255,255,.8);
+  font-family: 'Inter', sans-serif; margin-top: 4px;
+}
+.gc-desc-input::placeholder { color: rgba(255,255,255,.5); }
+
+/* A'zolar tanlash */
+.gc-body { flex: 1; overflow-y: auto; padding: 0; }
+.gc-search { padding: 12px 16px; border-bottom: 1px solid var(--border-light); }
+.gc-search input {
+  width: 100%; padding: 9px 14px 9px 36px;
+  background: var(--bg-tertiary); border-radius: 20px; font-size: 14px;
+}
+.gc-search-wrap { position: relative; }
+.gc-search-wrap svg {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; color: var(--text-muted);
+}
+
+/* Tanlangan a'zolar */
+.gc-selected-bar {
+  display: flex; gap: 8px; padding: 10px 16px;
+  overflow-x: auto; border-bottom: 1px solid var(--border-light);
+  min-height: 0; transition: min-height .2s;
+  scrollbar-width: none;
+}
+.gc-selected-bar::-webkit-scrollbar { display: none; }
+.gc-selected-bar.has-items { min-height: 68px; }
+
+.gc-chip {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; flex-shrink: 0; cursor: pointer; position: relative;
+}
+.gc-chip-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: white; font-weight: 600;
+  position: relative;
+}
+.gc-chip-remove {
+  position: absolute; top: -2px; right: -2px;
+  width: 18px; height: 18px; background: #ef4444;
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; border: 2px solid var(--bg);
+}
+.gc-chip-remove svg { width: 10px; height: 10px; color: white; }
+.gc-chip-name { font-size: 10px; color: var(--text); max-width: 48px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Kontakt ro'yxati (tanlash uchun) */
+.gc-contact-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px; cursor: pointer; transition: background .15s;
+}
+.gc-contact-item:hover { background: var(--bg-hover); }
+.gc-contact-av {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 600; color: white;
+  flex-shrink: 0; overflow: hidden;
+}
+.gc-contact-info { flex: 1; min-width: 0; }
+.gc-contact-name { font-weight: 600; font-size: 14px; color: var(--text); }
+.gc-contact-sub  { font-size: 12px; color: var(--text-secondary); }
+.gc-checkbox {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--border); display: flex;
+  align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .2s;
+}
+.gc-checkbox.checked {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-color: transparent;
+}
+.gc-checkbox.checked svg { display: block; }
+.gc-checkbox svg { display: none; width: 12px; height: 12px; color: white; }
+
+.gc-footer {
+  padding: 14px 20px; border-top: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.gc-count { font-size: 13px; color: var(--text-muted); }
+.gc-create-btn {
+  padding: 10px 24px; border-radius: 12px; font-size: 14px; font-weight: 700;
+  color: white; background: linear-gradient(135deg, var(--primary), var(--accent));
+  cursor: pointer; border: none; font-family: 'Inter', sans-serif;
+  box-shadow: 0 4px 12px rgba(2,132,199,.3); transition: all .2s;
+}
+.gc-create-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(2,132,199,.4); }
+.gc-create-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ============================================
+   SOZLAMALAR MODAL (Guruh/Kanal)
+   ============================================ */
+.gs-card {
+  background: var(--bg); border-radius: 20px; max-width: 460px; width: 100%;
+  max-height: 92vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,.25);
+  animation: modalUp .3s ease;
+}
+.gs-header-banner {
+  padding: 24px; text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+}
+.gs-avatar {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(255,255,255,.2); display: flex; align-items: center;
+  justify-content: center; font-size: 32px; margin: 0 auto 12px;
+  border: 3px solid rgba(255,255,255,.4); overflow: hidden;
+}
+.gs-name { font-size: 22px; font-weight: 700; color: white; font-family: 'Plus Jakarta Sans', sans-serif; }
+.gs-meta { font-size: 13px; color: rgba(255,255,255,.8); margin-top: 4px; }
+
+.gs-section { padding: 0 16px 8px; }
+.gs-section-title {
+  font-size: 11px; font-weight: 600; color: var(--primary);
+  padding: 16px 0 8px; text-transform: uppercase; letter-spacing: .8px;
+}
+.gs-field { margin-bottom: 12px; }
+.gs-field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+.gs-input {
+  width: 100%; padding: 11px 14px; background: var(--bg-tertiary);
+  border-radius: 10px; font-size: 14px; transition: all .2s;
+}
+.gs-input:focus { background: var(--bg-hover); box-shadow: 0 0 0 2px var(--primary-light); }
+
+/* A'zolar ro'yxati sozlamalar ichida */
+.gs-member {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border-light);
+}
+.gs-member:last-child { border-bottom: none; }
+.gs-member-av {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 600; color: white; flex-shrink: 0; overflow: hidden;
+}
+.gs-member-info { flex: 1; min-width: 0; }
+.gs-member-name { font-weight: 600; font-size: 14px; color: var(--text); }
+.gs-member-role { font-size: 11px; color: var(--primary); font-weight: 500; }
+.gs-member-role.admin { color: #f59e0b; }
+
+.gs-member-actions { display: flex; gap: 4px; }
+.gs-action-btn {
+  width: 32px; height: 32px; border-radius: 8px; display: flex;
+  align-items: center; justify-content: center; cursor: pointer;
+  background: var(--bg-tertiary); transition: all .2s;
+}
+.gs-action-btn:hover { background: var(--bg-hover); }
+.gs-action-btn.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+.gs-action-btn svg { width: 16px; height: 16px; }
+.gs-add-member-btn {
+  display: flex; align-items: center; gap: 10px; padding: 10px 0;
+  color: var(--primary); font-weight: 600; font-size: 14px; cursor: pointer;
+  background: none; border: none; font-family: 'Inter', sans-serif; width: 100%;
+}
+.gs-add-member-btn svg { width: 20px; height: 20px; }
+.gs-danger-zone { padding: 8px 16px 16px; }
+.gs-danger-btn {
+  width: 100%; padding: 12px; border-radius: 12px; border: none;
+  background: rgba(239,68,68,.1); color: #ef4444; font-weight: 600;
+  font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: background .2s;
+}
+.gs-danger-btn:hover { background: rgba(239,68,68,.2); }
+
+/* Guruh/Kanal xabari — sender ismi */
+.msg-sender-name {
+  font-size: 11px; font-weight: 600; color: var(--primary);
+  margin-bottom: 2px; display: block;
+}
+
+/* Chat list - type badge */
+.chat-type-badge {
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 6px; margin-left: 5px;
+}
+.badge-group { background: rgba(2,132,199,.15); color: var(--primary); }
+.badge-channel { background: rgba(99,102,241,.15); color: var(--accent); }
+
+/* ============================================
+   CHAT DELETE TUGMASI
+   ============================================ */
+.chat-delete-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--text-muted); flex-shrink: 0;
+  opacity: 0; transition: all 0.2s;
+}
+.chat-item:hover .chat-delete-btn,
+.contact-item:hover .chat-delete-btn {
+  opacity: 1;
+}
+.chat-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='80' y2='80' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%230284c7'/%3E%3Cstop offset='1' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='80' height='80' rx='20' fill='url(%23g)'/%3E%3Cpath d='M18 28 Q18 20 28 20 L52 20 Q62 20 62 28 L62 44 Q62 52 52 52 L44 52 L36 62 L36 52 L28 52 Q18 52 18 44 Z' fill='white' opacity='.95'/%3E%3Ccircle cx='30' cy='36' r='3.5' fill='%230284c7'/%3E%3Ccircle cx='40' cy='36' r='3.5' fill='%230284c7'/%3E%3Ccircle cx='50' cy='36' r='3.5' fill='%230284c7'/%3E%3C/svg%3E"/>
+</head>
+<body data-theme="light">
+
+<!-- LOGIN -->
+<div id="login-screen" class="login-screen">
+  <div class="login-bg"></div>
+
+  <!-- Step 1: Telefon -->
+  <div id="step-phone" class="login-card login-step">
+    <div class="login-logo">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#0284c7"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+        <rect width="80" height="80" rx="22" fill="url(#lg)"/>
+        <path d="M15 26Q15 18 25 18L55 18Q65 18 65 26L65 44Q65 52 55 52L46 52L38 62L38 52L25 52Q15 52 15 44Z" fill="white" opacity=".95"/>
+        <circle cx="29" cy="35" r="3.5" fill="#0284c7"/><circle cx="40" cy="35" r="3.5" fill="#0284c7"/><circle cx="51" cy="35" r="3.5" fill="#0284c7"/>
+      </svg>
+    </div>
+    <h1 class="login-title">Vibe</h1>
+    <p class="login-subtitle">Telefon raqamingizni kiriting</p>
+    <div class="login-form">
+      <label class="login-label">Telefon raqam</label>
+      <div style="position:relative">
+        <div class="country-phone-row">
+          <button class="country-select-btn" id="country-select-btn" type="button">
+            <span id="sel-flag">🇺🇿</span>
+            <span id="sel-code">+998</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="phone-field-wrap">
+            <input type="tel" id="phone-input" class="login-input" placeholder="90 123 45 67" maxlength="13" inputmode="numeric"/>
+          </div>
+        </div>
+        <div class="country-dropdown hidden" id="country-dropdown"></div>
+      </div>
+      <p class="phone-hint">SMS tasdiqi talab etilmaydi — demo versiya</p>
+      <button id="phone-next-btn" class="login-btn"><span>Davom etish</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Step 2: Ro'yxatdan o'tish -->
+  <div id="step-register" class="login-card login-step hidden">
+    <button id="reg-back-btn" class="reg-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Orqaga</button>
+    <h2 class="login-title" style="font-size:22px;margin-top:8px">Yangi hisob</h2>
+    <p class="login-subtitle">Ma'lumotlaringizni kiriting</p>
+    <div class="login-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label class="login-label">Ism *</label><input type="text" id="reg-name" class="login-input" placeholder="Ali" maxlength="20"/></div>
+        <div><label class="login-label">Familya</label><input type="text" id="reg-surname" class="login-input" placeholder="Valiyev" maxlength="20"/></div>
+      </div>
+      <label class="login-label" style="margin-top:14px">Username</label>
+      <div class="username-wrap" style="position:relative">
+        <span class="username-prefix">@</span>
+        <input type="text" id="reg-username" class="login-input" placeholder="ali_valiyev" maxlength="30" style="padding-left:26px"/>
+      </div>
+      <label class="login-label" style="margin-top:14px">Profil rasmi</label>
+      <div class="avatar-tabs">
+        <button class="avatar-tab-btn active" id="reg-tab-gallery">📷 Galereya</button>
+        <button class="avatar-tab-btn" id="reg-tab-emoji">😀 Avatar</button>
+      </div>
+      <div id="reg-gallery-section">
+        <label class="photo-upload-area">
+          <input type="file" id="reg-photo-input" accept="image/*" style="display:none"/>
+          <div class="photo-preview" id="reg-photo-preview">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p style="color:#38bdf8;font-size:13px;margin-top:8px;font-weight:500">Rasm tanlash uchun bosing</p>
+          </div>
+        </label>
+      </div>
+      <div id="reg-emoji-section" style="display:none">
+        <div class="avatar-picker" id="reg-avatar-picker"></div>
+      </div>
+      <button id="reg-btn" class="login-btn" style="margin-top:20px"><span>Ro'yxatdan o'tish</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <header class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="logo-text"><h1>Vibe</h1><span>Messenger</span></div>
+      </div>
+      <div style="position:relative">
+        <button class="icon-btn" id="menu-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div id="main-menu" class="main-menu hidden">
+          <button class="menu-item" id="mmenu-saved"><span>📌</span>Saqlangan xabarlar</button>
+          <button class="menu-item" id="mmenu-newchat"><span>✏️</span>Yangi chat</button>
+          <button class="menu-item" id="mmenu-newgroup"><span>👥</span>Yangi guruh</button>
+          <button class="menu-item" id="mmenu-newchannel"><span>📢</span>Yangi kanal</button>
+          <div class="menu-divider"></div>
+          <button class="menu-item" id="mmenu-profile"><span>👤</span>Profilim</button>
+          <button class="menu-item" id="mmenu-theme"><span id="mmenu-theme-icon">🌙</span><span id="mmenu-theme-txt">To'q rejim</span></button>
+          <div class="menu-divider"></div>
+          <button class="menu-item logout" id="mmenu-logout"><span>🚪</span>Chiqish</button>
+        </div>
+      </div>
+    </header>
+    <nav class="tabs">
+      <button class="tab active" data-tab="chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>Chatlar</span></button>
+      <button class="tab" data-tab="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Kontaktlar</span></button>
+      <button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Sozlamalar</span></button>
+    </nav>
+
+    <!-- Chats tab -->
+    <div class="tab-content active" data-content="chats">
+      <div class="search-bar"><svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="search-input" placeholder="Qidirish... yoki +998 raqam"/></div>
+      <div class="stories-bar" id="stories-bar"></div>
+      <div class="chats-list" id="chats-list"></div>
+      <button class="fab" id="new-chat-btn" title="Yangi chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+    </div>
+
+    <!-- Contacts tab -->
+    <div class="tab-content" data-content="contacts">
+      <div class="search-bar"><svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="contacts-search" placeholder="Kontaktlarni qidirish..."/></div>
+      <div class="contacts-list" id="contacts-list"></div>
+      <button class="fab" id="add-contact-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></button>
+    </div>
+
+    <!-- Settings tab -->
+    <div class="tab-content" data-content="settings">
+      <div class="settings-profile" id="settings-profile"></div>
+      <div class="settings-section">
+        <h3 class="settings-title">Sozlamalar</h3>
+        <button class="settings-item" id="edit-profile-btn"><div class="settings-icon" style="background:linear-gradient(135deg,#0284c7,#6366f1)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="settings-info"><span class="settings-name">Profilni tahrirlash</span><span class="settings-desc">Ism, username, bio, rasm</span></div><svg class="settings-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+        <button class="settings-item" id="theme-toggle-btn"><div class="settings-icon" style="background:linear-gradient(135deg,#1e293b,#475569)"><svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="settings-info"><span class="settings-name">Tema</span><span class="settings-desc" id="theme-desc">Yorqin rejim</span></div><div class="toggle" id="theme-toggle"><div class="toggle-circle"></div></div></button>
+        <button class="settings-item"><div class="settings-icon" style="background:linear-gradient(135deg,#0891b2,#2563eb)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="settings-info"><span class="settings-name">Bildirishnomalar</span><span class="settings-desc">Ovoz va xabarlar</span></div><div class="toggle active" id="notif-toggle"><div class="toggle-circle"></div></div></button>
+        <button class="settings-item logout" id="logout-btn"><div class="settings-icon" style="background:linear-gradient(135deg,#ef4444,#f97316)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><div class="settings-info"><span class="settings-name">Chiqish</span><span class="settings-desc">Hisobdan chiqish</span></div></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CHAT WINDOW -->
+  <main class="chat-window" id="chat-window">
+    <div class="welcome-screen" id="welcome-screen">
+      <div class="welcome-content">
+        <div class="welcome-icon">💫</div>
+        <h2>Vibe'ga xush kelibsiz!</h2>
+        <p>Suhbatni boshlash uchun chat tanlang yoki yangi kontakt qo'shing.</p>
+        <button class="welcome-btn" id="welcome-new-chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Yangi chat boshlash</button>
+      </div>
+    </div>
+    <div class="chat-view hidden" id="chat-view">
+      <header class="chat-header">
+        <button class="icon-btn back-btn" id="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
+        <div class="chat-header-avatar" id="chat-header-avatar"></div>
+        <div class="chat-header-info" id="chat-header-info-click">
+          <span class="chat-header-name" id="chat-header-name"></span>
+          <span class="chat-header-status" id="chat-header-status"></span>
+        </div>
+        <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 12 19.79 19.79 0 0 1 1.07 3.35 2 2 0 0 1 3.05 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg></button>
+        <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg></button>
+        <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+      </header>
+      <div class="messages-area" id="messages-area"></div>
+      <div class="message-input-area">
+        <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+        <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+        <textarea id="message-input" class="message-input" placeholder="Xabar yozing..." rows="1"></textarea>
+        <button class="send-btn" id="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- YANGI KONTAKT MODAL -->
+<div class="modal hidden" id="new-chat-modal">
+  <div class="nc-card">
+    <h2 class="nc-title">Yangi kontakt</h2>
+    <div class="nc-avatar-preview" id="nc-avatar-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+    <div class="nc-fields">
+      <div class="nc-field-row">
+        <div class="nc-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="nc-field-inputs">
+          <div class="nc-field-group"><input type="text" id="new-contact-name" class="nc-input" placeholder=" " maxlength="25"/><label class="nc-label">Ism</label><div class="nc-line"></div></div>
+          <div class="nc-field-group"><input type="text" id="new-contact-surname" class="nc-input" placeholder=" " maxlength="25"/><label class="nc-label">Familya</label><div class="nc-line"></div></div>
+        </div>
+      </div>
+      <div class="nc-field-row">
+        <div class="nc-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 12 19.79 19.79 0 0 1 1.07 3.35 2 2 0 0 1 3.05 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg></div>
+        <div class="nc-field-inputs">
+          <div class="nc-field-group">
+            <div class="nc-phone-wrap"><span class="nc-phone-code" id="nc-phone-code">+998</span><input type="tel" id="new-contact-phone" class="nc-input nc-phone-input" placeholder=" " maxlength="13" inputmode="numeric"/></div>
+            <label class="nc-label nc-phone-label">Telefon raqam</label>
+            <div class="nc-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nc-footer">
+      <button class="nc-btn-cancel" data-close-modal>Bekor qilish</button>
+      <button class="nc-btn-create" id="save-new-contact">Qo'shish</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFIL TAHRIRLASH MODAL -->
+<div class="modal hidden" id="profile-modal">
+  <div class="modal-card">
+    <header class="modal-header"><h2>Profilni tahrirlash</h2><button class="icon-btn" data-close-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+    <div class="modal-body">
+      <!-- Profil rasmi tahrirlash -->
+      <div class="profile-photo-edit" id="profile-photo-edit">
+        <input type="file" id="edit-photo-input" accept="image/*" style="display:none"/>
+        <div id="edit-photo-display"></div>
+        <div class="pf-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      </div>
+      <label class="modal-label">Ism va Familya</label>
+      <input type="text" id="edit-name" class="modal-input" maxlength="40"/>
+      <label class="modal-label">Username</label>
+      <div class="username-wrap" style="position:relative">
+        <span class="username-prefix">@</span>
+        <input type="text" id="edit-username" class="modal-input" placeholder="username" maxlength="30" style="padding-left:26px"/>
+      </div>
+      <label class="modal-label">Bio <span id="bio-counter" class="bio-counter">0/200</span></label>
+      <textarea id="edit-bio" class="modal-input" placeholder="O'zingiz haqida..." maxlength="200" rows="3" style="resize:vertical"></textarea>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" data-close-modal>Bekor qilish</button><button class="btn btn-primary" id="save-profile">Saqlash</button></div>
+  </div>
+</div>
+
+<!-- STORY YARATISH -->
+<div class="modal hidden" id="story-create-modal">
+  <div class="modal-card story-create-card">
+    <header class="modal-header"><h2>Yangi story</h2><button class="icon-btn" data-close-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+    <div class="modal-body">
+      <div class="story-type-tabs">
+        <button class="story-type-btn active" id="stype-text">✍️ Matn</button>
+        <button class="story-type-btn" id="stype-photo">📷 Rasm</button>
+        <button class="story-type-btn" id="stype-video">🎥 Video</button>
+      </div>
+      <div class="story-preview" id="story-preview">
+        <textarea id="story-text" class="story-text-input" placeholder="Nima yozmoqchisiz?"></textarea>
+      </div>
+      <div id="story-bg-section">
+        <label class="modal-label">Fon tanlang</label>
+        <div class="bg-picker" id="bg-picker"></div>
+      </div>
+      <input type="file" id="story-media-input" accept="image/*,video/*" style="display:none"/>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" data-close-modal>Bekor qilish</button><button class="btn btn-primary" id="publish-story">Joylash</button></div>
+  </div>
+</div>
+
+<!-- STORY KO'RISH -->
+<div class="story-viewer hidden" id="story-viewer">
+  <div class="story-viewer-bg" id="story-viewer-bg"></div>
+  <div class="story-viewer-progress"><div class="story-viewer-bar" id="story-viewer-bar"></div></div>
+  <header class="story-viewer-header">
+    <div class="story-viewer-user">
+      <div class="story-viewer-avatar" id="story-viewer-avatar"></div>
+      <div><span class="story-viewer-name" id="story-viewer-name"></span><span class="story-viewer-time" id="story-viewer-time"></span></div>
+    </div>
+    <button class="icon-btn story-close" id="story-close"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </header>
+  <div class="story-viewer-content" id="story-viewer-content"></div>
+  <!-- Reply bar -->
+  <div class="story-reply-bar">
+    <div class="story-reply-emojis">
+      <span class="story-emoji-btn" data-emoji="❤️">❤️</span>
+      <span class="story-emoji-btn" data-emoji="😮">😮</span>
+      <span class="story-emoji-btn" data-emoji="😂">😂</span>
+      <span class="story-emoji-btn" data-emoji="👏">👏</span>
+      <span class="story-emoji-btn" data-emoji="🔥">🔥</span>
+    </div>
+    <div class="story-reply-input-wrap">
+      <input class="story-reply-input" id="story-reply-input" placeholder="Javob yozing..."/>
+      <button class="story-reply-send" id="story-reply-send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFIL MODAL (kontakt) -->
+<div class="modal hidden" id="contact-profile-modal">
+  <div class="modal-card">
+    <header class="modal-header"><h2>Profil</h2><button class="icon-btn" data-close-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+    <div class="modal-body" id="contact-profile-body" style="text-align:center"></div>
+    <div class="modal-footer"><button class="btn btn-secondary" data-close-modal>Yopish</button><button class="btn btn-primary" id="cpm-message-btn">Xabar yozish</button></div>
+  </div>
+</div>
+
+<!-- GURUH YARATISH -->
+<div class="modal hidden" id="create-group-modal">
+  <div class="gc-modal-card">
+    <div class="gc-banner">
+      <div class="gc-icon-wrap" id="grp-icon-wrap">
+        <span id="grp-icon-emoji">👥</span>
+        <input type="file" id="grp-photo-input" accept="image/*"/>
+      </div>
+      <div class="gc-banner-inputs">
+        <input class="gc-name-input" id="grp-name" placeholder="Guruh nomi..." maxlength="50"/>
+        <input class="gc-desc-input" id="grp-desc" placeholder="Qisqacha tavsif (ixtiyoriy)..." maxlength="120"/>
+      </div>
+    </div>
+    <div class="gc-body">
+      <div class="gc-search">
+        <div class="gc-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="grp-search" placeholder="Kontaktlarni qidirish..."/>
+        </div>
+      </div>
+      <div class="gc-selected-bar" id="grp-selected-bar"></div>
+      <div id="grp-contacts-list"></div>
+    </div>
+    <div class="gc-footer">
+      <div>
+        <span class="gc-count" id="grp-count">0 a'zo tanlangan</span>
+        <button style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-left:10px" data-close-modal>Bekor qilish</button>
+      </div>
+      <button class="gc-create-btn" id="create-group-btn" disabled>Guruh yaratish</button>
+    </div>
+  </div>
+</div>
+
+<!-- KANAL YARATISH -->
+<div class="modal hidden" id="create-channel-modal">
+  <div class="gc-modal-card">
+    <div class="gc-banner" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
+      <div class="gc-icon-wrap" id="ch-icon-wrap">
+        <span id="ch-icon-emoji">📢</span>
+        <input type="file" id="ch-photo-input" accept="image/*"/>
+      </div>
+      <div class="gc-banner-inputs">
+        <input class="gc-name-input" id="ch-name" placeholder="Kanal nomi..." maxlength="50"/>
+        <input class="gc-desc-input" id="ch-desc" placeholder="Kanal haqida..." maxlength="120"/>
+      </div>
+    </div>
+    <div class="gc-body">
+      <div style="padding:16px;border-bottom:1px solid var(--border-light)">
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Kanal turi</label>
+        <div style="display:flex;gap:8px">
+          <button class="gc-type-btn active" id="ch-type-public" style="flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:white;border:none">🌐 Ochiq</button>
+          <button class="gc-type-btn" id="ch-type-private" style="flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg-tertiary);color:var(--text-secondary);border:none">🔒 Yopiq</button>
+        </div>
+      </div>
+      <div style="padding:16px;border-bottom:1px solid var(--border-light)">
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Username</label>
+        <div style="position:relative">
+          <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--primary);font-weight:700">@</span>
+          <input type="text" id="ch-username" placeholder="kanal_username" maxlength="30" style="width:100%;padding:11px 14px 11px 26px;background:var(--bg-tertiary);border-radius:10px;font-size:14px;border:none;outline:none;color:var(--text)"/>
+        </div>
+      </div>
+      <div class="gc-search" style="padding:12px 16px">
+        <p style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">Obunachilarga qo'shing:</p>
+        <div class="gc-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="ch-search" placeholder="Kontaktlarni qidirish..."/>
+        </div>
+      </div>
+      <div class="gc-selected-bar" id="ch-selected-bar"></div>
+      <div id="ch-contacts-list"></div>
+    </div>
+    <div class="gc-footer">
+      <div>
+        <span class="gc-count" id="ch-count">0 obunachi</span>
+        <button style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-left:10px" data-close-modal>Bekor qilish</button>
+      </div>
+      <button class="gc-create-btn" id="create-channel-btn">Kanal yaratish</button>
+    </div>
+  </div>
+</div>
+
+<!-- GURUH SOZLAMALARI -->
+<div class="modal hidden" id="group-settings-modal">
+  <div class="gs-card">
+    <div class="gs-header-banner" id="gs-banner" style="position:relative">
+      <div class="gs-avatar" id="gs-avatar"></div>
+      <div class="gs-name" id="gs-name-display"></div>
+      <div class="gs-meta" id="gs-meta"></div>
+      <button class="icon-btn" data-close-modal style="position:absolute;top:12px;right:12px;color:white;background:rgba(255,255,255,0.2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="gs-section">
+      <div class="gs-section-title">Guruh ma'lumotlari</div>
+      <div class="gs-field"><label>Guruh nomi</label><input class="gs-input" id="gs-name-inp" maxlength="50"/></div>
+      <div class="gs-field"><label>Tavsif</label><input class="gs-input" id="gs-desc-inp" placeholder="Tavsif..." maxlength="120"/></div>
+      <button class="gc-create-btn" id="gs-save-info" style="width:100%;margin-top:4px">Saqlash</button>
+    </div>
+    <div class="gs-section">
+      <div class="gs-section-title">A'zolar</div>
+      <div id="gs-members-list"></div>
+      <button class="gs-add-member-btn" id="gs-add-member">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        A'zo qo'shish
+      </button>
+    </div>
+    <div class="gs-danger-zone">
+      <button class="gs-danger-btn" id="gs-leave-group">Guruhdan chiqish</button>
+    </div>
+  </div>
+</div>
+
+<!-- KANAL SOZLAMALARI -->
+<div class="modal hidden" id="channel-settings-modal">
+  <div class="gs-card">
+    <div class="gs-header-banner" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);position:relative" id="cs-banner">
+      <div class="gs-avatar" id="cs-avatar"></div>
+      <div class="gs-name" id="cs-name-display"></div>
+      <div class="gs-meta" id="cs-meta"></div>
+      <button class="icon-btn" data-close-modal style="position:absolute;top:12px;right:12px;color:white;background:rgba(255,255,255,0.2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="gs-section">
+      <div class="gs-section-title">Kanal ma'lumotlari</div>
+      <div class="gs-field"><label>Kanal nomi</label><input class="gs-input" id="cs-name-inp" maxlength="50"/></div>
+      <div class="gs-field"><label>Tavsif</label><input class="gs-input" id="cs-desc-inp" placeholder="Tavsif..." maxlength="120"/></div>
+      <div class="gs-field"><label>Username</label><div style="position:relative"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--primary);font-weight:700">@</span><input class="gs-input" id="cs-username-inp" placeholder="username" maxlength="30" style="padding-left:26px"/></div></div>
+      <button class="gc-create-btn" id="cs-save-info" style="width:100%;margin-top:4px;background:linear-gradient(135deg,#6366f1,#8b5cf6)">Saqlash</button>
+    </div>
+    <div class="gs-section">
+      <div class="gs-section-title">Obunachillar</div>
+      <div id="cs-members-list"></div>
+      <button class="gs-add-member-btn" id="cs-add-member" style="color:#6366f1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        Obunachi qo'shish
+      </button>
+    </div>
+    <div class="gs-danger-zone">
+      <button class="gs-danger-btn" id="cs-delete-channel">Kanalni o'chirish</button>
+    </div>
+  </div>
+</div>
+
+<!-- A'ZO QO'SHISH MODAL (guruh/kanal uchun) -->
+<div class="modal hidden" id="add-member-modal">
+  <div class="gc-modal-card" style="max-width:400px">
+    <div style="padding:18px 20px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between">
+      <h3 style="font-size:17px;font-weight:700;color:var(--text)" id="am-title">A'zo qo'shish</h3>
+      <button class="icon-btn" data-close-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="gc-search" style="padding:12px 16px">
+      <div class="gc-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="am-search" placeholder="Qidirish..."/>
+      </div>
+    </div>
+    <div id="am-contacts-list" style="max-height:320px;overflow-y:auto"></div>
+    <div style="padding:14px 20px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-secondary" data-close-modal>Bekor qilish</button>
+      <button class="btn btn-primary" id="am-confirm-btn">Qo'shish</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<script>
+// ============================================
+// VIBE MESSENGER — QAYTA YOZILGAN SCRIPT
+// ============================================
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+// ============================================
+// MAMLAKAT KODLARI
+// ============================================
+const COUNTRIES = [
+  {flag:'🇺🇿',name:"O'zbekiston",code:'+998'},
+  {flag:'🇷🇺',name:'Rossiya',code:'+7'},
+  {flag:'🇰🇿',name:'Qozogiston',code:'+7'},
+  {flag:'🇰🇬',name:'Qirgiziston',code:'+996'},
+  {flag:'🇹🇯',name:'Tojikiston',code:'+992'},
+  {flag:'🇹🇲',name:'Turkmaniston',code:'+993'},
+  {flag:'🇦🇿',name:'Ozarbayjon',code:'+994'},
+  {flag:'🇹🇷',name:'Turkiya',code:'+90'},
+  {flag:'🇺🇦',name:'Ukraina',code:'+380'},
+  {flag:'🇩🇪',name:'Germaniya',code:'+49'},
+  {flag:'🇬🇧',name:'Britaniya',code:'+44'},
+  {flag:'🇺🇸',name:'AQSh',code:'+1'},
+  {flag:'🇸🇦',name:'Saudiya',code:'+966'},
+  {flag:'🇦🇪',name:'BAA',code:'+971'},
+  {flag:'🇰🇷',name:'Koreya',code:'+82'},
+];
+
+const AVATARS = ['😀','😎','🤩','🥳','🦄','🐱','🐶','🦊','🐼','🦁','🐯','🐸','🌟','🔥','💎','🎮'];
+const COLORS = [
+  'linear-gradient(135deg,#0284c7,#6366f1)',
+  'linear-gradient(135deg,#0891b2,#2563eb)',
+  'linear-gradient(135deg,#10b981,#0284c7)',
+  'linear-gradient(135deg,#f59e0b,#ef4444)',
+  'linear-gradient(135deg,#8b5cf6,#0284c7)',
+  'linear-gradient(135deg,#ec4899,#6366f1)',
+];
+const STORY_BGS = [
+  'linear-gradient(135deg,#0284c7,#6366f1)',
+  'linear-gradient(135deg,#0891b2,#2563eb)',
+  'linear-gradient(135deg,#7c3aed,#ec4899)',
+  'linear-gradient(135deg,#10b981,#0284c7)',
+  'linear-gradient(135deg,#1e293b,#334155)',
+  'linear-gradient(135deg,#f59e0b,#ef4444)',
+];
+
+// ============================================
+// STATE
+// ============================================
+var state = {
+  phone: '',
+  countryCode: '+998',
+  user: {
+    name:'', surname:'', fullName:'', username:'',
+    bio:'', avatar:'😀', photoUrl:'', color:COLORS[0]
+  },
+  contacts: [],
+  chats: { saved: [] },
+  stories: [],
+  groups: {},
+  channels: {},
+  activeChat: null,
+  theme: localStorage.getItem('vibe_theme') || 'light',
+};
+
+// ============================================
+// LOCALSTORAGE
+// ============================================
+function saveData() {
+  try {
+    var all = JSON.parse(localStorage.getItem('vibe_users') || '{}');
+    all[state.phone] = {
+      user: state.user,
+      contacts: state.contacts,
+      chats: state.chats,
+      stories: state.stories,
+      groups: state.groups,
+      channels: state.channels,
+    };
+    localStorage.setItem('vibe_users', JSON.stringify(all));
+    console.log('Saqlandi: ' + state.phone);
+  } catch(e) { console.warn('Saqlash xatosi:', e); }
+}
+
+function loadData(phone) {
+  try {
+    var all = JSON.parse(localStorage.getItem('vibe_users') || '{}');
+    var d = all[phone];
+    if (d) {
+      state.user     = d.user     || state.user;
+      state.contacts = d.contacts || [];
+      state.chats    = d.chats    || { saved: [] };
+      state.stories  = d.stories  || [];
+      state.groups   = d.groups   || {};
+      state.channels = d.channels || {};
+      return true;
+    }
+    return false;
+  } catch(e) { return false; }
+}
+
+function userExists(phone) {
+  try {
+    var all = JSON.parse(localStorage.getItem('vibe_users') || '{}');
+    return !!all[phone];
+  } catch(e) { return false; }
+}
+
+// ============================================
+// HELPERS
+// ============================================
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+function nowTime() {
+  var d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function getLastMsg(id) {
+  var m = state.chats[id] || [];
+  return m[m.length - 1];
+}
+function showToast(msg, type) {
+  var c = $('#toast-container');
+  if (!c) return;
+  var t = document.createElement('div');
+  t.className = 'toast';
+  if (type === 'error') t.style.background = '#ef4444';
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(10px)';
+    setTimeout(function() { t.remove(); }, 300);
+  }, 2500);
+}
+function getColor(name) {
+  return COLORS[(name || 'A').charCodeAt(0) % COLORS.length];
+}
+function avatarImg(c) {
+  if (!c) return '';
+  if (c.photoUrl) return '<img src="' + c.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+  return esc(c.avatar || c.name.charAt(0) || '?');
+}
+
+// ============================================
+// COUNTRY PICKER
+// ============================================
+var selCountry = COUNTRIES[0];
+
+function initCountryPicker() {
+  var btn = $('#country-select-btn');
+  var dd  = $('#country-dropdown');
+  if (!btn || !dd) return;
+  dd.innerHTML = '';
+  COUNTRIES.forEach(function(c) {
+    var d = document.createElement('div');
+    d.className = 'country-option';
+    d.innerHTML = '<span class="flag">' + c.flag + '</span>' +
+      '<span class="cname">' + esc(c.name) + '</span>' +
+      '<span class="ccode">' + esc(c.code) + '</span>';
+    d.addEventListener('click', function() {
+      selCountry = c;
+      state.countryCode = c.code;
+      $('#sel-flag') && ($('#sel-flag').textContent = c.flag);
+      $('#sel-code') && ($('#sel-code').textContent = c.code);
+      dd.classList.add('hidden');
+    });
+    dd.appendChild(d);
+  });
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dd.classList.toggle('hidden');
+  });
+  document.addEventListener('click', function() { dd.classList.add('hidden'); });
+}
+
+// ============================================
+// LOGIN
+// ============================================
+function showStep(id) {
+  $$('.login-step').forEach(function(s) { s.classList.add('hidden'); });
+  var el = $('#' + id);
+  if (el) el.classList.remove('hidden');
+}
+
+var regAv = AVATARS[0], regCol = COLORS[0], regPhoto = '', regTab = 'gallery';
+
+function initLogin() {
+  initCountryPicker();
+
+  // Step 1: Telefon
+  var phoneinp = $('#phone-input');
+  phoneinp && phoneinp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doPhoneNext();
+  });
+  $('#phone-next-btn') && $('#phone-next-btn').addEventListener('click', doPhoneNext);
+
+  // Step 2: Ro'yxatdan o'tish
+  buildAvatarPicker('reg-avatar-picker', function() { return regAv; }, function() { return regCol; },
+    function(a, c) { regAv = a; regCol = c; });
+
+  var tabG = $('#reg-tab-gallery'), tabE = $('#reg-tab-emoji');
+  var secG = $('#reg-gallery-section'), secE = $('#reg-emoji-section');
+
+  tabG && tabG.addEventListener('click', function() {
+    regTab = 'gallery';
+    tabG.classList.add('active'); tabE.classList.remove('active');
+    secG.style.display = 'block'; secE.style.display = 'none';
+  });
+  tabE && tabE.addEventListener('click', function() {
+    regTab = 'emoji';
+    tabE.classList.add('active'); tabG.classList.remove('active');
+    secG.style.display = 'none'; secE.style.display = 'block';
+  });
+
+  var fi = $('#reg-photo-input'), pv = $('#reg-photo-preview');
+  fi && fi.addEventListener('change', function() {
+    var f = this.files[0]; if (!f) return;
+    if (!f.type.startsWith('image/')) { showToast('Faqat rasm', 'error'); return; }
+    var r = new FileReader();
+    r.onload = function(ev) {
+      regPhoto = ev.target.result;
+      if (pv) {
+        pv.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = regPhoto;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:12px';
+        var ov = document.createElement('div');
+        ov.className = 'photo-preview-overlay';
+        ov.innerHTML = '<span>Rasm tanlangan</span>';
+        pv.appendChild(img); pv.appendChild(ov);
+      }
+    };
+    r.readAsDataURL(f);
+  });
+
+  $('#reg-back-btn') && $('#reg-back-btn').addEventListener('click', function() { showStep('step-phone'); });
+  $('#reg-name') && $('#reg-name').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var s = $('#reg-surname'); s ? s.focus() : doRegister(); }
+  });
+  $('#reg-surname') && $('#reg-surname').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var u = $('#reg-username'); u ? u.focus() : doRegister(); }
+  });
+  $('#reg-username') && $('#reg-username').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doRegister();
+  });
+  $('#reg-btn') && $('#reg-btn').addEventListener('click', doRegister);
+}
+
+function doPhoneNext() {
+  var raw = (($('#phone-input') || {}).value || '').replace(/\D/g, '');
+  if (raw.length < 7) { showToast("Raqamni to'liq kiriting", 'error'); return; }
+  state.phone = state.countryCode + raw;
+  if (userExists(state.phone)) {
+    loadData(state.phone);
+    enterApp();
+    showToast(state.user.name + "ga xush kelibsiz! 👋");
+  } else {
+    showStep('step-register');
+    $('#reg-name') && $('#reg-name').focus();
+  }
+}
+
+function doRegister() {
+  var nm = (($('#reg-name') || {}).value || '').trim();
+  var sn = (($('#reg-surname') || {}).value || '').trim();
+  var un = (($('#reg-username') || {}).value || '').trim().replace('@', '');
+  if (!nm) { showToast("Ismni kiriting", 'error'); $('#reg-name') && $('#reg-name').focus(); return; }
+  var full = sn ? nm + ' ' + sn : nm;
+  state.user = {
+    name: nm, surname: sn, fullName: full,
+    username: un || nm.toLowerCase().replace(/\s+/g, '_'),
+    bio: '', avatar: regTab === 'gallery' ? nm.charAt(0).toUpperCase() : regAv,
+    photoUrl: regTab === 'gallery' && regPhoto ? regPhoto : '',
+    color: regCol
+  };
+  state.contacts = [];
+  state.chats    = { saved: [] };
+  state.stories  = [];
+  state.groups   = {};
+  state.channels = {};
+  saveData();
+  enterApp();
+  showToast("Xush kelibsiz, " + nm + "! 💙");
+}
+
+function enterApp() {
+  document.body.dataset.theme = state.theme;
+  applyThemeUI();
+  $('#login-screen').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  renderAll();
+}
+
+// ============================================
+// AVATAR PICKER
+// ============================================
+function buildAvatarPicker(pickerId, getAv, getCol, onSel) {
+  var el = $('#' + pickerId); if (!el) return;
+  el.innerHTML = '';
+  AVATARS.forEach(function(av, i) {
+    var col = COLORS[i % COLORS.length];
+    var d = document.createElement('div');
+    d.className = 'avatar-option' + (av === getAv() ? ' selected' : '');
+    d.style.background = col; d.textContent = av;
+    d.addEventListener('click', function() {
+      onSel(av, col);
+      buildAvatarPicker(pickerId, getAv, getCol, onSel);
+    });
+    el.appendChild(d);
+  });
+}
+
+// ============================================
+// TABS
+// ============================================
+function switchTab(name) {
+  $$('.tab').forEach(function(t) { t.classList.toggle('active', t.dataset.tab === name); });
+  $$('.tab-content').forEach(function(c) { c.classList.toggle('active', c.dataset.content === name); });
+}
+
+// ============================================
+// CHAT RENDER
+// ============================================
+function renderChats() {
+  var list = $('#chats-list'); if (!list) return;
+  var q = (($('#search-input') || {}).value || '').trim().toLowerCase();
+  var html = '';
+
+  // 1. Saqlangan xabarlar
+  var sl = getLastMsg('saved');
+  if (!q || 'saqlangan xabarlar'.includes(q)) {
+    html += '<div class="chat-item pinned' + (state.activeChat === 'saved' ? ' active' : '') + '" data-chatid="saved">' +
+      '<div class="chat-avatar saved-avatar">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+      '</div><div class="chat-info">' +
+      '<div class="chat-top"><span class="chat-name">Saqlangan xabarlar</span><span class="chat-time">📌</span></div>' +
+      '<div class="chat-bottom"><span class="chat-preview">' + (sl ? esc(sl.text) : 'Eslatmalaringiz') + '</span></div>' +
+      '</div></div>';
+  }
+
+  // 2. Kontaktlar
+  state.contacts.forEach(function(c) {
+    var qClean = q.startsWith('@') ? q.slice(1) : q;
+    if (q && !c.name.toLowerCase().includes(qClean) &&
+        !(c.username||'').toLowerCase().includes(qClean) &&
+        !(c.phone||'').replace(/\D/g,'').includes(qClean.replace(/\D/g,''))) return;
+    var lm = getLastMsg(c.id);
+    var unread = (state.chats[c.id] || []).filter(function(m) { return !m.sent && !m.read; }).length;
+    html += '<div class="chat-item' + (state.activeChat === c.id ? ' active' : '') + '" data-chatid="' + c.id + '">' +
+      '<div class="chat-avatar" style="background:' + c.color + '">' + avatarImg(c) +
+      (c.online ? '<div class="online-dot"></div>' : '') + '</div>' +
+      '<div class="chat-info"><div class="chat-top">' +
+      '<span class="chat-name">' + esc(c.name) + '</span>' +
+      '<span class="chat-time">' + (lm ? esc(lm.time) : '') + '</span></div>' +
+      '<div class="chat-bottom"><span class="chat-preview">' + (lm ? esc(lm.text) : "Hali xabar yo'q") + '</span>' +
+      (unread ? '<span class="chat-badge">' + unread + '</span>' : '') + '</div></div>' +
+      '<button class="chat-delete-btn" data-delid="' + c.id + '" title="O\'chirish">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+      '</button></div>';
+  });
+
+  // 3. Guruhlar
+  Object.values(state.groups).forEach(function(grp) {
+    if (q && !grp.name.toLowerCase().includes(q)) return;
+    var lm = getLastMsg(grp.id);
+    html += '<div class="chat-item' + (state.activeChat === grp.id ? ' active' : '') + '" data-chatid="' + grp.id + '">' +
+      '<div class="chat-avatar" style="background:' + (grp.photoUrl ? 'transparent' : grp.color) + '">' + avatarImg(grp) + '</div>' +
+      '<div class="chat-info"><div class="chat-top">' +
+      '<span class="chat-name">' + esc(grp.name) + '<span class="chat-type-badge badge-group">Guruh</span></span>' +
+      '<span class="chat-time">' + (lm ? esc(lm.time) : '') + '</span></div>' +
+      '<div class="chat-bottom"><span class="chat-preview">' + (lm ? esc(lm.text) : (grp.members||[]).length + " a'zo") + '</span></div></div>' +
+      '<button class="chat-delete-btn" data-delgrp="' + grp.id + '" title="O\'chirish">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+      '</button></div>';
+  });
+
+  // 4. Kanallar
+  Object.values(state.channels).forEach(function(ch) {
+    if (q && !ch.name.toLowerCase().includes(q)) return;
+    var lm = getLastMsg(ch.id);
+    html += '<div class="chat-item' + (state.activeChat === ch.id ? ' active' : '') + '" data-chatid="' + ch.id + '">' +
+      '<div class="chat-avatar" style="background:' + (ch.photoUrl ? 'transparent' : ch.color) + '">' + avatarImg(ch) + '</div>' +
+      '<div class="chat-info"><div class="chat-top">' +
+      '<span class="chat-name">' + esc(ch.name) + '<span class="chat-type-badge badge-channel">Kanal</span></span>' +
+      '<span class="chat-time">' + (lm ? esc(lm.time) : '') + '</span></div>' +
+      '<div class="chat-bottom"><span class="chat-preview">' + (lm ? esc(lm.text) : '📢 ' + (ch.subscribers||[]).length + ' obunachi') + '</span></div></div>' +
+      '<button class="chat-delete-btn" data-delch="' + ch.id + '" title="O\'chirish">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+      '</button></div>';
+  });
+
+  if (!state.contacts.length && !Object.keys(state.groups).length && !Object.keys(state.channels).length && !q) {
+    html += '<div class="empty-state"><div class="empty-state-icon">👥</div><p>Kontaktlar yoq</p><p style="font-size:12px;margin-top:6px;color:var(--text-muted)">+ tugmasi bilan qoshing</p></div>';
+  } else if (!html && q) {
+    html = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Topilmadi</p></div>';
+  }
+
+  list.innerHTML = html;
+
+  // Click eventlar
+  list.querySelectorAll('[data-chatid]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      if (e.target.closest('.chat-delete-btn')) return;
+      var id = el.dataset.chatid;
+      if (id === 'saved') openChat('saved');
+      else if (id.startsWith('g_') || id.startsWith('c_')) openGroupChannelChat(id);
+      else openChat(parseInt(id));
+    });
+  });
+
+  // Delete eventlar
+  list.querySelectorAll('[data-delid]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = parseInt(btn.dataset.delid);
+      if (!confirm("Bu kontakt va chatni o'chirasizmi?")) return;
+      state.contacts = state.contacts.filter(function(c) { return c.id !== id; });
+      delete state.chats[id];
+      if (state.activeChat === id) { state.activeChat = null; closeChat(); }
+      saveData(); renderAll(); showToast("O'chirildi");
+    });
+  });
+  list.querySelectorAll('[data-delgrp]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = btn.dataset.delgrp;
+      if (!confirm("Guruhni o'chirasizmi?")) return;
+      delete state.groups[id]; delete state.chats[id];
+      if (state.activeChat === id) { state.activeChat = null; closeChat(); }
+      saveData(); renderAll(); showToast("Guruh o'chirildi");
+    });
+  });
+  list.querySelectorAll('[data-delch]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = btn.dataset.delch;
+      if (!confirm("Kanalni o'chirasizmi?")) return;
+      delete state.channels[id]; delete state.chats[id];
+      if (state.activeChat === id) { state.activeChat = null; closeChat(); }
+      saveData(); renderAll(); showToast("Kanal o'chirildi");
+    });
+  });
+}
+
+// ============================================
+// KONTAKTLAR
+// ============================================
+function renderContacts() {
+  var list = $('#contacts-list'); if (!list) return;
+  var q = (($('#contacts-search') || {}).value || '').toLowerCase();
+  var html = '';
+  state.contacts.forEach(function(c) {
+    if (q && !c.name.toLowerCase().includes(q) && !(c.username||'').toLowerCase().includes(q)) return;
+    html += '<div class="contact-item" style="position:relative" data-cid="' + c.id + '">' +
+      '<div class="chat-avatar" style="background:' + c.color + '">' + avatarImg(c) +
+      (c.online ? '<div class="online-dot"></div>' : '') + '</div>' +
+      '<div class="chat-info"><div class="chat-name">' + esc(c.name) + '</div>' +
+      '<div class="chat-preview" style="color:var(--primary);font-weight:500">' + (c.username ? '@' + esc(c.username) : esc(c.phone || '')) + '</div></div>' +
+      '<button class="chat-delete-btn" data-delcontact="' + c.id + '" title="O\'chirish">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+      '</button></div>';
+  });
+  if (!state.contacts.length) html = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>Kontaktlar yoq</p></div>';
+  list.innerHTML = html || '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Topilmadi</p></div>';
+
+  list.querySelectorAll('.contact-item').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      if (e.target.closest('.chat-delete-btn')) return;
+      openChat(parseInt(el.dataset.cid));
+      switchTab('chats');
+    });
+  });
+  list.querySelectorAll('[data-delcontact]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = parseInt(btn.dataset.delcontact);
+      if (!confirm("Kontaktni o'chirasizmi?")) return;
+      state.contacts = state.contacts.filter(function(c) { return c.id !== id; });
+      delete state.chats[id];
+      if (state.activeChat === id) { state.activeChat = null; closeChat(); }
+      saveData(); renderAll(); showToast("Kontakt o'chirildi");
+    });
+  });
+}
+
+// ============================================
+// STORIES
+// ============================================
+function renderStories() {
+  var bar = $('#stories-bar'); if (!bar) return;
+  var meAv = state.user.photoUrl
+    ? '<img src="' + state.user.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+    : esc(state.user.avatar);
+
+  var html = '<div class="story-item" id="add-story">' +
+    '<div class="story-avatar-wrap add-story"><div class="story-avatar" style="background:' + state.user.color + ';overflow:hidden">' + meAv + '</div>' +
+    '<div class="story-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div></div>' +
+    '<span class="story-name">Sizning</span></div>';
+
+  state.stories.forEach(function(s) {
+    var ct = s.userId === 'me'
+      ? { name: 'Siz', avatar: state.user.avatar, color: state.user.color, photoUrl: state.user.photoUrl }
+      : state.contacts.find(function(c) { return c.id === s.userId; });
+    if (!ct) return;
+    var av = ct.photoUrl
+      ? '<img src="' + ct.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+      : esc(ct.avatar);
+    html += '<div class="story-item" data-sid="' + s.id + '">' +
+      '<div class="story-avatar-wrap' + (s.viewed ? ' viewed' : '') + '">' +
+      '<div class="story-avatar" style="background:' + ct.color + ';overflow:hidden">' + av + '</div></div>' +
+      '<span class="story-name">' + esc(s.userId === 'me' ? 'Siz' : ct.name.split(' ')[0]) + '</span></div>';
+  });
+
+  bar.innerHTML = html;
+  $('#add-story') && $('#add-story').addEventListener('click', openStoryCreator);
+  bar.querySelectorAll('[data-sid]').forEach(function(el) {
+    el.addEventListener('click', function() { viewStory(parseInt(el.dataset.sid)); });
+  });
+}
+
+// ============================================
+// SOZLAMALAR PROFIL
+// ============================================
+function renderSettingsProfile() {
+  var el = $('#settings-profile'); if (!el) return;
+  var av = state.user.photoUrl
+    ? '<div class="settings-profile-avatar" style="padding:0;overflow:hidden"><img src="' + state.user.photoUrl + '" style="width:100%;height:100%;object-fit:cover"></div>'
+    : '<div class="settings-profile-avatar" style="background:' + state.user.color + '">' + esc(state.user.avatar) + '</div>';
+  el.innerHTML = av +
+    '<div class="settings-profile-info">' +
+    '<div class="settings-profile-name">' + esc(state.user.fullName || state.user.name) + '</div>' +
+    (state.user.username ? '<div class="settings-profile-sub">@' + esc(state.user.username) + '</div>' : '') +
+    '<div class="settings-profile-bio">' + esc(state.phone) + '</div></div>';
+}
+
+// ============================================
+// CHAT OCHISH
+// ============================================
+function closeChat() {
+  $('#app').classList.remove('chat-open');
+  $('#chat-view') && $('#chat-view').classList.add('hidden');
+  $('#welcome-screen') && $('#welcome-screen').classList.remove('hidden');
+}
+
+function openChat(chatId) {
+  if (typeof chatId === 'string' && (chatId.startsWith('g_') || chatId.startsWith('c_'))) {
+    openGroupChannelChat(chatId); return;
+  }
+  state.activeChat = chatId;
+  $('#welcome-screen') && $('#welcome-screen').classList.add('hidden');
+  $('#chat-view') && $('#chat-view').classList.remove('hidden');
+  $('#app').classList.add('chat-open');
+
+  var isSaved = chatId === 'saved';
+  var ct = isSaved
+    ? { name: 'Saqlangan xabarlar', avatar: '🔖', color: COLORS[0], online: false, username: '', photoUrl: '' }
+    : state.contacts.find(function(c) { return c.id === chatId; });
+  if (!ct) return;
+
+  var ha = $('#chat-header-avatar'), hn = $('#chat-header-name'), hs = $('#chat-header-status');
+  if (ha) {
+    ha.style.background = ct.photoUrl ? 'transparent' : ct.color;
+    ha.innerHTML = ct.photoUrl
+      ? '<img src="' + ct.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+      : esc(ct.avatar);
+  }
+  if (hn) hn.textContent = ct.name;
+  if (hs) {
+    if (isSaved)       { hs.textContent = "Faqat siz ko'rasiz"; hs.className = 'chat-header-status'; }
+    else if (ct.online){ hs.textContent = '● onlayn';            hs.className = 'chat-header-status online'; }
+    else               { hs.textContent = ct.username ? '@' + ct.username : 'yaqinda ko\'rindi'; hs.className = 'chat-header-status'; }
+  }
+
+  // Qo'ng'iroq tugmalarini boshqarish
+  var callBtns = $$('#chat-header .icon-btn:not(.back-btn):not(#chat-more-btn)');
+  callBtns.forEach(function(btn, i) {
+    if (i === 0 || i === 1) { // telefon va video tugmalar
+      btn.style.display = isSaved ? 'none' : 'flex';
+    }
+  });
+
+  var hinfo = $('#chat-header-info-click');
+  if (hinfo && !isSaved) {
+    hinfo.onclick = function() { openContactProfile(chatId); };
+  }
+
+  (state.chats[chatId] || []).forEach(function(m) { if (!m.sent) m.read = true; });
+  renderMessages(chatId, false);
+  renderChats();
+  $('#message-input') && $('#message-input').focus();
+}
+
+function openGroupChannelChat(chatId) {
+  state.activeChat = chatId;
+  $('#welcome-screen') && $('#welcome-screen').classList.add('hidden');
+  $('#chat-view') && $('#chat-view').classList.remove('hidden');
+  $('#app').classList.add('chat-open');
+
+  var isGroup = chatId.startsWith('g_');
+  var info = isGroup ? state.groups[chatId] : state.channels[chatId];
+  if (!info) return;
+
+  var ha = $('#chat-header-avatar'), hn = $('#chat-header-name'), hs = $('#chat-header-status');
+  if (ha) {
+    ha.style.background = info.photoUrl ? 'transparent' : info.color;
+    ha.innerHTML = info.photoUrl
+      ? '<img src="' + info.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+      : esc(info.avatar);
+  }
+  if (hn) hn.textContent = info.name;
+  if (hs) {
+    var cnt = isGroup ? (info.members || []).length : (info.subscribers || []).length;
+    hs.textContent = isGroup ? cnt + " a'zo" : cnt + ' obunachi';
+    hs.className = 'chat-header-status';
+  }
+
+  var hinfo = $('#chat-header-info-click');
+  if (hinfo) hinfo.onclick = isGroup
+    ? function() { openGroupSettings(chatId); }
+    : function() { openChannelSettings(chatId); };
+
+  renderMessages(chatId, true);
+  renderChats();
+  $('#message-input') && $('#message-input').focus();
+}
+
+// ============================================
+// XABARLAR
+// ============================================
+function renderMessages(chatId, isGroupOrChannel) {
+  var area = $('#messages-area'); if (!area) return;
+  var msgs = state.chats[chatId] || [];
+  if (!msgs.length) {
+    area.innerHTML = '<div class="empty-state" style="margin:auto"><div class="empty-state-icon">💬</div><p>Birinchi xabaringizni yozing</p></div>';
+    return;
+  }
+  var html = '<div class="message-day">Bugun</div>';
+  msgs.forEach(function(m) {
+    var tick = '';
+    if (m.sent) {
+      if      (m.status === 'read')      tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="read"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></svg>';
+      else if (m.status === 'delivered') tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></svg>';
+      else                               tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    }
+    var senderName = (!m.sent && m.senderName && isGroupOrChannel)
+      ? '<span class="msg-sender-name">' + esc(m.senderName) + '</span>' : '';
+    var content = '';
+    if (m.fileUrl && m.fileType === 'image') {
+      content = '<img src="' + m.fileUrl + '" style="max-width:200px;border-radius:10px;display:block;margin-bottom:4px" onclick="window.open(this.src)">';
+    } else if (m.fileUrl && m.fileType === 'video') {
+      content = '<video src="' + m.fileUrl + '" controls style="max-width:200px;border-radius:10px;display:block;margin-bottom:4px"></video>';
+    } else if (m.fileUrl && m.fileType === 'file') {
+      content = '<div style="display:flex;align-items:center;gap:8px;padding:4px 0"><span style="font-size:24px">📄</span><span style="font-size:13px">' + esc(m.fileName || m.text) + '</span></div>';
+    } else {
+      content = esc(m.text);
+    }
+    html += '<div class="message ' + (m.sent ? 'sent' : 'received') + '">' +
+      senderName + content +
+      '<div class="message-meta"><span>' + esc(m.time) + '</span>' + tick + '</div></div>';
+  });
+  area.innerHTML = html;
+  area.scrollTop = area.scrollHeight;
+}
+
+function sendMessage() {
+  var inp = $('#message-input');
+  var txt = (inp || {}).value || '';
+  if (!txt.trim() || state.activeChat === null) return;
+
+  var msg = { id: Date.now(), text: txt.trim(), time: nowTime(), sent: true, status: 'sent' };
+  state.chats[state.activeChat] = state.chats[state.activeChat] || [];
+  state.chats[state.activeChat].push(msg);
+  inp.value = ''; inp.style.height = 'auto';
+
+  var isGC = typeof state.activeChat === 'string' &&
+    (state.activeChat.startsWith('g_') || state.activeChat.startsWith('c_'));
+
+  renderMessages(state.activeChat, isGC);
+  renderChats();
+  saveData();
+
+  setTimeout(function() { msg.status = 'delivered'; renderMessages(state.activeChat, isGC); }, 500);
+  if (state.activeChat !== 'saved' && !isGC) {
+    setTimeout(function() { msg.status = 'read'; renderMessages(state.activeChat, isGC); saveData(); }, 1000);
+  } else if (state.activeChat === 'saved') {
+    setTimeout(function() { msg.status = 'read'; renderMessages(state.activeChat, isGC); saveData(); }, 800);
+  }
+  // Guruh uchun ham faqat "read" status - haqiqiy javob yo'q
+  if (isGC && state.activeChat.startsWith('g_')) {
+    setTimeout(function() { msg.status = 'read'; renderMessages(state.activeChat, true); saveData(); }, 1000);
+  }
+}
+
+// ============================================
+// KONTAKT PROFILI
+// ============================================
+var cpmContactId = null;
+function openContactProfile(id) {
+  var ct = state.contacts.find(function(c) { return c.id === id; }); if (!ct) return;
+  cpmContactId = id;
+  var body = $('#contact-profile-body'); if (!body) return;
+  var av = ct.photoUrl
+    ? '<img src="' + ct.photoUrl + '" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto 14px;display:block">'
+    : '<div style="width:90px;height:90px;border-radius:50%;background:' + ct.color + ';display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 14px">' + esc(ct.avatar) + '</div>';
+  body.innerHTML = av +
+    '<div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px">' + esc(ct.name) + '</div>' +
+    (ct.username ? '<div style="color:var(--primary);font-weight:600;margin-bottom:6px">@' + esc(ct.username) + '</div>' : '') +
+    (ct.phone ? '<div style="color:var(--text-secondary);font-size:14px;margin-bottom:6px">📞 ' + esc(ct.phone) + '</div>' : '') +
+    (ct.bio ? '<div style="color:var(--text-secondary);font-size:14px;margin-top:8px;line-height:1.5">' + esc(ct.bio) + '</div>' : '');
+  var mb = $('#cpm-message-btn');
+  if (mb) mb.onclick = function() {
+    $('#contact-profile-modal') && $('#contact-profile-modal').classList.add('hidden');
+    openChat(id);
+  };
+  $('#contact-profile-modal') && $('#contact-profile-modal').classList.remove('hidden');
+}
+
+// ============================================
+// YANGI KONTAKT
+// ============================================
+var ncAv = AVATARS[0], ncCol = COLORS[0];
+function openNewChatModal() {
+  ['new-contact-name','new-contact-surname','new-contact-phone'].forEach(function(id) {
+    var el = $('#' + id); if (el) el.value = '';
+  });
+  var prev = $('#nc-avatar-preview');
+  if (prev) {
+    prev.style.background = 'var(--bg-tertiary)';
+    prev.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  }
+  var pcode = $('#nc-phone-code'); if (pcode) pcode.textContent = state.countryCode;
+  $('#new-chat-modal') && $('#new-chat-modal').classList.remove('hidden');
+  var ni = $('#new-contact-name'); if (ni) { ni.focus(); ni.oninput = updateNcPreview; }
+}
+
+function updateNcPreview() {
+  var nm = (($('#new-contact-name') || {}).value || '').trim();
+  var prev = $('#nc-avatar-preview'); if (!prev) return;
+  if (nm) {
+    prev.style.background = getColor(nm);
+    prev.innerHTML = '<span style="font-size:28px;font-weight:700;color:white">' + nm.charAt(0).toUpperCase() + '</span>';
+  } else {
+    prev.style.background = 'var(--bg-tertiary)';
+    prev.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  }
+}
+
+function saveNewContact() {
+  var nm  = (($('#new-contact-name')    || {}).value || '').trim();
+  var sn  = (($('#new-contact-surname') || {}).value || '').trim();
+  var ph  = (($('#new-contact-phone')   || {}).value || '').replace(/\D/g, '');
+  if (!nm) { showToast("Ismni kiriting", 'error'); return; }
+  var full  = sn ? nm + ' ' + sn : nm;
+  var phone = ph ? state.countryCode + ph : '';
+  var id    = state.contacts.length ? Math.max.apply(null, state.contacts.map(function(c) { return c.id; })) + 1 : 1;
+  var col   = getColor(nm);
+  state.contacts.push({
+    id: id, name: full, bio: '',
+    phone: phone,
+    avatar: nm.charAt(0).toUpperCase(),
+    color: col, online: false,
+    username: nm.toLowerCase().replace(/\s+/g, '_') + id
+  });
+  state.chats[id] = [];
+  $('#new-chat-modal') && $('#new-chat-modal').classList.add('hidden');
+  saveData(); renderAll();
+  showToast(full + " qo'shildi!");
+  setTimeout(function() { openChat(id); }, 100);
+}
+
+// ============================================
+// PROFIL TAHRIRLASH
+// ============================================
+var epPhoto = '';
+function openProfileModal() {
+  var nm = $('#edit-name'), bi = $('#edit-bio'), un = $('#edit-username');
+  if (nm) nm.value = state.user.fullName || state.user.name;
+  if (bi) bi.value = state.user.bio || '';
+  if (un) un.value = state.user.username || '';
+  epPhoto = state.user.photoUrl;
+  var disp = $('#edit-photo-display');
+  if (disp) disp.innerHTML = epPhoto
+    ? '<img class="pf-img" src="' + epPhoto + '">'
+    : '<div class="pf-avatar" style="background:' + state.user.color + '">' + esc(state.user.avatar) + '</div>';
+  if (bi) {
+    var upd = function() {
+      var c = $('#bio-counter'); if (!c) return;
+      var n = bi.value.length; c.textContent = n + '/200';
+      c.className = 'bio-counter' + (n > 180 ? ' warn' : '');
+    };
+    bi.addEventListener('input', upd); upd();
+  }
+  var ped = $('#profile-photo-edit');
+  if (ped) ped.onclick = function() { $('#edit-photo-input') && $('#edit-photo-input').click(); };
+  var fii = $('#edit-photo-input');
+  fii && fii.addEventListener('change', function() {
+    var f = this.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function(ev) {
+      epPhoto = ev.target.result;
+      var disp = $('#edit-photo-display');
+      if (disp) disp.innerHTML = '<img class="pf-img" src="' + epPhoto + '">';
+    };
+    r.readAsDataURL(f);
+  });
+  $('#profile-modal') && $('#profile-modal').classList.remove('hidden');
+}
+
+function saveProfile() {
+  var nm = (($('#edit-name') || {}).value || '').trim();
+  var bi = (($('#edit-bio') || {}).value || '').trim();
+  var un = (($('#edit-username') || {}).value || '').trim().replace('@', '');
+  if (!nm) { showToast("Ismni kiriting", 'error'); return; }
+  state.user.fullName = nm; state.user.name = nm.split(' ')[0];
+  state.user.bio = bi.slice(0, 200); state.user.username = un;
+  if (epPhoto) state.user.photoUrl = epPhoto;
+  $('#profile-modal') && $('#profile-modal').classList.add('hidden');
+  saveData(); renderAll(); showToast("Saqlandi!");
+}
+
+// ============================================
+// TEMA
+// ============================================
+function applyThemeUI() {
+  var tog = $('#theme-toggle'), desc = $('#theme-desc'), icon = $('#theme-icon');
+  if (!tog) return;
+  if (state.theme === 'dark') {
+    tog.classList.add('active');
+    if (desc) desc.textContent = "To'q rejim";
+    if (icon) icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  } else {
+    tog.classList.remove('active');
+    if (desc) desc.textContent = "Yorqin rejim";
+    if (icon) icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  }
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  document.body.dataset.theme = state.theme;
+  localStorage.setItem('vibe_theme', state.theme);
+  applyThemeUI();
+}
+
+// ============================================
+// STORY
+// ============================================
+var storyBg = STORY_BGS[0], storyTimer = null, storyType = 'text', storyMedia = '', storyIsVid = false;
+
+function openStoryCreator() {
+  storyType = 'text'; storyBg = STORY_BGS[0]; storyMedia = ''; storyIsVid = false;
+  var prev = $('#story-preview');
+  if (prev) {
+    prev.style.background = storyBg;
+    prev.innerHTML = '<textarea id="story-text" class="story-text-input" placeholder="Nima yozmoqchisiz?"></textarea>';
+  }
+  var bs = $('#story-bg-section'); if (bs) bs.style.display = 'block';
+  ['stype-text','stype-photo','stype-video'].forEach(function(id) {
+    var b = $('#' + id); if (b) b.classList.remove('active');
+  });
+  $('#stype-text') && $('#stype-text').classList.add('active');
+  var bp = $('#bg-picker');
+  if (bp) {
+    bp.innerHTML = '';
+    STORY_BGS.forEach(function(bg) {
+      var d = document.createElement('div');
+      d.className = 'bg-option' + (bg === storyBg ? ' selected' : '');
+      d.style.background = bg;
+      d.addEventListener('click', function() {
+        storyBg = bg;
+        var p = $('#story-preview'); if (p) p.style.background = bg;
+        bp.querySelectorAll('.bg-option').forEach(function(x) { x.classList.remove('selected'); });
+        d.classList.add('selected');
+      });
+      bp.appendChild(d);
+    });
+  }
+  $('#story-create-modal') && $('#story-create-modal').classList.remove('hidden');
+}
+
+function setStoryType(type) {
+  storyType = type;
+  ['stype-text','stype-photo','stype-video'].forEach(function(id) {
+    var b = $('#' + id); if (b) b.classList.remove('active');
+  });
+  $('#stype-' + type) && $('#stype-' + type).classList.add('active');
+  var prev = $('#story-preview'), bs = $('#story-bg-section');
+  if (type === 'text') {
+    if (prev) { prev.style.background = storyBg; prev.innerHTML = '<textarea id="story-text" class="story-text-input" placeholder="Nima yozmoqchisiz?"></textarea>'; }
+    if (bs) bs.style.display = 'block';
+  } else {
+    if (prev) { prev.style.background = '#000'; prev.innerHTML = '<div class="story-media-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><p>Tanlash uchun bosing</p></div>'; }
+    if (bs) bs.style.display = 'none';
+    var fi = $('#story-media-input');
+    if (fi) { fi.accept = type === 'video' ? 'video/*' : 'image/*'; fi.click(); }
+  }
+}
+
+function publishStory() {
+  var txt = '', media = '', isVid = false;
+  if (storyType === 'text') {
+    txt = (($('#story-text') || {}).value || '').trim();
+    if (!txt) { showToast("Matn yozing", 'error'); return; }
+  } else {
+    if (!storyMedia) { showToast("Media tanlang", 'error'); return; }
+    media = storyMedia; isVid = storyIsVid;
+  }
+  var s = { id: Date.now(), userId: 'me', text: txt, media: media, isVideo: isVid, bg: storyBg, time: 'hozirgina', viewed: false, type: storyType };
+  state.stories.unshift(s);
+  $('#story-create-modal') && $('#story-create-modal').classList.add('hidden');
+  saveData(); renderStories(); showToast("Story joylandi!");
+}
+
+function viewStory(sid) {
+  var s = state.stories.find(function(x) { return x.id === sid; }); if (!s) return;
+  var ct = s.userId === 'me'
+    ? { name: 'Siz', avatar: state.user.avatar, color: state.user.color, photoUrl: state.user.photoUrl }
+    : state.contacts.find(function(c) { return c.id === s.userId; });
+  if (!ct) return;
+  s.viewed = true;
+
+  var bg = $('#story-viewer-bg'), avEl = $('#story-viewer-avatar');
+  var nm = $('#story-viewer-name'), tm = $('#story-viewer-time');
+  var content = $('#story-viewer-content'), bar = $('#story-viewer-bar');
+
+  if (bg)   bg.style.background = (s.type === 'text' || !s.media) ? s.bg : '#000';
+  if (avEl) {
+    avEl.innerHTML = ct.photoUrl
+      ? '<img src="' + ct.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+      : esc(ct.avatar);
+    avEl.style.background = ct.color;
+  }
+  if (nm)  nm.textContent = ct.name;
+  if (tm)  tm.textContent = s.time;
+  if (content) {
+    if (s.media && !s.isVideo) content.innerHTML = '<img src="' + s.media + '" class="story-viewer-media" style="max-height:70vh;border-radius:12px">';
+    else if (s.media && s.isVideo) content.innerHTML = '<video src="' + s.media + '" class="story-viewer-media" controls style="max-height:70vh;border-radius:12px"></video>';
+    else content.innerHTML = '<p class="story-viewer-text">' + esc(s.text) + '</p>';
+  }
+  if (bar) { bar.style.transition = 'none'; bar.style.width = '0'; }
+  $('#story-viewer') && $('#story-viewer').classList.remove('hidden');
+  setTimeout(function() { if (bar) { bar.style.transition = 'width 5s linear'; bar.style.width = '100%'; } }, 50);
+  if (storyTimer) clearTimeout(storyTimer);
+  storyTimer = setTimeout(closeStory, 5000);
+}
+
+function closeStory() {
+  $('#story-viewer') && $('#story-viewer').classList.add('hidden');
+  if (storyTimer) clearTimeout(storyTimer);
+  renderStories();
+}
+
+// ============================================
+// GURUH YARATISH
+// ============================================
+var grpSelected = new Set(), grpPhoto = '';
+
+function openCreateGroup() {
+  grpSelected.clear(); grpPhoto = '';
+  var nm = $('#grp-name'), dc = $('#grp-desc');
+  if (nm) nm.value = ''; if (dc) dc.value = '';
+  var bar = $('#grp-selected-bar'); if (bar) { bar.innerHTML = ''; bar.classList.remove('has-items'); }
+  renderGcContacts('grp-contacts-list', grpSelected, 'grp-search', updateGrpUI);
+  updateGrpUI();
+  $('#create-group-modal') && $('#create-group-modal').classList.remove('hidden');
+  nm && nm.focus();
+}
+
+function updateGrpUI() {
+  var bar = $('#grp-selected-bar'), cnt = $('#grp-count'), btn = $('#create-group-btn');
+  if (bar) renderGcChips(bar, grpSelected, function() { updateGrpUI(); renderGcContacts('grp-contacts-list', grpSelected, 'grp-search', updateGrpUI); });
+  if (cnt) cnt.textContent = grpSelected.size + " a'zo tanlangan";
+  if (btn) btn.disabled = grpSelected.size < 1;
+  if (bar) bar.classList.toggle('has-items', grpSelected.size > 0);
+}
+
+function doCreateGroup() {
+  var nm = (($('#grp-name') || {}).value || '').trim();
+  if (!nm) { showToast("Guruh nomini kiriting", 'error'); return; }
+  var id = 'g_' + Date.now();
+  var members = ['me'].concat(Array.from(grpSelected));
+  state.groups[id] = {
+    id: id, name: nm, desc: (($('#grp-desc') || {}).value || '').trim(),
+    color: getColor(nm), avatar: nm.charAt(0).toUpperCase(),
+    photoUrl: grpPhoto, members: members, admins: ['me'],
+    type: 'group', createdAt: Date.now()
+  };
+  state.chats[id] = [];
+  $('#create-group-modal') && $('#create-group-modal').classList.add('hidden');
+  saveData(); renderAll();
+  showToast(nm + " guruhi yaratildi!");
+  setTimeout(function() { openGroupChannelChat(id); }, 100);
+}
+
+// ============================================
+// KANAL YARATISH
+// ============================================
+var chSelected = new Set(), chPhoto = '', chIsPublic = true;
+
+function openCreateChannel() {
+  chSelected.clear(); chPhoto = ''; chIsPublic = true;
+  ['ch-name','ch-desc','ch-username'].forEach(function(id) { var el = $('#' + id); if (el) el.value = ''; });
+  var bar = $('#ch-selected-bar'); if (bar) { bar.innerHTML = ''; bar.classList.remove('has-items'); }
+  renderGcContacts('ch-contacts-list', chSelected, 'ch-search', updateChUI);
+  updateChUI();
+  $('#create-channel-modal') && $('#create-channel-modal').classList.remove('hidden');
+  $('#ch-name') && $('#ch-name').focus();
+}
+
+function updateChUI() {
+  var bar = $('#ch-selected-bar'), cnt = $('#ch-count');
+  if (bar) renderGcChips(bar, chSelected, function() { updateChUI(); renderGcContacts('ch-contacts-list', chSelected, 'ch-search', updateChUI); });
+  if (cnt) cnt.textContent = chSelected.size + ' obunachi';
+  if (bar) bar.classList.toggle('has-items', chSelected.size > 0);
+}
+
+function doCreateChannel() {
+  var nm = (($('#ch-name') || {}).value || '').trim();
+  if (!nm) { showToast("Kanal nomini kiriting", 'error'); return; }
+  var id = 'c_' + Date.now();
+  var un = (($('#ch-username') || {}).value || '').trim().replace('@', '') || nm.toLowerCase().replace(/\s+/g, '_');
+  state.channels[id] = {
+    id: id, name: nm, desc: (($('#ch-desc') || {}).value || '').trim(),
+    username: un, isPublic: chIsPublic, photoUrl: chPhoto,
+    color: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+    avatar: nm.charAt(0).toUpperCase(),
+    subscribers: ['me'].concat(Array.from(chSelected)),
+    admins: ['me'], type: 'channel', createdAt: Date.now()
+  };
+  state.chats[id] = [];
+  $('#create-channel-modal') && $('#create-channel-modal').classList.add('hidden');
+  saveData(); renderAll();
+  showToast(nm + " kanali yaratildi!");
+  setTimeout(function() { openGroupChannelChat(id); }, 100);
+}
+
+// ============================================
+// GC HELPERS
+// ============================================
+function renderGcContacts(listId, selectedSet, searchId, onUpdate) {
+  var list = $('#' + listId); if (!list) return;
+  var q = (($('#' + searchId) || {}).value || '').toLowerCase();
+  var html = '';
+  state.contacts.forEach(function(c) {
+    if (q && !c.name.toLowerCase().includes(q)) return;
+    var checked = selectedSet.has(c.id);
+    var av = avatarImg(c);
+    html += '<div class="gc-contact-item" data-id="' + c.id + '">' +
+      '<div class="gc-contact-av" style="background:' + c.color + '">' + av + '</div>' +
+      '<div class="gc-contact-info"><div class="gc-contact-name">' + esc(c.name) + '</div>' +
+      '<div class="gc-contact-sub">' + (c.username ? '@' + esc(c.username) : esc(c.phone || '')) + '</div></div>' +
+      '<div class="gc-checkbox' + (checked ? ' checked' : '') + '">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+      '</div></div>';
+  });
+  if (!html) html = '<div class="empty-state" style="padding:24px"><div class="empty-state-icon">👥</div><p>Kontakt yoq</p></div>';
+  list.innerHTML = html;
+  list.querySelectorAll('.gc-contact-item').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var id = parseInt(el.dataset.id);
+      if (selectedSet.has(id)) selectedSet.delete(id); else selectedSet.add(id);
+      onUpdate(); renderGcContacts(listId, selectedSet, searchId, onUpdate);
+    });
+  });
+}
+
+function renderGcChips(bar, selectedSet, onRemove) {
+  bar.innerHTML = '';
+  selectedSet.forEach(function(id) {
+    var c = state.contacts.find(function(x) { return x.id === id; }); if (!c) return;
+    var div = document.createElement('div'); div.className = 'gc-chip';
+    div.innerHTML = '<div class="gc-chip-av" style="background:' + c.color + '">' + avatarImg(c) +
+      '<div class="gc-chip-remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div></div>' +
+      '<span class="gc-chip-name">' + esc(c.name.split(' ')[0]) + '</span>';
+    div.addEventListener('click', function() { selectedSet.delete(id); onRemove(); });
+    bar.appendChild(div);
+  });
+}
+
+// ============================================
+// GURUH SOZLAMALARI
+// ============================================
+var gsCurrentId = '';
+function openGroupSettings(groupId) {
+  gsCurrentId = groupId;
+  var grp = state.groups[groupId]; if (!grp) return;
+  var ni = $('#gs-name-inp'), di = $('#gs-desc-inp');
+  if (ni) ni.value = grp.name; if (di) di.value = grp.desc || '';
+  var nm = $('#gs-name-display'), mt = $('#gs-meta'), av = $('#gs-avatar');
+  if (nm) nm.textContent = grp.name;
+  if (mt) mt.textContent = (grp.members || []).length + " a'zo";
+  if (av) { av.style.background = grp.photoUrl ? 'transparent' : grp.color; av.innerHTML = grp.photoUrl ? '<img src="' + grp.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : esc(grp.avatar); }
+  renderGsMembers(groupId, 'group');
+  $('#group-settings-modal') && $('#group-settings-modal').classList.remove('hidden');
+}
+
+var csCurrentId = '';
+function openChannelSettings(channelId) {
+  csCurrentId = channelId;
+  var ch = state.channels[channelId]; if (!ch) return;
+  var ni = $('#cs-name-inp'), di = $('#cs-desc-inp'), ui = $('#cs-username-inp');
+  if (ni) ni.value = ch.name; if (di) di.value = ch.desc || ''; if (ui) ui.value = ch.username || '';
+  var nm = $('#cs-name-display'), mt = $('#cs-meta'), av = $('#cs-avatar');
+  if (nm) nm.textContent = ch.name;
+  if (mt) mt.textContent = (ch.subscribers || []).length + " obunachi";
+  if (av) { av.style.background = ch.photoUrl ? 'transparent' : ch.color; av.innerHTML = ch.photoUrl ? '<img src="' + ch.photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : esc(ch.avatar); }
+  renderGsMembers(channelId, 'channel');
+  $('#channel-settings-modal') && $('#channel-settings-modal').classList.remove('hidden');
+}
+
+function renderGsMembers(id, type) {
+  var info = type === 'group' ? state.groups[id] : state.channels[id]; if (!info) return;
+  var listEl = $('#' + (type === 'group' ? 'gs-members-list' : 'cs-members-list')); if (!listEl) return;
+  var memberIds = type === 'group' ? (info.members || []) : (info.subscribers || []);
+  var html = '';
+  memberIds.forEach(function(mid) {
+    var name, avatar, color, photoUrl = '', isAdmin;
+    if (mid === 'me') {
+      name = state.user.fullName || state.user.name; avatar = state.user.avatar;
+      color = state.user.color; photoUrl = state.user.photoUrl || ''; isAdmin = true;
+    } else {
+      var ct = state.contacts.find(function(c) { return c.id === mid; }); if (!ct) return;
+      name = ct.name; avatar = ct.avatar; color = ct.color; photoUrl = ct.photoUrl || '';
+      isAdmin = (info.admins || []).includes(mid);
+    }
+    var av = photoUrl ? '<img src="' + photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : esc(avatar);
+    html += '<div class="gs-member">' +
+      '<div class="gs-member-av" style="background:' + color + '">' + av + '</div>' +
+      '<div class="gs-member-info"><div class="gs-member-name">' + esc(name) + (mid === 'me' ? ' (siz)' : '') + '</div>' +
+      (isAdmin ? '<div class="gs-member-role admin">Admin</div>' : "<div class=\"gs-member-role\">A'zo</div>") + '</div>';
+    if (mid !== 'me') {
+      html += '<div class="gs-member-actions">' +
+        (!isAdmin ? '<button class="gs-action-btn" onclick="makeAdmin(\'' + id + '\',\'' + type + '\',' + mid + ')" title="Admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>' : '') +
+        '<button class="gs-action-btn danger" onclick="removeMember(\'' + id + '\',\'' + type + '\',' + mid + ')" title="Chiqarish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>' +
+        '</div>';
+    }
+    html += '</div>';
+  });
+  listEl.innerHTML = html || '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:16px">Azolar yoq</p>';
+}
+
+function makeAdmin(id, type, memberId) {
+  var info = type === 'group' ? state.groups[id] : state.channels[id]; if (!info) return;
+  if (!info.admins) info.admins = [];
+  if (!info.admins.includes(memberId)) info.admins.push(memberId);
+  save(); renderGsMembers(id, type); showToast("Admin qilindi!");
+}
+
+function removeMember(id, type, memberId) {
+  var info = type === 'group' ? state.groups[id] : state.channels[id]; if (!info) return;
+  var arr = type === 'group' ? 'members' : 'subscribers';
+  info[arr] = (info[arr] || []).filter(function(m) { return m !== memberId; });
+  save(); renderGsMembers(id, type); showToast("Chiqarildi");
+}
+
+// ============================================
+// A'ZO QO'SHISH
+// ============================================
+var amId = '', amType = '', amSelected = new Set();
+function openAddMember(id, type) {
+  amId = id; amType = type; amSelected.clear();
+  var title = $('#am-title');
+  if (title) title.textContent = type === 'group' ? "A'zo qo'shish" : "Obunachi qo'shish";
+  renderAmContacts();
+  $('#add-member-modal') && $('#add-member-modal').classList.remove('hidden');
+}
+
+function renderAmContacts() {
+  var list = $('#am-contacts-list'); if (!list) return;
+  var q = (($('#am-search') || {}).value || '').toLowerCase();
+  var info = amType === 'group' ? state.groups[amId] : state.channels[amId];
+  var existing = new Set(amType === 'group' ? (info && info.members || []) : (info && info.subscribers || []));
+  var html = '';
+  state.contacts.forEach(function(c) {
+    if (existing.has(c.id)) return;
+    if (q && !c.name.toLowerCase().includes(q)) return;
+    var checked = amSelected.has(c.id);
+    html += '<div class="gc-contact-item" data-id="' + c.id + '">' +
+      '<div class="gc-contact-av" style="background:' + c.color + '">' + avatarImg(c) + '</div>' +
+      '<div class="gc-contact-info"><div class="gc-contact-name">' + esc(c.name) + '</div></div>' +
+      '<div class="gc-checkbox' + (checked ? ' checked' : '') + '"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>';
+  });
+  if (!html) html = '<div class="empty-state" style="padding:20px"><p>Qoshish uchun kontakt yoq</p></div>';
+  list.innerHTML = html;
+  list.querySelectorAll('.gc-contact-item').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var id = parseInt(el.dataset.id);
+      if (amSelected.has(id)) amSelected.delete(id); else amSelected.add(id);
+      renderAmContacts();
+    });
+  });
+}
+
+function confirmAddMember() {
+  if (!amSelected.size) { showToast("Hech kim tanlanmadi", 'error'); return; }
+  var info = amType === 'group' ? state.groups[amId] : state.channels[amId]; if (!info) return;
+  var arr = amType === 'group' ? 'members' : 'subscribers';
+  amSelected.forEach(function(id) { if (!(info[arr] || []).includes(id)) (info[arr] = info[arr] || []).push(id); });
+  saveData(); renderGsMembers(amId, amType);
+  $('#add-member-modal') && $('#add-member-modal').classList.add('hidden');
+  showToast(amSelected.size + " qo'shildi!");
+  amSelected.clear();
+}
+
+// ============================================
+// LOGOUT
+// ============================================
+function logout() {
+  if (!confirm("Hisobdan chiqishni tasdiqlaysizmi?")) return;
+  state.activeChat = null;
+  closeChat();
+  $('#app') && $('#app').classList.add('hidden');
+  $('#login-screen') && $('#login-screen').classList.remove('hidden');
+  showStep('step-phone');
+  var pi = $('#phone-input'); if (pi) { pi.value = ''; pi.focus(); }
+  showToast("Chiqildi!");
+}
+
+// ============================================
+// RENDER ALL
+// ============================================
+function save() { saveData(); }
+function renderAll() {
+  renderChats(); renderContacts(); renderStories(); renderSettingsProfile();
+}
+
+// ============================================
+// MAIN INIT
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  document.body.dataset.theme = state.theme;
+  applyThemeUI();
+  initLogin();
+
+  // Tabs
+  $$('.tab').forEach(function(t) {
+    t.addEventListener('click', function() { switchTab(t.dataset.tab); });
+  });
+
+  // Search
+  $('#search-input') && $('#search-input').addEventListener('input', renderChats);
+  $('#contacts-search') && $('#contacts-search').addEventListener('input', renderContacts);
+
+  // FAB
+  $('#new-chat-btn')     && $('#new-chat-btn').addEventListener('click', openNewChatModal);
+  $('#add-contact-btn')  && $('#add-contact-btn').addEventListener('click', openNewChatModal);
+  $('#welcome-new-chat') && $('#welcome-new-chat').addEventListener('click', openNewChatModal);
+
+  // Xabar
+  var inp = $('#message-input');
+  if (inp) {
+    inp.addEventListener('input', function() { inp.style.height = 'auto'; inp.style.height = Math.min(inp.scrollHeight, 120) + 'px'; });
+    inp.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+  }
+  $('#send-btn') && $('#send-btn').addEventListener('click', sendMessage);
+
+  // Back
+  $('#back-btn') && $('#back-btn').addEventListener('click', function() {
+    state.activeChat = null; closeChat(); renderChats();
+  });
+
+  // Modal yopish
+  $$('[data-close-modal]').forEach(function(btn) {
+    btn.addEventListener('click', function() { btn.closest('.modal').classList.add('hidden'); });
+  });
+  $$('.modal').forEach(function(m) {
+    m.addEventListener('click', function(e) { if (e.target === m) m.classList.add('hidden'); });
+  });
+
+  // Kontakt saqlash
+  $('#save-new-contact') && $('#save-new-contact').addEventListener('click', saveNewContact);
+  $('#new-contact-name') && $('#new-contact-name').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var s = $('#new-contact-surname'); s ? s.focus() : saveNewContact(); }
+  });
+  $('#new-contact-surname') && $('#new-contact-surname').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var p = $('#new-contact-phone'); p ? p.focus() : saveNewContact(); }
+  });
+  $('#new-contact-phone') && $('#new-contact-phone').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') saveNewContact();
+  });
+
+  // Profil
+  $('#edit-profile-btn') && $('#edit-profile-btn').addEventListener('click', openProfileModal);
+  $('#save-profile') && $('#save-profile').addEventListener('click', saveProfile);
+
+  // Tema
+  $('#theme-toggle-btn') && $('#theme-toggle-btn').addEventListener('click', toggleTheme);
+  $('#notif-toggle') && $('#notif-toggle').addEventListener('click', function() {
+    $('#notif-toggle').classList.toggle('active');
+  });
+
+  // Story
+  var smi = $('#story-media-input');
+  smi && smi.addEventListener('change', function() {
+    var f = this.files[0]; if (!f) return;
+    storyIsVid = f.type.startsWith('video/');
+    var r = new FileReader();
+    r.onload = function(ev) {
+      storyMedia = ev.target.result;
+      var prev = $('#story-preview'); if (!prev) return;
+      prev.innerHTML = '';
+      if (storyIsVid) {
+        var v = document.createElement('video'); v.src = storyMedia; v.controls = true; v.className = 'story-viewer-media'; prev.appendChild(v);
+      } else {
+        var img = document.createElement('img'); img.src = storyMedia; img.className = 'story-viewer-media'; prev.appendChild(img);
+      }
+    };
+    r.readAsDataURL(f);
+  });
+
+  $('#publish-story') && $('#publish-story').addEventListener('click', publishStory);
+  $('#stype-text')   && $('#stype-text').addEventListener('click', function() { setStoryType('text'); });
+  $('#stype-photo')  && $('#stype-photo').addEventListener('click', function() { setStoryType('photo'); });
+  $('#stype-video')  && $('#stype-video').addEventListener('click', function() { setStoryType('video'); });
+  $('#story-close')  && $('#story-close').addEventListener('click', closeStory);
+  $$('.story-emoji-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var toast = document.createElement('div'); toast.className = 'story-reaction-toast';
+      toast.textContent = 'Reaktsiya: ' + btn.dataset.emoji;
+      var sv = $('#story-viewer'); if (sv) sv.appendChild(toast);
+      setTimeout(function() { toast.remove(); }, 2000);
+    });
+  });
+  $('#story-reply-send') && $('#story-reply-send').addEventListener('click', function() {
+    var inp = $('#story-reply-input'); if (!inp || !inp.value.trim()) return;
+    showToast("Javob yuborildi!"); inp.value = '';
+  });
+  $('#story-reply-input') && $('#story-reply-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { if (!this.value.trim()) return; showToast("Javob yuborildi!"); this.value = ''; }
+  });
+
+  // Guruh
+  $('#create-group-btn') && $('#create-group-btn').addEventListener('click', doCreateGroup);
+  $('#grp-search') && $('#grp-search').addEventListener('input', function() {
+    renderGcContacts('grp-contacts-list', grpSelected, 'grp-search', updateGrpUI);
+  });
+
+  // Kanal
+  $('#create-channel-btn') && $('#create-channel-btn').addEventListener('click', doCreateChannel);
+  $('#ch-search') && $('#ch-search').addEventListener('input', function() {
+    renderGcContacts('ch-contacts-list', chSelected, 'ch-search', updateChUI);
+  });
+  $('#ch-type-public') && $('#ch-type-public').addEventListener('click', function() {
+    chIsPublic = true;
+    this.style.cssText = 'flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:white;border:none';
+    $('#ch-type-private').style.cssText = 'flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg-tertiary);color:var(--text-secondary);border:none';
+  });
+  $('#ch-type-private') && $('#ch-type-private').addEventListener('click', function() {
+    chIsPublic = false;
+    this.style.cssText = 'flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none';
+    $('#ch-type-public').style.cssText = 'flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg-tertiary);color:var(--text-secondary);border:none';
+  });
+
+  // Guruh sozlamalari
+  $('#gs-save-info') && $('#gs-save-info').addEventListener('click', function() {
+    var grp = state.groups[gsCurrentId]; if (!grp) return;
+    grp.name = ($('#gs-name-inp') || {}).value || grp.name;
+    grp.desc = ($('#gs-desc-inp') || {}).value || '';
+    saveData(); renderAll(); showToast("Saqlandi!");
+    $('#gs-name-display') && ($('#gs-name-display').textContent = grp.name);
+  });
+  $('#gs-add-member') && $('#gs-add-member').addEventListener('click', function() {
+    $('#group-settings-modal') && $('#group-settings-modal').classList.add('hidden');
+    openAddMember(gsCurrentId, 'group');
+  });
+  $('#gs-leave-group') && $('#gs-leave-group').addEventListener('click', function() {
+    if (!confirm("Guruhdan chiqasizmi?")) return;
+    delete state.groups[gsCurrentId]; delete state.chats[gsCurrentId];
+    $('#group-settings-modal') && $('#group-settings-modal').classList.add('hidden');
+    if (state.activeChat === gsCurrentId) { state.activeChat = null; closeChat(); }
+    saveData(); renderAll(); showToast("Guruhdan chiqdingiz");
+  });
+
+  // Kanal sozlamalari
+  $('#cs-save-info') && $('#cs-save-info').addEventListener('click', function() {
+    var ch = state.channels[csCurrentId]; if (!ch) return;
+    ch.name = ($('#cs-name-inp') || {}).value || ch.name;
+    ch.desc = ($('#cs-desc-inp') || {}).value || '';
+    ch.username = (($('#cs-username-inp') || {}).value || '').replace('@', '') || ch.username;
+    saveData(); renderAll(); showToast("Saqlandi!");
+    $('#cs-name-display') && ($('#cs-name-display').textContent = ch.name);
+  });
+  $('#cs-add-member') && $('#cs-add-member').addEventListener('click', function() {
+    $('#channel-settings-modal') && $('#channel-settings-modal').classList.add('hidden');
+    openAddMember(csCurrentId, 'channel');
+  });
+  $('#cs-delete-channel') && $('#cs-delete-channel').addEventListener('click', function() {
+    if (!confirm("Kanalni o'chirasizmi?")) return;
+    delete state.channels[csCurrentId]; delete state.chats[csCurrentId];
+    $('#channel-settings-modal') && $('#channel-settings-modal').classList.add('hidden');
+    if (state.activeChat === csCurrentId) { state.activeChat = null; closeChat(); }
+    saveData(); renderAll(); showToast("Kanal o'chirildi");
+  });
+
+  // A'zo qo'shish
+  $('#am-search') && $('#am-search').addEventListener('input', renderAmContacts);
+  $('#am-confirm-btn') && $('#am-confirm-btn').addEventListener('click', confirmAddMember);
+
+  // Logout
+  $('#logout-btn') && $('#logout-btn').addEventListener('click', logout);
+
+  // Contact profile modal
+  $('#cpm-message-btn') && ($('#cpm-message-btn').onclick = function() {
+    $('#contact-profile-modal') && $('#contact-profile-modal').classList.add('hidden');
+    if (cpmContactId) openChat(cpmContactId);
+  });
+
+  // 3-CHIZIQCHA MENYU
+  var menuBtn = $('#menu-btn'), mainMenu = $('#main-menu');
+  function updateMenuTheme() {
+    var icon = $('#mmenu-theme-icon'), txt = $('#mmenu-theme-txt');
+    if (state.theme === 'dark') { if (icon) icon.textContent = '☀️'; if (txt) txt.textContent = 'Yorqin rejim'; }
+    else { if (icon) icon.textContent = '🌙'; if (txt) txt.textContent = "To'q rejim"; }
+  }
+  menuBtn && menuBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    mainMenu && mainMenu.classList.toggle('hidden');
+    updateMenuTheme();
+  });
+  document.addEventListener('click', function() { mainMenu && mainMenu.classList.add('hidden'); });
+  mainMenu && mainMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+
+  $('#mmenu-saved') && $('#mmenu-saved').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden'); openChat('saved'); switchTab('chats');
+  });
+  $('#mmenu-newchat') && $('#mmenu-newchat').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden'); openNewChatModal();
+  });
+  $('#mmenu-newgroup') && $('#mmenu-newgroup').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden'); openCreateGroup();
+  });
+  $('#mmenu-newchannel') && $('#mmenu-newchannel').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden'); openCreateChannel();
+  });
+  $('#mmenu-profile') && $('#mmenu-profile').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden');
+    switchTab('settings');
+    setTimeout(openProfileModal, 100);
+  });
+  $('#mmenu-theme') && $('#mmenu-theme').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden'); toggleTheme(); updateMenuTheme();
+  });
+  $('#mmenu-logout') && $('#mmenu-logout').addEventListener('click', function() {
+    mainMenu && mainMenu.classList.add('hidden'); logout();
+  });
+
+  // Emoji picker
+  var emojiBtn = document.querySelector('.message-input-area .icon-btn');
+  if (emojiBtn) {
+    emojiBtn.id = 'emoji-toggle-btn';
+    emojiBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleEmojiPicker(); });
+  }
+
+  // Attach btn
+  var allInputBtns = document.querySelectorAll('.message-input-area .icon-btn');
+  if (allInputBtns[1]) {
+    allInputBtns[1].id = 'attach-btn';
+  }
+  initFileSend();
+
+  console.log('Vibe Messenger tayyor!');
+});
+
+// ============================================
+// EMOJI PICKER
+// ============================================
+var EMOJIS = [
+  '😀','😂','😍','🥰','😎','🤩','🥳','😜','🤔','😭','😡','🥺',
+  '👍','👎','❤️','🔥','⭐','✅','🎉','🙏','💯','💪','🤝','👋',
+  '😊','😇','🤗','😏','😒','😔','😃','😄','😅','😆','🤣','😁',
+  '🐱','🐶','🦊','🐼','🦁','🐯','🐸','🦄','🌸','🌟','💫','✨',
+  '🍕','🍔','☕','🍜','🍣','🍰','🎂','🍎','🍓','🍊',
+  '🏠','🚗','✈️','🎮','📱','💻','🎵','🎬','📚','🌍',
+];
+
+var emojiPickerOpen = false;
+
+function toggleEmojiPicker() {
+  var picker = $('#emoji-picker-popup');
+  if (!picker) {
+    createEmojiPicker();
+    return;
+  }
+  emojiPickerOpen = !emojiPickerOpen;
+  picker.style.display = emojiPickerOpen ? 'grid' : 'none';
+}
+
+function createEmojiPicker() {
+  var existing = $('#emoji-picker-popup');
+  if (existing) { existing.remove(); }
+
+  var picker = document.createElement('div');
+  picker.id = 'emoji-picker-popup';
+  picker.style.cssText = 'position:absolute;bottom:70px;left:10px;width:300px;max-height:200px;' +
+    'overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:16px;' +
+    'padding:12px;display:grid;grid-template-columns:repeat(8,1fr);gap:4px;' +
+    'box-shadow:0 8px 32px rgba(0,0,0,.2);z-index:100;animation:fadeIn .2s ease;';
+
+  EMOJIS.forEach(function(em) {
+    var btn = document.createElement('button');
+    btn.textContent = em;
+    btn.style.cssText = 'font-size:22px;padding:4px;border-radius:8px;background:none;border:none;cursor:pointer;transition:background .15s;line-height:1;';
+    btn.addEventListener('mouseenter', function() { btn.style.background = 'var(--bg-hover)'; });
+    btn.addEventListener('mouseleave', function() { btn.style.background = 'none'; });
+    btn.addEventListener('click', function() {
+      var inp = $('#message-input');
+      if (inp) { inp.value += em; inp.focus(); }
+      picker.style.display = 'none'; emojiPickerOpen = false;
+    });
+    picker.appendChild(btn);
+  });
+
+  var area = $('.message-input-area');
+  if (area) {
+    area.style.position = 'relative';
+    area.appendChild(picker);
+  }
+  emojiPickerOpen = true;
+}
+
+// Tashqariga bosish → emoji picker yopilsin
+document.addEventListener('click', function(e) {
+  var picker = $('#emoji-picker-popup');
+  if (picker && !picker.contains(e.target) && e.target.id !== 'emoji-toggle-btn') {
+    picker.style.display = 'none'; emojiPickerOpen = false;
+  }
+});
+
+// ============================================
+// FAYL / RASM JO'NATISH
+// ============================================
+function initFileSend() {
+  var attachBtn = $('#attach-btn');
+  var fileInput = $('#chat-file-input');
+  if (!fileInput) {
+    fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'chat-file-input';
+    fileInput.accept = 'image/*,video/*,.pdf,.doc,.docx,.txt';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+  }
+  attachBtn && attachBtn.addEventListener('click', function(e) {
+    e.stopPropagation(); fileInput.click();
+  });
+  fileInput.addEventListener('change', function() {
+    var f = this.files[0]; if (!f) return;
+    if (state.activeChat === null) { showToast("Chat tanlanmagan", 'error'); return; }
+    var r = new FileReader();
+    r.onload = function(ev) {
+      var isImg = f.type.startsWith('image/');
+      var isVid = f.type.startsWith('video/');
+      var msg = {
+        id: Date.now(), time: nowTime(), sent: true, status: 'sent',
+        text: isImg ? '' : isVid ? '' : f.name,
+        fileUrl: ev.target.result,
+        fileType: isImg ? 'image' : isVid ? 'video' : 'file',
+        fileName: f.name,
+      };
+      state.chats[state.activeChat] = state.chats[state.activeChat] || [];
+      state.chats[state.activeChat].push(msg);
+      var isGC = typeof state.activeChat === 'string' &&
+        (state.activeChat.startsWith('g_') || state.activeChat.startsWith('c_'));
+      renderMessages(state.activeChat, isGC);
+      renderChats(); saveData();
+      setTimeout(function() { msg.status = 'read'; renderMessages(state.activeChat, isGC); }, 1000);
+    };
+    r.readAsDataURL(f);
+    this.value = '';
+  });
+}
+
+</script>
+</body>
+</html>
