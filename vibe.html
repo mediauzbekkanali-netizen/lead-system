@@ -1507,6 +1507,7 @@ function switchTab(name) {
 function renderChats() {
   var list = $('#chats-list'); if (!list) return;
   var q = (($('#search-input') || {}).value || '').trim().toLowerCase();
+  var qClean = q.startsWith('@') ? q.slice(1) : q;
   var html = '';
 
   // 1. Saqlangan xabarlar
@@ -1523,7 +1524,6 @@ function renderChats() {
 
   // 2. Kontaktlar
   state.contacts.forEach(function(c) {
-    var qClean = q.startsWith('@') ? q.slice(1) : q;
     if (q && !c.name.toLowerCase().includes(qClean) &&
         !(c.username||'').toLowerCase().includes(qClean) &&
         !(c.phone||'').replace(/\D/g,'').includes(qClean.replace(/\D/g,''))) return;
@@ -1544,7 +1544,7 @@ function renderChats() {
 
   // 3. Guruhlar
   Object.values(state.groups).forEach(function(grp) {
-    if (q && !grp.name.toLowerCase().includes(q)) return;
+    if (q && !grp.name.toLowerCase().includes(qClean)) return;
     var lm = getLastMsg(grp.id);
     html += '<div class="chat-item' + (state.activeChat === grp.id ? ' active' : '') + '" data-chatid="' + grp.id + '">' +
       '<div class="chat-avatar" style="background:' + (grp.photoUrl ? 'transparent' : grp.color) + '">' + avatarImg(grp) + '</div>' +
@@ -1559,7 +1559,7 @@ function renderChats() {
 
   // 4. Kanallar
   Object.values(state.channels).forEach(function(ch) {
-    if (q && !ch.name.toLowerCase().includes(q)) return;
+    if (q && !ch.name.toLowerCase().includes(qClean) && !(ch.username||'').toLowerCase().includes(qClean)) return;
     var lm = getLastMsg(ch.id);
     html += '<div class="chat-item' + (state.activeChat === ch.id ? ' active' : '') + '" data-chatid="' + ch.id + '">' +
       '<div class="chat-avatar" style="background:' + (ch.photoUrl ? 'transparent' : ch.color) + '">' + avatarImg(ch) + '</div>' +
@@ -1631,9 +1631,10 @@ function renderChats() {
 function renderContacts() {
   var list = $('#contacts-list'); if (!list) return;
   var q = (($('#contacts-search') || {}).value || '').toLowerCase();
+  var qClean = q.startsWith('@') ? q.slice(1) : q;
   var html = '';
   state.contacts.forEach(function(c) {
-    if (q && !c.name.toLowerCase().includes(q) && !(c.username||'').toLowerCase().includes(q)) return;
+    if (q && !c.name.toLowerCase().includes(qClean) && !(c.username||'').toLowerCase().includes(qClean)) return;
     html += '<div class="contact-item" style="position:relative" data-cid="' + c.id + '">' +
       '<div class="chat-avatar" style="background:' + c.color + '">' + avatarImg(c) +
       (c.online ? '<div class="online-dot"></div>' : '') + '</div>' +
@@ -2153,7 +2154,7 @@ function updateGrpUI() {
   var bar = $('#grp-selected-bar'), cnt = $('#grp-count'), btn = $('#create-group-btn');
   if (bar) renderGcChips(bar, grpSelected, function() { updateGrpUI(); renderGcContacts('grp-contacts-list', grpSelected, 'grp-search', updateGrpUI); });
   if (cnt) cnt.textContent = grpSelected.size + " a'zo tanlangan";
-  if (btn) btn.disabled = grpSelected.size < 1;
+  if (btn) btn.disabled = false;
   if (bar) bar.classList.toggle('has-items', grpSelected.size > 0);
 }
 
