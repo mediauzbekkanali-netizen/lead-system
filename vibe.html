@@ -733,8 +733,36 @@ input,textarea{ font-family:inherit; border:none; outline:none; color:var(--text
 </head>
 <body data-theme="light">
 
+<!-- GATE KIRISH -->
+<div id="gate-screen" class="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-card" style="max-width:400px">
+    <div class="login-logo">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <defs><linearGradient id="lg2" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#0284c7"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+        <rect width="80" height="80" rx="22" fill="url(#lg2)"/>
+        <path d="M15 26Q15 18 25 18L55 18Q65 18 65 26L65 44Q65 52 55 52L46 52L38 62L38 52L25 52Q15 52 15 44Z" fill="white" opacity=".95"/>
+        <circle cx="29" cy="35" r="3.5" fill="#0284c7"/><circle cx="40" cy="35" r="3.5" fill="#0284c7"/><circle cx="51" cy="35" r="3.5" fill="#0284c7"/>
+      </svg>
+    </div>
+    <h1 class="login-title">Vibe</h1>
+    <p class="login-subtitle">Tizimga kirish uchun ma'lumotlaringizni kiriting</p>
+    <div class="login-form">
+      <label class="login-label">Login</label>
+      <input type="text" id="gate-login-inp" class="login-input" placeholder="Loginni kiriting" autocomplete="username" style="text-transform:uppercase"/>
+      <label class="login-label">Parol</label>
+      <input type="password" id="gate-pass-inp" class="login-input" placeholder="••••••••" autocomplete="current-password"/>
+      <p id="gate-error" class="hidden" style="color:#ef4444;font-size:13px;margin-top:10px;text-align:center;font-weight:500">⚠️ Login yoki parol noto'g'ri!</p>
+      <button id="gate-btn" class="login-btn" style="margin-top:20px">
+        <span>Kirish</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- LOGIN -->
-<div id="login-screen" class="login-screen">
+<div id="login-screen" class="login-screen hidden">
   <div class="login-bg"></div>
 
   <!-- Step 1: Telefon -->
@@ -2394,9 +2422,15 @@ function logout() {
   state.activeChat = null;
   closeChat();
   $('#app') && $('#app').classList.add('hidden');
-  $('#login-screen') && $('#login-screen').classList.remove('hidden');
+  $('#login-screen') && $('#login-screen').classList.add('hidden');
   showStep('step-phone');
-  var pi = $('#phone-input'); if (pi) { pi.value = ''; pi.focus(); }
+  var pi = $('#phone-input'); if (pi) pi.value = '';
+  sessionStorage.removeItem('vibe_auth');
+  var gl = $('#gate-login-inp'); if (gl) gl.value = '';
+  var gp = $('#gate-pass-inp'); if (gp) { gp.value = ''; }
+  var ge = $('#gate-error'); if (ge) ge.classList.add('hidden');
+  $('#gate-screen') && $('#gate-screen').classList.remove('hidden');
+  setTimeout(function() { var gl2 = $('#gate-login-inp'); if (gl2) gl2.focus(); }, 100);
   showToast("Chiqildi!");
 }
 
@@ -2411,9 +2445,49 @@ function renderAll() {
 // ============================================
 // MAIN INIT
 // ============================================
+// ============================================
+// GATE AUTENTIFIKATSIYA
+// ============================================
+var GATE_LOGIN = 'ASADBEK';
+var GATE_PASS  = 'ASADBEKUZBUZBUZB';
+
+function doGateLogin() {
+  var l  = (($('#gate-login-inp') || {}).value || '').trim().toUpperCase();
+  var p  = (($('#gate-pass-inp')  || {}).value || '').trim();
+  var ge = $('#gate-error');
+  if (l === GATE_LOGIN && p === GATE_PASS) {
+    sessionStorage.setItem('vibe_auth', '1');
+    $('#gate-screen')  && $('#gate-screen').classList.add('hidden');
+    $('#login-screen') && $('#login-screen').classList.remove('hidden');
+    if (ge) ge.classList.add('hidden');
+  } else {
+    if (ge) ge.classList.remove('hidden');
+    var gp = $('#gate-pass-inp'); if (gp) { gp.value = ''; gp.focus(); }
+    var gs = $('#gate-screen');
+    if (gs) { gs.style.animation = 'none'; gs.offsetHeight; gs.style.animation = ''; }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   document.body.dataset.theme = state.theme;
   applyThemeUI();
+
+  // Gate tekshiruvi
+  if (sessionStorage.getItem('vibe_auth') === '1') {
+    var gs = $('#gate-screen');  if (gs) gs.classList.add('hidden');
+    var ls = $('#login-screen'); if (ls) ls.classList.remove('hidden');
+  } else {
+    setTimeout(function() { var gl = $('#gate-login-inp'); if (gl) gl.focus(); }, 200);
+  }
+
+  $('#gate-btn') && $('#gate-btn').addEventListener('click', doGateLogin);
+  $('#gate-login-inp') && $('#gate-login-inp').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var gp = $('#gate-pass-inp'); if (gp) gp.focus(); }
+  });
+  $('#gate-pass-inp') && $('#gate-pass-inp').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doGateLogin();
+  });
+
   initLogin();
 
   // Tabs
