@@ -326,6 +326,19 @@ input,textarea{ font-family:inherit; border:none; outline:none; color:var(--text
 .send-btn:active{ transform:scale(.95); }
 .send-btn svg{ width:18px; height:18px; }
 
+/* Xabar o'chirish tugmasi */
+.msg-delete-btn{
+  position:absolute; top:-7px; width:20px; height:20px;
+  border-radius:50%; background:#ef4444; color:white;
+  font-size:14px; line-height:1; display:flex; align-items:center;
+  justify-content:center; opacity:0; transition:opacity .2s;
+  cursor:pointer; border:2px solid var(--bg); z-index:5;
+  box-shadow:0 2px 6px rgba(239,68,68,.4);
+}
+.message.sent  .msg-delete-btn{ right:-7px; }
+.message.received .msg-delete-btn{ left:-7px; }
+.message:hover .msg-delete-btn{ opacity:1; }
+
 /* Modallar */
 .modal{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:50; padding:20px; animation:fadeIn .2s ease; }
 @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
@@ -1866,12 +1879,26 @@ function renderMessages(chatId, isGroupOrChannel) {
     } else {
       content = esc(m.text);
     }
-    html += '<div class="message ' + (m.sent ? 'sent' : 'received') + '">' +
+    html += '<div class="message ' + (m.sent ? 'sent' : 'received') + '" data-msgid="' + m.id + '">' +
+      '<button class="msg-delete-btn" data-delmsgid="' + m.id + '" title="O\'chirish">×</button>' +
       senderName + content +
       '<div class="message-meta"><span>' + esc(m.time) + '</span>' + tick + '</div></div>';
   });
   area.innerHTML = html;
   area.scrollTop = area.scrollHeight;
+
+  // Xabar o'chirish event lari
+  area.querySelectorAll('.msg-delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var msgId = parseInt(btn.dataset.delmsgid);
+      if (!confirm("Xabarni o'chirasizmi?")) return;
+      state.chats[chatId] = (state.chats[chatId] || []).filter(function(m) { return m.id !== msgId; });
+      renderMessages(chatId, isGroupOrChannel);
+      renderChats();
+      saveData();
+    });
+  });
 }
 
 function sendMessage() {
