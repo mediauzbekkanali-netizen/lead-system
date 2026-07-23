@@ -1566,9 +1566,10 @@ function renderChats() {
 
   // 2. Kontaktlar
   state.contacts.forEach(function(c) {
+    var qDigits = qClean.replace(/\D/g,'');
     if (q && !c.name.toLowerCase().includes(qClean) &&
         !(c.username||'').toLowerCase().includes(qClean) &&
-        !(c.phone||'').replace(/\D/g,'').includes(qClean.replace(/\D/g,''))) return;
+        !(qDigits && (c.phone||'').replace(/\D/g,'').includes(qDigits))) return;
     var lm = getLastMsg(c.id);
     var unread = (state.chats[c.id] || []).filter(function(m) { return !m.sent && !m.read; }).length;
     html += '<div class="chat-item' + (state.activeChat === c.id ? ' active' : '') + '" data-chatid="' + c.id + '">' +
@@ -1676,7 +1677,10 @@ function renderContacts() {
   var qClean = q.startsWith('@') ? q.slice(1) : q;
   var html = '';
   state.contacts.forEach(function(c) {
-    if (q && !c.name.toLowerCase().includes(qClean) && !(c.username||'').toLowerCase().includes(qClean)) return;
+    var qd = qClean.replace(/\D/g,'');
+    if (q && !c.name.toLowerCase().includes(qClean) &&
+        !(c.username||'').toLowerCase().includes(qClean) &&
+        !(qd && (c.phone||'').replace(/\D/g,'').includes(qd))) return;
     html += '<div class="contact-item" style="position:relative" data-cid="' + c.id + '">' +
       '<div class="chat-avatar" style="background:' + c.color + '">' + avatarImg(c) +
       (c.online ? '<div class="online-dot"></div>' : '') + '</div>' +
@@ -2267,9 +2271,10 @@ function doCreateChannel() {
 function renderGcContacts(listId, selectedSet, searchId, onUpdate) {
   var list = $('#' + listId); if (!list) return;
   var q = (($('#' + searchId) || {}).value || '').toLowerCase();
+  var qc = q.startsWith('@') ? q.slice(1) : q;
   var html = '';
   state.contacts.forEach(function(c) {
-    if (q && !c.name.toLowerCase().includes(q)) return;
+    if (q && !c.name.toLowerCase().includes(qc) && !(c.username||'').toLowerCase().includes(qc)) return;
     var checked = selectedSet.has(c.id);
     var av = avatarImg(c);
     html += '<div class="gc-contact-item" data-id="' + c.id + '">' +
@@ -2395,12 +2400,13 @@ function openAddMember(id, type) {
 function renderAmContacts() {
   var list = $('#am-contacts-list'); if (!list) return;
   var q = (($('#am-search') || {}).value || '').toLowerCase();
+  var qac = q.startsWith('@') ? q.slice(1) : q;
   var info = amType === 'group' ? state.groups[amId] : state.channels[amId];
   var existing = new Set(amType === 'group' ? (info && info.members || []) : (info && info.subscribers || []));
   var html = '';
   state.contacts.forEach(function(c) {
     if (existing.has(c.id)) return;
-    if (q && !c.name.toLowerCase().includes(q)) return;
+    if (q && !c.name.toLowerCase().includes(qac) && !(c.username||'').toLowerCase().includes(qac)) return;
     var checked = amSelected.has(c.id);
     html += '<div class="gc-contact-item" data-id="' + c.id + '">' +
       '<div class="gc-contact-av" style="background:' + c.color + '">' + avatarImg(c) + '</div>' +
