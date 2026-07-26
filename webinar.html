@@ -3,737 +3,213 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Bolalarni sog'lom ovqatlantiramiz! Bepul vebinar, 1-avgust</title>
-<meta name="description" content="6 oydan 6 yoshgacha bo'lgan bolalar uchun ovqatlanish asoslari. Nutritsiolog Ziyoda Xo'jaeva bilan bepul onlayn vebinar, 1-avgust, soat 19:00, Telegram orqali." />
+<title>Bolangizni sog'lom ovqatlantirishni bepulga o'rgataman, 1-avgust vebinar</title>
+<meta name="description" content="6 oydan 6 yoshgacha bo'lgan bolalar uchun ovqatlanish asoslari. Ziyoda Xo'jaeva bilan bepul vebinar, 1-avgust. Telegram kanalga qo'shiling." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f4f6ef;
-    --bg-alt: #e9ede1;
-    --surface: #ffffff;
+    --card: #ffffff;
     --text: #1c2118;
     --text-muted: #5b6552;
-    --border: #dde2d2;
+    --border: #e4e8da;
     --accent: #b8461c;
     --accent-strong: #963811;
     --accent-tint: #f4ddce;
-    --sage: #7c8f6d;
-    --radius: 18px;
-    --radius-sm: 10px;
-    --radius-pill: 999px;
-    --shadow: 0 20px 45px -20px rgba(28, 33, 24, 0.22);
+    --shadow: 0 30px 60px -28px rgba(28, 33, 24, 0.28);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #14170f;
-      --bg-alt: #1b1f14;
-      --surface: #1e2317;
+      --card: #1e2317;
       --text: #edf0e6;
       --text-muted: #a7b198;
       --border: #303827;
       --accent: #e07a45;
       --accent-strong: #f0955f;
       --accent-tint: #3a2417;
-      --sage: #93a583;
-      --shadow: 0 20px 45px -20px rgba(0, 0, 0, 0.55);
+      --shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6);
     }
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; }
-
   body {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(120% 90% at 50% -10%, var(--accent-tint) 0%, var(--bg) 55%);
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
     color: var(--text);
-    line-height: 1.5;
+    padding: 32px 18px;
     -webkit-font-smoothing: antialiased;
   }
 
-  img, svg { display: block; max-width: 100%; }
-
-  a { color: inherit; }
-
-  .wrap {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 24px;
+  .card {
+    width: 100%;
+    max-width: 620px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    box-shadow: var(--shadow);
+    padding: 32px;
   }
 
-  /* ---------- Header ---------- */
-
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .header-inner {
+  .badges {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 68px;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
     gap: 10px;
-    font-weight: 700;
-    font-size: 15px;
-    white-space: nowrap;
   }
 
-  .brand-mark {
-    width: 34px;
-    height: 34px;
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .badge .dot {
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--accent);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 800;
     flex-shrink: 0;
   }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 13px 26px;
-    border-radius: var(--radius-pill);
-    font-weight: 700;
-    font-size: 15px;
-    font-family: inherit;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-  }
-
-  .btn:active { transform: scale(0.97); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--accent) 60%, transparent);
-  }
-
-  .btn-primary:hover { background: var(--accent-strong); }
-
-  .btn-sm { padding: 10px 18px; font-size: 13.5px; }
-
-  /* ---------- Hero ---------- */
-
-  .hero {
-    padding: 56px 0 64px;
-  }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 56px;
-    align-items: center;
-  }
-
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: var(--radius-pill);
+  .badge-right {
+    padding: 7px 14px;
+    border-radius: 999px;
     background: var(--accent-tint);
     color: var(--accent-strong);
-    font-size: 13.5px;
-    font-weight: 700;
-    margin-bottom: 22px;
-  }
-
-  .eyebrow .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
   }
 
   h1 {
-    font-size: clamp(34px, 5vw, 54px);
-    line-height: 1.08;
+    font-size: clamp(28px, 5.2vw, 38px);
+    line-height: 1.18;
     letter-spacing: -0.01em;
     font-weight: 800;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
-  .hero-sub {
-    font-size: 17px;
+  h1 .highlight {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
+    text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .subtext {
+    font-size: 16px;
     color: var(--text-muted);
-    max-width: 46ch;
-    margin-bottom: 30px;
-  }
-
-  .hero-ctas {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-  }
-
-  .hero-meta {
-    font-size: 13.5px;
-    color: var(--text-muted);
-  }
-
-  .hero-meta strong { color: var(--text); }
-
-  /* Hero visual: layered organic blobs + monogram photo-frame placeholder */
-  .hero-visual {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(2px);
-  }
-
-  .blob-1 {
-    width: 78%;
-    height: 78%;
-    background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%),
-                var(--bg-alt);
-    top: 4%;
-    left: 6%;
-  }
-
-  .blob-2 {
-    width: 46%;
-    height: 46%;
-    background: color-mix(in srgb, var(--sage) 55%, var(--bg-alt));
-    bottom: 2%;
-    right: 2%;
-    opacity: 0.85;
-  }
-
-  .blob-3 {
-    width: 22%;
-    height: 22%;
-    background: var(--accent);
-    top: 10%;
-    right: 12%;
-    opacity: 0.9;
+    max-width: 52ch;
+    margin-bottom: 26px;
   }
 
   .photo-frame {
     position: relative;
-    width: 58%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 6px solid var(--surface);
-    box-shadow: var(--shadow);
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 18px;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--accent-tint), var(--border));
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    margin-bottom: 26px;
+  }
+
+  .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .photo-frame .monogram {
-    font-size: clamp(48px, 7vw, 72px);
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-  }
-
-  /* TODO: replace .photo-frame contents with a real <img src="ziyoda.jpg" alt="Ziyoda Xo'jaeva"> of the speaker */
-
-  /* ---------- Section shell ---------- */
-
-  section { padding: 72px 0; }
-
-  .section-alt { background: var(--bg-alt); }
-
-  h2 {
-    font-size: clamp(26px, 3.4vw, 36px);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    margin-bottom: 14px;
-  }
-
-  .section-lead {
-    color: var(--text-muted);
-    font-size: 16px;
-    max-width: 56ch;
-    margin-bottom: 40px;
-  }
-
-  /* ---------- Benefits bento ---------- */
-
-  .benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-  }
-
-  .benefit-card {
-    padding: 30px;
-    border-radius: var(--radius);
-    background: var(--surface);
-    border: 1px solid var(--border);
-  }
-
-  .benefit-card.tinted {
-    background: var(--accent-tint);
-    border-color: transparent;
-  }
-
-  .benefit-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: var(--accent-tint);
-    color: var(--accent-strong);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
-  }
-
-  .benefit-card.tinted .benefit-icon {
-    background: var(--surface);
-  }
-
-  .benefit-card h3 {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .benefit-card p {
-    color: var(--text-muted);
-    font-size: 14.5px;
-  }
-
-  /* ---------- Speaker split ---------- */
-
-  .speaker-grid {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 56px;
-    align-items: center;
-  }
-
-  .speaker-photo {
-    position: relative;
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius);
-    background: linear-gradient(160deg, var(--accent-tint), var(--bg-alt));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
-  }
-
-  .speaker-photo .monogram {
-    font-size: 64px;
+    font-size: 88px;
     font-weight: 800;
     color: var(--accent-strong);
   }
 
-  /* TODO: replace .speaker-photo contents with a real <img> portrait of Ziyoda Xo'jaeva */
+  /* TODO: replace the .monogram span with
+     <img src="images/ziyoda.jpg" alt="Ziyoda Xo'jaeva"> once the real photo file is added to the repo */
 
-  .speaker-role {
-    color: var(--accent-strong);
-    font-weight: 700;
-    font-size: 14.5px;
-    margin-bottom: 10px;
-  }
-
-  .speaker-grid p {
-    color: var(--text-muted);
-    font-size: 16px;
-    max-width: 54ch;
-  }
-
-  .speaker-grid p + p { margin-top: 14px; }
-
-  /* ---------- Register ---------- */
-
-  .register-panel {
-    max-width: 560px;
-    margin: 0 auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 40px;
-    box-shadow: var(--shadow);
-    text-align: center;
-  }
-
-  .register-info {
+  .cta-btn {
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin: 0 0 30px;
-    padding: 18px;
-    border-radius: var(--radius-sm);
-    background: var(--bg-alt);
-  }
-
-  .register-info div {
-    text-align: left;
-    font-size: 14px;
-  }
-
-  .register-info strong {
-    display: block;
-    font-size: 15px;
-    margin-bottom: 2px;
-  }
-
-  form { text-align: left; }
-
-  label {
-    display: block;
-    font-size: 13.5px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  input {
+    gap: 10px;
     width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-family: inherit;
-    color: var(--text);
-    background: var(--surface);
-    outline: none;
-    margin-bottom: 18px;
-    transition: border-color 0.15s ease;
+    padding: 18px;
+    border-radius: 14px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
   }
 
-  input::placeholder { color: var(--text-muted); opacity: 0.7; }
+  .cta-btn:hover { background: var(--accent-strong); }
+  .cta-btn:active { transform: scale(0.98); }
 
-  input:focus { border-color: var(--accent); }
+  .cta-btn svg { flex-shrink: 0; }
 
-  input.error { border-color: #c0392b; }
-
-  .error-msg {
-    font-size: 12.5px;
-    color: #c0392b;
-    margin-top: -12px;
-    margin-bottom: 14px;
-    display: none;
-  }
-
-  form .btn { width: 100%; padding: 15px; font-size: 16px; }
-
-  .privacy {
+  .caption {
     text-align: center;
-    font-size: 12.5px;
+    font-size: 13.5px;
     color: var(--text-muted);
     margin-top: 16px;
   }
 
-  .success {
-    display: none;
-    text-align: center;
-  }
-
-  .success .icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent-tint);
-    color: var(--accent-strong);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-  }
-
-  .success h3 { font-size: 20px; margin-bottom: 8px; }
-  .success p { color: var(--text-muted); font-size: 14.5px; }
-
-  /* ---------- Footer ---------- */
-
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 32px 0;
-  }
-
-  .footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    font-size: 13.5px;
-    color: var(--text-muted);
-  }
-
-  .footer-inner a { font-weight: 700; color: var(--accent-strong); text-decoration: none; }
-
-  /* ---------- Reveal on scroll ---------- */
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1; transform: none; transition: none; }
-    html { scroll-behavior: auto; }
-  }
-
-  /* ---------- Mobile ---------- */
-
-  @media (max-width: 860px) {
-    .hero-grid, .speaker-grid { grid-template-columns: 1fr; gap: 36px; }
-    .hero-visual { order: -1; max-width: 320px; margin: 0 auto; }
-    .speaker-photo { max-width: 260px; margin: 0 auto; }
-    .benefits-grid { grid-template-columns: 1fr; }
-    .register-panel { padding: 28px 22px; }
-    section { padding: 56px 0; }
-  }
+  .caption strong { color: var(--text); font-weight: 700; }
 
   @media (max-width: 480px) {
-    .brand span.brand-name { display: none; }
-    .register-info { flex-direction: column; gap: 14px; }
+    .card { padding: 22px; border-radius: 20px; }
+    .cta-btn { font-size: 15px; gap: 8px; padding: 16px 10px; }
   }
 </style>
 </head>
 <body>
 
-  <header>
-    <div class="wrap header-inner">
-      <div class="brand">
-        <span class="brand-mark">ZX</span>
-        <span class="brand-name">Ziyoda Xo'jaeva</span>
-      </div>
-      <a href="#register" class="btn btn-primary btn-sm">Ro'yxatdan o'tish</a>
+  <div class="card">
+    <div class="badges">
+      <span class="badge">
+        <span class="dot"></span>
+        Prikorm &amp; BLW
+      </span>
+      <span class="badge badge-right">
+        <span class="dot"></span>
+        1-avgust
+      </span>
     </div>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <div>
-          <span class="eyebrow"><span class="dot"></span>Bepul vebinar · 1-avgust, 19:00</span>
-          <h1>Bolalarni sog'lom ovqatlantiramiz!</h1>
-          <p class="hero-sub">6 oydan 6 yoshgacha bo'lgan bolalar uchun to'g'ri ovqatlanish asoslari bo'yicha bepul onlayn dars.</p>
-          <div class="hero-ctas">
-            <a href="#register" class="btn btn-primary">Ro'yxatdan o'tish</a>
-            <span class="hero-meta">Telegram orqali · <strong>1-avgust, soat 19:00</strong></span>
-          </div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="blob blob-1"></div>
-          <div class="blob blob-2"></div>
-          <div class="blob blob-3"></div>
-          <div class="photo-frame">
-            <span class="monogram">ZX</span>
-          </div>
-        </div>
-      </div>
-    </section>
+    <h1>Bolangizni 6 Oydan <span class="highlight">Sog'lom Ovqatlantirishni</span> Bepulga O'rgataman</h1>
 
-    <section class="section-alt">
-      <div class="wrap">
-        <h2 class="reveal">Vebinarda nimalarni bilib olasiz</h2>
-        <p class="section-lead reveal">To'rtta asosiy mavzu, aniq va amaliy tavsiyalar bilan.</p>
-        <div class="benefits-grid">
-          <div class="benefit-card reveal">
-            <div class="benefit-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
-            </div>
-            <h3>Prikormni qachon boshlash kerak</h3>
-            <p>6 oydan boshlab bolangizga birinchi taomlarni qanday va nimadan boshlash.</p>
-          </div>
-          <div class="benefit-card tinted reveal">
-            <div class="benefit-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8 15c1.5 1.5 6.5 1.5 8 0"/></svg>
-            </div>
-            <h3>Bola ovqatni rad etsa nima qilish</h3>
-            <p>Kapris va tanlab ovqatlanishga to'g'ri yondashish yo'llari.</p>
-          </div>
-          <div class="benefit-card reveal">
-            <div class="benefit-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
-            </div>
-            <h3>Shakar va tuz: qachon va qancha</h3>
-            <p>Ratsionga shakar va tuzni kiritish bo'yicha xavfsiz me'yorlar.</p>
-          </div>
-          <div class="benefit-card tinted reveal">
-            <div class="benefit-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
-            </div>
-            <h3>Yoshiga mos kunlik menyu</h3>
-            <p>Yosh bosqichlariga ko'ra to'g'ri porsiya va ratsion tuzish.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <p class="subtext">Bepul jonli vebinar: 6 oydan 6 yoshgacha bo'lgan bolalar uchun ovqatlanish asoslari, boshidan oxirigacha, bosqichma-bosqich.</p>
 
-    <section>
-      <div class="wrap speaker-grid">
-        <div class="speaker-photo reveal">
-          <span class="monogram">ZX</span>
-        </div>
-        <div class="reveal">
-          <h2>Vebinarni kim olib boradi</h2>
-          <span class="speaker-role">Ziyoda Xo'jaeva, nutritsiolog va prikorm mutaxassisi</span>
-          <p>6 oydan 6 yoshgacha bo'lgan bolalarni sog'lom va xavfsiz ovqatlantirish bo'yicha ilmga asoslangan, amaliyotda sinalgan tavsiyalarni sodda tilda tushuntiradi.</p>
-          <p>Vebinar davomida savollaringizga jonli javob berish imkoniyati ham bo'ladi.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="register" class="section-alt">
-      <div class="wrap">
-        <h2 class="reveal" style="text-align:center;">Bepul vebinarga yoziling</h2>
-        <p class="section-lead reveal" style="text-align:center; margin-left:auto; margin-right:auto;">O'rinlar soni cheklangan. Ismingiz va telefon raqamingizni qoldiring, qolganini o'zimiz aytamiz.</p>
-
-        <div class="register-panel reveal">
-          <div id="form-section">
-            <div class="register-info">
-              <div>
-                <strong>1-avgust</strong>
-                soat 19:00 (Toshkent)
-              </div>
-              <div>
-                <strong>Telegram</strong>
-                havola ro'yxatdan o'tgach beriladi
-              </div>
-            </div>
-
-            <form id="leadForm" novalidate>
-              <label for="name">Ismingiz</label>
-              <input type="text" id="name" name="name" placeholder="Masalan: Malika" autocomplete="name" />
-              <div class="error-msg" id="nameErr">Ism kiritilmagan</div>
-
-              <label for="phone">Telefon raqamingiz</label>
-              <input type="tel" id="phone" name="phone" placeholder="+998 90 123 45 67" autocomplete="tel" />
-              <div class="error-msg" id="phoneErr">To'g'ri raqam kiriting</div>
-
-              <button type="submit" id="submitBtn" class="btn btn-primary">Ro'yxatdan o'tish</button>
-            </form>
-
-            <p class="privacy">Ma'lumotlaringiz maxfiy saqlanadi</p>
-          </div>
-
-          <div class="success" id="success-section">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <h3>Arizangiz qabul qilindi!</h3>
-            <p>Vebinar kuni (1-avgust, soat 19:00) sizga Telegram havolasini yuboramiz.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap footer-inner">
-      <span>Ziyoda Xo'jaeva, nutritsiolog va prikorm mutaxassisi</span>
-      <a href="#" id="telegramLink">Telegram</a>
+    <div class="photo-frame">
+      <span class="monogram">ZX</span>
     </div>
-  </footer>
 
-  <!-- TODO: set the real Telegram channel/group URL on #telegramLink above -->
+    <a class="cta-btn" href="https://t.me/prikorm_blw_uz" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.05 2.93a1.5 1.5 0 0 0-1.56-.24L2.6 9.87a1.4 1.4 0 0 0 .07 2.6l4.55 1.52 1.77 5.6a1.3 1.3 0 0 0 2.16.5l2.5-2.4 4.4 3.24a1.4 1.4 0 0 0 2.22-.85l2.68-14.5a1.5 1.5 0 0 0-.9-1.65ZM8.98 13.6l8.6-6.9c.25-.2.5.13.28.35l-7.2 6.98a1.2 1.2 0 0 0-.34.68l-.27 2.4-1.07-3.5Z"/></svg>
+      Telegram kanalga qo'shilish
+    </a>
 
-  <script>
-    const form = document.getElementById("leadForm");
-    const btn  = document.getElementById("submitBtn");
-
-    function showError(inputId, errId, show) {
-      document.getElementById(inputId).classList.toggle("error", show);
-      document.getElementById(errId).style.display = show ? "block" : "none";
-    }
-
-    function validatePhone(p) {
-      return /^[\+]?[\d\s\-\(\)]{9,15}$/.test(p.trim());
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name  = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-
-      let valid = true;
-
-      if (!name) { showError("name", "nameErr", true); valid = false; }
-      else        { showError("name", "nameErr", false); }
-
-      if (!validatePhone(phone)) { showError("phone", "phoneErr", true); valid = false; }
-      else                       { showError("phone", "phoneErr", false); }
-
-      if (!valid) return;
-
-      btn.disabled = true;
-      btn.textContent = "Yuborilmoqda...";
-
-      try {
-        const res = await fetch("/api/lead", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, phone }),
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          document.getElementById("form-section").style.display = "none";
-          document.getElementById("success-section").style.display = "block";
-        } else {
-          throw new Error(data.error || "Xatolik yuz berdi");
-        }
-      } catch (err) {
-        alert("❌ " + err.message + "\nQayta urinib ko'ring.");
-        btn.disabled = false;
-        btn.textContent = "Ro'yxatdan o'tish";
-      }
-    });
-
-    const revealEls = document.querySelectorAll(".reveal");
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
-      revealEls.forEach((el) => io.observe(el));
-    } else {
-      revealEls.forEach((el) => el.classList.add("is-visible"));
-    }
-  </script>
+    <p class="caption"><strong>1-avgust</strong> &middot; Ishtirok butunlay bepul</p>
+  </div>
 
 </body>
 </html>
