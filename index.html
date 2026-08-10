@@ -84,6 +84,42 @@
   .m .v{font-size:16px;font-weight:800;margin-top:2px}
   .m.hl .v{color:var(--green)}
 
+  /* ── Trend chart ── */
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin-bottom:24px}
+  .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .chart-head .title{font-size:14px;font-weight:700}
+  .chart-head .legend{font-size:12px;color:var(--muted)}
+  .bars{display:flex;align-items:flex-end;gap:6px;height:130px;padding-top:6px}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+  .bar-wrap{width:100%;height:110px;display:flex;align-items:flex-end;justify-content:center}
+  .bar{width:70%;max-width:34px;background:linear-gradient(180deg,#5b8cff,#3f6fe0);border-radius:6px 6px 0 0;
+    min-height:3px;position:relative;transition:opacity .12s;cursor:default}
+  .bar:hover{opacity:.85}
+  .bar .tip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;white-space:nowrap;
+    background:#0a0f22;border:1px solid var(--line);color:var(--text);font-size:11px;padding:5px 8px;border-radius:8px;
+    opacity:0;pointer-events:none;transition:opacity .12s;z-index:5}
+  .bar:hover .tip{opacity:1}
+  .bar-lbl{font-size:10px;color:var(--muted);white-space:nowrap}
+
+  /* ── Modal ── */
+  .modal-back{position:fixed;inset:0;background:rgba(4,7,17,.72);backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .modal{background:var(--card);border:1px solid var(--line);border-radius:18px;width:100%;max-width:520px;
+    max-height:90vh;overflow:auto;position:relative}
+  .modal-x{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.4);color:#fff;border:none;
+    width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:14px;z-index:2}
+  .modal-thumb{aspect-ratio:16/9;background:var(--bg2);overflow:hidden}
+  .modal-thumb img{width:100%;height:100%;object-fit:cover}
+  .modal-thumb .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;color:#4b5680}
+  .modal-in{padding:20px}
+  .modal-in h3{font-size:18px;margin-bottom:4px}
+  .modal-in .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .mgrid .m .v{font-size:18px}
+  .btn-fb{display:inline-block;width:100%;text-align:center;padding:12px;background:var(--card2);
+    border:1px solid var(--line);border-radius:11px;color:var(--brand);font-weight:700;text-decoration:none;font-size:14px}
+  .btn-fb:hover{border-color:var(--brand)}
+
   .state{text-align:center;padding:70px 20px;color:var(--muted)}
   .state .big{font-size:44px;margin-bottom:14px}
   .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--brand);
@@ -139,9 +175,18 @@
 
   <div class="wrap">
     <div class="tiles" id="tiles"></div>
+    <div id="trendBox"></div>
     <div class="section-title">🎬 Aktiv reklamalar <span class="count" id="adCount">0</span></div>
     <div id="content"></div>
     <div class="foot" id="updated"></div>
+  </div>
+</div>
+
+<!-- Reklama batafsil oynasi -->
+<div id="modal" class="modal-back hidden">
+  <div class="modal">
+    <button class="modal-x" id="modalX">✕</button>
+    <div id="modalBody"></div>
   </div>
 </div>
 
@@ -215,8 +260,9 @@ async function loadAds(){
   }
 }
 
+let _ads=[], _cur="";
 function render(d){
-  const cur=d.currency||"";
+  const cur=d.currency||""; _cur=cur;
   const s=d.summary||{};
   $("adCount").textContent = s.activeAds||0;
 
@@ -228,15 +274,40 @@ function render(d){
     tile("Qamrov", fmtNum(s.reach), "reach"),
   ].join("");
 
-  const ads=d.ads||[];
+  renderTrend(d.trend||[], cur);
+
+  const ads=d.ads||[]; _ads=ads;
   if(!ads.length){
     $("content").innerHTML=`<div class="state"><div class="big">😴</div>
       Bu davrda aktiv ishlayotgan reklama topilmadi.</div>`;
   } else {
-    $("content").innerHTML = `<div class="grid">${ads.map(a=>adCard(a,cur)).join("")}</div>`;
+    $("content").innerHTML = `<div class="grid">${ads.map((a,i)=>adCard(a,cur,i)).join("")}</div>`;
+    document.querySelectorAll("[data-ad]").forEach(el=>el.onclick=()=>openModal(+el.getAttribute("data-ad")));
   }
   const t=new Date(d.updatedAt||Date.now());
   $("updated").textContent = "So'nggi yangilanish: "+t.toLocaleString("ru-RU");
+}
+
+function renderTrend(trend,cur){
+  const box=$("trendBox");
+  if(!trend || trend.length<2){ box.innerHTML=""; return; }
+  const max=Math.max(...trend.map(x=>x.spend),1);
+  const bars=trend.map(x=>{
+    const h=Math.round((x.spend/max)*100);
+    const d=new Date(x.date);
+    const lbl=isNaN(d)? x.date : (d.getDate()+"."+(d.getMonth()+1));
+    return `<div class="bar-col">
+      <div class="bar-wrap"><div class="bar" style="height:${Math.max(h,2)}%">
+        <span class="tip">${fmtMoney(x.spend,cur)} · ${fmtNum(x.results)} natija</span>
+      </div></div>
+      <div class="bar-lbl">${lbl}</div>
+    </div>`;
+  }).join("");
+  box.innerHTML=`<div class="chart-card">
+    <div class="chart-head"><span class="title">📈 Kunlik sarf</span>
+      <span class="legend">ustunga bosing/hovering — sarf va natija</span></div>
+    <div class="bars">${bars}</div>
+  </div>`;
 }
 
 function tile(label,value,sub){
@@ -246,12 +317,12 @@ function tile(label,value,sub){
 
 function esc(s){ return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
-function adCard(a,cur){
+function adCard(a,cur,i){
   const thumb = a.thumbnail
     ? `<img src="${esc(a.thumbnail)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=&quot;ph&quot;>🖼️</div>'" />`
     : `<div class="ph">🖼️</div>`;
   const vbadge = a.isVideo ? `<span class="vbadge">▶ Video</span>` : "";
-  return `<div class="ad">
+  return `<div class="ad" data-ad="${i}">
     <div class="thumb">
       ${thumb}
       <span class="badge"><span class="dot"></span> Ishlayapti</span>
@@ -271,6 +342,44 @@ function adCard(a,cur){
     </div>
   </div>`;
 }
+
+// ── Batafsil oyna ──
+function openModal(i){
+  const a=_ads[i]; if(!a) return;
+  const cur=_cur;
+  const thumb = a.thumbnail
+    ? `<img src="${esc(a.thumbnail)}" onerror="this.parentNode.innerHTML='<div class=&quot;ph&quot;>🖼️</div>'" />`
+    : `<div class="ph">🖼️</div>`;
+  const acct=String(a.account||"").replace("act_","");
+  const fbLink = acct && a.id
+    ? `https://www.facebook.com/adsmanager/manage/ads?act=${encodeURIComponent(acct)}&selected_ad_ids=${encodeURIComponent(a.id)}`
+    : "";
+  const m=(k,v)=>`<div class="m"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+  $("modalBody").innerHTML=`
+    <div class="modal-thumb">${thumb}</div>
+    <div class="modal-in">
+      <h3>${esc(a.name)}</h3>
+      <div class="sub">${esc(a.campaign||"")}${a.adset?" · "+esc(a.adset):""}${a.isVideo?" · ▶ Video":""}</div>
+      <div class="mgrid">
+        ${m(esc(a.resultLabel||"Natija"), fmtNum(a.results))}
+        ${m("Sarf", fmtMoney(a.spend,cur))}
+        ${m("Ko'rsatishlar", fmtNum(a.impressions))}
+        ${m("Qamrov", fmtNum(a.reach))}
+        ${m("Bosishlar", fmtNum(a.clicks))}
+        ${m("CTR", (Number(a.ctr||0)).toFixed(2)+"%")}
+        ${m("CPC", fmtMoney(a.cpc,cur))}
+        ${m("CPM", fmtMoney(a.cpm,cur))}
+        ${a.isVideo?m("Video ko'rish (ThruPlay)", fmtNum(a.thruplays)):""}
+        ${m("Chastota", (Number(a.frequency||0)).toFixed(2))}
+      </div>
+      ${fbLink?`<a class="btn-fb" href="${fbLink}" target="_blank" rel="noopener">Ads Manager'da ochish ↗</a>`:""}
+    </div>`;
+  $("modal").classList.remove("hidden");
+}
+function closeModal(){ $("modal").classList.add("hidden"); }
+$("modalX").addEventListener("click", closeModal);
+$("modal").addEventListener("click", (e)=>{ if(e.target.id==="modal") closeModal(); });
+document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeModal(); });
 
 // ── Boshlash ──
 if(token()) startDashboard(); else showLogin();

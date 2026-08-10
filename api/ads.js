@@ -1,5 +1,5 @@
 // GET /api/ads?range=last_7d  → kirgan loyihaning AKTIV reklamalari (Facebook'dan jonli)
-import { setCors, json, verifyToken, bearer, callGas, fetchActiveAds } from "./_lib.js";
+import { setCors, json, verifyToken, bearer, callGas, fetchActiveAds, fetchTrend } from "./_lib.js";
 
 export default async function handler(req, res) {
   setCors(res);
@@ -21,12 +21,16 @@ export default async function handler(req, res) {
     if (!p.fbToken) return json(res, 400, { ok: false, error: "Facebook token biriktirilmagan. Admin bilan bog'laning." });
     if (!p.adAccounts) return json(res, 400, { ok: false, error: "Reklama akkaunti biriktirilmagan. Admin bilan bog'laning." });
 
-    const result = await fetchActiveAds(p.fbToken, p.adAccounts, range);
+    const [result, trend] = await Promise.all([
+      fetchActiveAds(p.fbToken, p.adAccounts, range),
+      fetchTrend(p.fbToken, p.adAccounts, range).catch(() => []),
+    ]);
     return json(res, 200, {
       ok: true,
       project: { id: p.id, name: p.name },
       range,
       updatedAt: new Date().toISOString(),
+      trend,
       ...result,
     });
   } catch (err) {

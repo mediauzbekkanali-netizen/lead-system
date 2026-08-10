@@ -255,6 +255,39 @@ async function fetchAdsForAccount(token, account, range) {
   return { ads, currency };
 }
 
+// Akkaunt darajasidagi kunlik trend (grafik uchun) — best-effort
+export async function fetchTrend(token, adAccounts, range) {
+  const accounts = Array.isArray(adAccounts)
+    ? adAccounts
+    : String(adAccounts || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const preset = datePreset(range);
+  const byDate = {};
+
+  for (const acct of accounts) {
+    const acctId = String(acct).startsWith("act_") ? String(acct) : `act_${acct}`;
+    const url =
+      `https://graph.facebook.com/${FB_VERSION}/${acctId}/insights` +
+      `?fields=${encodeURIComponent("spend,impressions,actions")}` +
+      `&time_increment=1&date_preset=${preset}&limit=90` +
+      `&access_token=${encodeURIComponent(token)}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.error) continue;
+      for (const row of data.data || []) {
+        const day = row.date_start;
+        if (!day) continue;
+        if (!byDate[day]) byDate[day] = { date: day, spend: 0, results: 0, impressions: 0 };
+        byDate[day].spend += Number(row.spend || 0);
+        byDate[day].impressions += Number(row.impressions || 0);
+        byDate[day].results += extractResults(row).results;
+      }
+    } catch { /* trend muhim emas */ }
+  }
+
+  return Object.values(byDate).sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
 export async function fetchActiveAds(token, adAccounts, range) {
   const accounts = Array.isArray(adAccounts)
     ? adAccounts
