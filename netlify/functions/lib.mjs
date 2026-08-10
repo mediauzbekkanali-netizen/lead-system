@@ -1,20 +1,44 @@
-// Umumiy backend kutubxonasi (Vercel serverless funksiyalar uchun)
+// Umumiy backend kutubxonasi (Netlify serverless funksiyalar uchun)
 // Tashqi paketlarsiz — faqat Node.js "crypto" va global "fetch".
 import crypto from "node:crypto";
+
+// ─────────────────────────────────────────────────────────────
+//  Web Request/Response yordamchilari (Netlify Functions v2)
+// ─────────────────────────────────────────────────────────────
+export function jsonResponse(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+  });
+}
+
+export async function readJson(req) {
+  try { return await req.json(); }
+  catch { return {}; }
+}
+
+export function getBearer(req) {
+  const h = req.headers.get("authorization") || req.headers.get("Authorization") || "";
+  return h.startsWith("Bearer ") ? h.slice(7) : null;
+}
+
+export function query(req, key) {
+  try { return new URL(req.url).searchParams.get(key); }
+  catch { return null; }
+}
 
 // ══════════════════════════════════════════════════════════════
 //  DEMO REJIM
 //  GAS_WEBHOOK_URL sozlanmagan bo'lsa — avtomatik yoqiladi.
 //  Sayt hech qanday sozlamasiz, namuna ma'lumot bilan to'liq ishlaydi.
 //  Google Sheets + Facebook token qo'shilishi bilan avtomatik
-//  haqiqiy ma'lumotga o'tadi (bu blok ishlamay qoladi).
+//  haqiqiy ma'lumotga o'tadi.
 // ══════════════════════════════════════════════════════════════
-export const DEMO = !process.env.GAS_WEBHOOK_URL;
+export function isDemo() { return !process.env.GAS_WEBHOOK_URL; }
 export const DEMO_ADMIN_PASSWORD = "admin123";
 export const DEMO_PROJECT_LOGIN = "demo";
 export const DEMO_PROJECT_PASSWORD = "demo123";
 
-// Admin ro'yxati uchun namuna loyihalar (xotirada)
 let _demoProjects = [
   { id: "demo",    name: "Demo Biznes",  login: "demo",         adAccounts: "9988776655", hasToken: true, tokenMasked: "EAAG…d4Zx", active: true },
   { id: "p_salon", name: "Salon Beauty", login: "salon_beauty", adAccounts: "1234567890", hasToken: true, tokenMasked: "EAAG…a1Bq", active: true },
@@ -59,7 +83,6 @@ export function demoDeleteProject(id) {
   _demoProjects = _demoProjects.filter((x) => x.id !== id);
 }
 
-// Namuna aktiv reklamalar (dashboard uchun)
 export function demoAds(range) {
   const scale = ({ today: 0.15, yesterday: 0.18, last_7d: 1, last_14d: 2,
     last_30d: 4.2, this_month: 3.6, lifetime: 9 })[range] || 1;
@@ -114,7 +137,6 @@ export function demoAds(range) {
   return { ads, summary, currency };
 }
 
-// Namuna kunlik trend (grafik uchun)
 export function demoTrend(range) {
   const days = ({ today: 1, yesterday: 1, last_7d: 7, last_14d: 14,
     last_30d: 30, this_month: 30, lifetime: 30 })[range] || 7;
@@ -135,32 +157,6 @@ export function demoTrend(range) {
     });
   }
   return out;
-}
-
-// ─────────────────────────────────────────────────────────────
-//  CORS + JSON javob yordamchilari
-// ─────────────────────────────────────────────────────────────
-export function setCors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-}
-
-export function json(res, status, obj) {
-  res.status(status).json(obj);
-}
-
-export async function readBody(req) {
-  if (req.body && typeof req.body === "object") return req.body;
-  return await new Promise((resolve) => {
-    let data = "";
-    req.on("data", (c) => (data += c));
-    req.on("end", () => {
-      try { resolve(data ? JSON.parse(data) : {}); }
-      catch { resolve({}); }
-    });
-    req.on("error", () => resolve({}));
-  });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -223,11 +219,6 @@ export function verifyToken(token) {
   return body;
 }
 
-export function bearer(req) {
-  const h = req.headers.authorization || req.headers.Authorization || "";
-  return h.startsWith("Bearer ") ? h.slice(7) : null;
-}
-
 // ─────────────────────────────────────────────────────────────
 //  Google Apps Script (Sheets) — ma'lumotlar bazasi
 // ─────────────────────────────────────────────────────────────
@@ -266,17 +257,8 @@ function datePreset(range) {
   return map[range] || "last_7d";
 }
 
-// Facebook "actions" massividan tushunarli natijalarni ajratamiz
 function extractResults(insights) {
-  const out = {
-    results: 0,
-    resultLabel: "Natija",
-    leads: 0,
-    messaging: 0,
-    purchases: 0,
-    linkClicks: 0,
-    thruplays: 0,
-  };
+  const out = { results: 0, resultLabel: "Natija", leads: 0, messaging: 0, purchases: 0, linkClicks: 0, thruplays: 0 };
   if (!insights) return out;
 
   const actions = insights.actions || [];
@@ -302,7 +284,6 @@ function extractResults(insights) {
   const tp = insights.video_thruplay_watched_actions || [];
   out.thruplays = tp.length ? Number(tp[0].value || 0) : 0;
 
-  // Asosiy natija turini aniqlaymiz (qaysi biri > 0)
   if (out.leads > 0) { out.results = out.leads; out.resultLabel = "Lidlar"; }
   else if (out.messaging > 0) { out.results = out.messaging; out.resultLabel = "Yozishmalar"; }
   else if (out.purchases > 0) { out.results = out.purchases; out.resultLabel = "Xaridlar"; }
@@ -378,7 +359,6 @@ async function fetchAdsForAccount(token, account, range) {
     pages++;
   }
 
-  // Valyutani alohida so'rov bilan olamiz (bir marta)
   try {
     const cRes = await fetch(
       `https://graph.facebook.com/${FB_VERSION}/${acctId}?fields=currency&access_token=${encodeURIComponent(token)}`
@@ -390,7 +370,6 @@ async function fetchAdsForAccount(token, account, range) {
   return { ads, currency };
 }
 
-// Akkaunt darajasidagi kunlik trend (grafik uchun) — best-effort
 export async function fetchTrend(token, adAccounts, range) {
   const accounts = Array.isArray(adAccounts)
     ? adAccounts
@@ -436,7 +415,6 @@ export async function fetchActiveAds(token, adAccounts, range) {
     if (!currency && c) currency = c;
   }
 
-  // Eng ko'p sarflagan reklama tepada
   all.sort((a, b) => b.spend - a.spend);
 
   const summary = all.reduce(
