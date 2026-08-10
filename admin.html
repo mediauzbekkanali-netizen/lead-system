@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Loyihalar</title>
+<style>
+  :root{
+    --bg:#0b1020; --bg2:#111832; --card:#151d3b; --card2:#1b2547;
+    --line:#26304f; --text:#eef2ff; --muted:#93a0c4; --brand:#5b8cff;
+    --green:#28c76f; --red:#ff5d6c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  .hidden{display:none!important}
+  label{display:block;font-size:13px;font-weight:600;color:#c3cdf0;margin:0 0 6px}
+  input,select,textarea{width:100%;padding:12px 13px;background:var(--bg2);border:1px solid var(--line);
+    border-radius:10px;font-size:14px;color:var(--text);outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--brand)}
+  .field{margin-bottom:14px}
+  button{cursor:pointer;font-weight:700;border:none;border-radius:10px}
+  .primary{background:linear-gradient(135deg,#5b8cff,#3f6fe0);color:#fff;padding:12px 18px;font-size:14px}
+  .ghost{background:var(--card2);border:1px solid var(--line);color:var(--text);padding:9px 14px;font-size:13px}
+  .danger{background:rgba(255,93,108,.15);border:1px solid rgba(255,93,108,.4);color:#ff9aa4;padding:7px 12px;font-size:12px}
+  .msg{font-size:13px;margin-top:12px;padding:11px 13px;border-radius:10px;display:none}
+  .msg.err{display:block;background:rgba(255,93,108,.12);color:#ff9aa4;border:1px solid rgba(255,93,108,.3)}
+  .msg.ok{display:block;background:rgba(40,199,111,.12);color:#7ff0b0;border:1px solid rgba(40,199,111,.3)}
+
+  /* login */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:38px 32px;width:100%;max-width:380px}
+  .login-card h1{font-size:22px;margin-bottom:6px}
+  .login-card p{color:var(--muted);font-size:14px;margin-bottom:24px}
+
+  /* shell */
+  .topbar{border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px}
+  .topbar .brand{font-weight:800;color:var(--brand)}
+  .spacer{flex:1}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+  .grid2{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .panel h2{font-size:16px;margin-bottom:16px}
+
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+  .pill.on{background:rgba(40,199,111,.15);color:#7ff0b0}
+  .pill.off{background:rgba(255,93,108,.15);color:#ff9aa4}
+  .mono{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap}
+  .hint{font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div style="font-size:14px;font-weight:800;color:var(--brand);margin-bottom:18px">🔐 ADMIN PANEL</div>
+    <h1>Admin kirish</h1>
+    <p>Faqat administrator uchun.</p>
+    <form id="loginForm">
+      <div class="field"><label>Admin parol</label>
+        <input id="adminPass" type="password" placeholder="••••••••" /></div>
+      <button class="primary" id="loginBtn" type="submit" style="width:100%">Kirish</button>
+      <div class="msg err" id="loginMsg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <span class="brand">🔐 Admin — Loyihalar</span>
+    <span class="spacer"></span>
+    <a href="/" class="ghost" style="text-decoration:none">← Dashboard</a>
+    <button class="ghost" id="logoutBtn">Chiqish</button>
+  </div>
+
+  <div class="wrap">
+    <div class="grid2">
+      <!-- FORM -->
+      <div class="panel">
+        <h2 id="formTitle">➕ Yangi loyiha qo'shish</h2>
+        <input type="hidden" id="editId" />
+        <div class="field"><label>Biznes nomi</label>
+          <input id="f_name" placeholder="Masalan: Salon Beauty" /></div>
+        <div class="field"><label>Login</label>
+          <input id="f_login" placeholder="salon_beauty" autocomplete="off" /></div>
+        <div class="field"><label>Parol</label>
+          <input id="f_password" type="text" placeholder="kuchli-parol" autocomplete="off" /></div>
+        <p class="hint" id="passHint">Tahrirda: bo'sh qoldirsangiz parol o'zgarmaydi.</p>
+        <div class="field"><label>Facebook token (shu biznesniki)</label>
+          <textarea id="f_token" rows="3" placeholder="EAAG..."></textarea></div>
+        <p class="hint">Tahrirda: bo'sh qoldirsangiz eski token saqlanadi.</p>
+        <div class="field"><label>Ad Account ID(lar)</label>
+          <input id="f_accounts" placeholder="1234567890, 9876543210" /></div>
+        <p class="hint">Vergul bilan bir nechta akkaunt kiritsa bo'ladi. "act_" shart emas.</p>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="primary" id="saveBtn">Saqlash</button>
+          <button class="ghost" id="cancelBtn" style="display:none">Bekor qilish</button>
+        </div>
+        <div class="msg" id="formMsg"></div>
+      </div>
+
+      <!-- LIST -->
+      <div class="panel">
+        <h2>📋 Loyihalar ro'yxati</h2>
+        <div id="listBox">
+          <div style="color:var(--muted);padding:20px 0">Yuklanmoqda...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOKEN_KEY="admin_token";
+const $=(id)=>document.getElementById(id);
+const token=()=>localStorage.getItem(TOKEN_KEY);
+
+function showApp(){ $("loginView").classList.add("hidden"); $("appView").classList.remove("hidden"); loadList(); }
+function showLogin(){ $("appView").classList.add("hidden"); $("loginView").classList.remove("hidden"); }
+function logout(){ localStorage.removeItem(TOKEN_KEY); showLogin(); }
+$("logoutBtn").addEventListener("click", logout);
+
+function flash(el,text,type){ el.className="msg "+type; el.textContent=text; el.style.display="block";
+  if(type==="ok") setTimeout(()=>{el.style.display="none";},2500); }
+
+// ── login ──
+$("loginForm").addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  const btn=$("loginBtn");
+  btn.disabled=true; btn.textContent="...";
+  try{
+    const r=await fetch("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({password:$("adminPass").value})});
+    const d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||"Xatolik");
+    localStorage.setItem(TOKEN_KEY,d.token);
+    showApp();
+  }catch(err){ flash($("loginMsg"),err.message,"err"); }
+  finally{ btn.disabled=false; btn.textContent="Kirish"; }
+});
+
+// ── list ──
+async function loadList(){
+  try{
+    const r=await fetch("/api/admin/projects",{headers:{Authorization:"Bearer "+token()}});
+    if(r.status===401){ logout(); return; }
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||"Xatolik");
+    renderList(d.projects||[]);
+  }catch(err){ $("listBox").innerHTML=`<div style="color:#ff9aa4;padding:16px 0">${err.message}</div>`; }
+}
+
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function renderList(items){
+  if(!items.length){ $("listBox").innerHTML=`<div style="color:var(--muted);padding:16px 0">Hozircha loyiha yo'q.</div>`; return; }
+  const rows=items.map(p=>`
+    <tr>
+      <td><b>${esc(p.name)}</b><div class="mono">${esc(p.login)}</div></td>
+      <td class="mono">${esc(p.adAccounts||"—")}</td>
+      <td>${p.hasToken?`<span class="mono">${esc(p.tokenMasked)}</span>`:`<span class="pill off">yo'q</span>`}</td>
+      <td><span class="pill ${p.active?"on":"off"}">${p.active?"Faol":"O'chiq"}</span></td>
+      <td><div class="row-actions">
+        <button class="ghost" data-edit='${esc(JSON.stringify(p))}'>Tahrir</button>
+        <button class="ghost" data-toggle="${esc(p.id)}" data-active="${p.active?1:0}">${p.active?"O'chirish":"Yoqish"}</button>
+        <button class="danger" data-del="${esc(p.id)}" data-name="${esc(p.name)}">🗑</button>
+      </div></td>
+    </tr>`).join("");
+  $("listBox").innerHTML=`<table><thead><tr>
+    <th>Biznes</th><th>Ad Account</th><th>Token</th><th>Holat</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table>`;
+
+  $("listBox").querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>startEdit(JSON.parse(b.getAttribute("data-edit"))));
+  $("listBox").querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggleActive(b.getAttribute("data-toggle"),b.getAttribute("data-active")!=="1"));
+  $("listBox").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delProject(b.getAttribute("data-del"),b.getAttribute("data-name")));
+}
+
+// ── form ──
+function resetForm(){
+  $("editId").value=""; $("f_name").value=""; $("f_login").value="";
+  $("f_password").value=""; $("f_token").value=""; $("f_accounts").value="";
+  $("formTitle").textContent="➕ Yangi loyiha qo'shish";
+  $("cancelBtn").style.display="none";
+  $("f_password").placeholder="kuchli-parol";
+  $("formMsg").style.display="none";
+}
+$("cancelBtn").addEventListener("click", resetForm);
+
+function startEdit(p){
+  $("editId").value=p.id; $("f_name").value=p.name||""; $("f_login").value=p.login||"";
+  $("f_password").value=""; $("f_password").placeholder="(o'zgartirmaslik uchun bo'sh)";
+  $("f_token").value=""; $("f_token").placeholder="(o'zgartirmaslik uchun bo'sh)";
+  $("f_accounts").value=p.adAccounts||"";
+  $("formTitle").textContent="✏️ Tahrirlash: "+(p.name||"");
+  $("cancelBtn").style.display="inline-block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+$("saveBtn").addEventListener("click", async()=>{
+  const id=$("editId").value;
+  const payload={
+    name:$("f_name").value.trim(), login:$("f_login").value.trim(),
+    password:$("f_password").value, fbToken:$("f_token").value.trim(),
+    adAccounts:$("f_accounts").value.trim(),
+  };
+  const btn=$("saveBtn"); btn.disabled=true; btn.textContent="Saqlanmoqda...";
+  try{
+    let r;
+    if(id){
+      r=await fetch("/api/admin/projects",{method:"PUT",
+        headers:{"Content-Type":"application/json",Authorization:"Bearer "+token()},
+        body:JSON.stringify({id,...payload})});
+    }else{
+      if(!payload.name||!payload.login||!payload.password) throw new Error("Nom, login va parol majburiy");
+      r=await fetch("/api/admin/projects",{method:"POST",
+        headers:{"Content-Type":"application/json",Authorization:"Bearer "+token()},
+        body:JSON.stringify(payload)});
+    }
+    const d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||"Xatolik");
+    flash($("formMsg"),"Saqlandi ✅","ok");
+    resetForm(); loadList();
+  }catch(err){ flash($("formMsg"),err.message,"err"); }
+  finally{ btn.disabled=false; btn.textContent="Saqlash"; }
+});
+
+async function toggleActive(id,active){
+  try{
+    const r=await fetch("/api/admin/projects",{method:"PUT",
+      headers:{"Content-Type":"application/json",Authorization:"Bearer "+token()},
+      body:JSON.stringify({id,active})});
+    const d=await r.json(); if(!d.ok) throw new Error(d.error);
+    loadList();
+  }catch(err){ alert(err.message); }
+}
+
+async function delProject(id,name){
+  if(!confirm(`"${name}" loyihasini o'chirasizmi?`)) return;
+  try{
+    const r=await fetch("/api/admin/projects?id="+encodeURIComponent(id),{method:"DELETE",
+      headers:{Authorization:"Bearer "+token()}});
+    const d=await r.json(); if(!d.ok) throw new Error(d.error);
+    loadList();
+  }catch(err){ alert(err.message); }
+}
+
+// start
+if(token()) showApp(); else showLogin();
+</script>
+</body>
+</html>

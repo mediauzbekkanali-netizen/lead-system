@@ -1,5 +1,10 @@
 # 📋 O'rnatish Qo'llanmasi (Uzbekcha)
 
+> ℹ️ **Reklama Dashboard** (har bir biznes o'z login/paroli bilan kirib, aktiv
+> Facebook reklamalarini ko'radi) uchun **[DASHBOARD.md](DASHBOARD.md)** ni o'qing.
+> Quyidagi hujjat eski **lead-forma** (`lead.html`) uchun.
+
+
 ## Papka Tuzilishi
 
 ```
