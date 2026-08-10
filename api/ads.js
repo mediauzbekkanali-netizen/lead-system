@@ -1,5 +1,5 @@
 // GET /api/ads?range=last_7d  → kirgan loyihaning AKTIV reklamalari (Facebook'dan jonli)
-import { setCors, json, verifyToken, bearer, callGas, fetchActiveAds, fetchTrend } from "./_lib.js";
+import { setCors, json, verifyToken, bearer, callGas, fetchActiveAds, fetchTrend, DEMO, demoAds, demoTrend } from "./_lib.js";
 
 export default async function handler(req, res) {
   setCors(res);
@@ -12,6 +12,19 @@ export default async function handler(req, res) {
   }
 
   const range = (req.query && req.query.range) || "last_7d";
+
+  // ── DEMO REJIM ──
+  if (DEMO) {
+    return json(res, 200, {
+      ok: true,
+      project: { id: "demo", name: "Demo Biznes" },
+      range,
+      updatedAt: new Date().toISOString(),
+      demo: true,
+      trend: demoTrend(range),
+      ...demoAds(range),
+    });
+  }
 
   try {
     // Loyihaning saqlangan FB tokeni va ad account(lar)ini olamiz (server tarafida)

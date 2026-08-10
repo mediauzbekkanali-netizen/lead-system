@@ -1,5 +1,5 @@
 // POST /api/admin/login  → admin paneliga kirish (ADMIN_PASSWORD orqali)
-import { setCors, json, readBody, signToken } from "../_lib.js";
+import { setCors, json, readBody, signToken, DEMO, DEMO_ADMIN_PASSWORD } from "../_lib.js";
 import crypto from "node:crypto";
 
 export default async function handler(req, res) {
@@ -8,7 +8,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { ok: false, error: "Faqat POST" });
 
   const { password } = await readBody(req);
-  const expected = process.env.ADMIN_PASSWORD;
+  // Demo rejimda ADMIN_PASSWORD sozlanmagan bo'lsa — standart demo parol
+  const expected = process.env.ADMIN_PASSWORD || (DEMO ? DEMO_ADMIN_PASSWORD : "");
 
   if (!expected) {
     return json(res, 500, { ok: false, error: "ADMIN_PASSWORD sozlanmagan" });

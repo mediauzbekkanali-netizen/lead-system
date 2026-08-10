@@ -2,6 +2,141 @@
 // Tashqi paketlarsiz — faqat Node.js "crypto" va global "fetch".
 import crypto from "node:crypto";
 
+// ══════════════════════════════════════════════════════════════
+//  DEMO REJIM
+//  GAS_WEBHOOK_URL sozlanmagan bo'lsa — avtomatik yoqiladi.
+//  Sayt hech qanday sozlamasiz, namuna ma'lumot bilan to'liq ishlaydi.
+//  Google Sheets + Facebook token qo'shilishi bilan avtomatik
+//  haqiqiy ma'lumotga o'tadi (bu blok ishlamay qoladi).
+// ══════════════════════════════════════════════════════════════
+export const DEMO = !process.env.GAS_WEBHOOK_URL;
+export const DEMO_ADMIN_PASSWORD = "admin123";
+export const DEMO_PROJECT_LOGIN = "demo";
+export const DEMO_PROJECT_PASSWORD = "demo123";
+
+// Admin ro'yxati uchun namuna loyihalar (xotirada)
+let _demoProjects = [
+  { id: "demo",    name: "Demo Biznes",  login: "demo",         adAccounts: "9988776655", hasToken: true, tokenMasked: "EAAG…d4Zx", active: true },
+  { id: "p_salon", name: "Salon Beauty", login: "salon_beauty", adAccounts: "1234567890", hasToken: true, tokenMasked: "EAAG…a1Bq", active: true },
+  { id: "p_gym",   name: "Gym Pro",      login: "gym_pro",      adAccounts: "2233445566", hasToken: true, tokenMasked: "EAAG…9KpL", active: false },
+];
+
+export function demoLoginProject(login, password) {
+  if (String(login).toLowerCase() === DEMO_PROJECT_LOGIN && String(password) === DEMO_PROJECT_PASSWORD) {
+    return { id: "demo", name: "Demo Biznes", login: "demo" };
+  }
+  return null;
+}
+
+export function demoListProjects() { return _demoProjects.map((p) => ({ ...p })); }
+
+export function demoCreateProject(project) {
+  const p = {
+    id: project.id,
+    name: project.name,
+    login: project.login,
+    adAccounts: project.adAccounts || "",
+    hasToken: !!project.fbToken,
+    tokenMasked: project.fbToken ? "EAAG…" + String(project.fbToken).slice(-4) : "",
+    active: true,
+  };
+  _demoProjects.push(p);
+  return { ...p };
+}
+
+export function demoUpdateProject(id, patch) {
+  const p = _demoProjects.find((x) => x.id === id);
+  if (!p) throw new Error("Loyiha topilmadi");
+  if (patch.name !== undefined) p.name = patch.name;
+  if (patch.login !== undefined) p.login = patch.login;
+  if (patch.adAccounts !== undefined) p.adAccounts = patch.adAccounts;
+  if (patch.active !== undefined) p.active = patch.active;
+  if (patch.fbToken) { p.hasToken = true; p.tokenMasked = "EAAG…" + String(patch.fbToken).slice(-4); }
+  return { ...p };
+}
+
+export function demoDeleteProject(id) {
+  _demoProjects = _demoProjects.filter((x) => x.id !== id);
+}
+
+// Namuna aktiv reklamalar (dashboard uchun)
+export function demoAds(range) {
+  const scale = ({ today: 0.15, yesterday: 0.18, last_7d: 1, last_14d: 2,
+    last_30d: 4.2, this_month: 3.6, lifetime: 9 })[range] || 1;
+  const currency = "USD";
+
+  const base = [
+    { name: "Qishki chegirma — 50%", campaign: "Konversiya · Lidlar",   adset: "18-45 · Toshkent",  seed: "ad11", isVideo: true,  ctr: 2.34, cpm: 4.10, cpc: 0.18, frequency: 1.8, resultLabel: "Lidlar",     results: 64, spend: 132.5, impressions: 32400, reach: 18200, clicks: 760, thruplays: 9800 },
+    { name: "Bepul konsultatsiya",   campaign: "Xabarlar · Messenger",  adset: "25-40 · Ayollar",   seed: "ad12", isVideo: true,  ctr: 3.10, cpm: 3.20, cpc: 0.12, frequency: 1.5, resultLabel: "Yozishmalar", results: 41, spend: 88.0,  impressions: 27500, reach: 15400, clicks: 850, thruplays: 12100 },
+    { name: "Yangi kolleksiya 2026",  campaign: "Trafik · Sayt",         adset: "Keng auditoriya",   seed: "ad13", isVideo: true,  ctr: 1.92, cpm: 3.80, cpc: 0.20, frequency: 2.1, resultLabel: "Havola bosishlari", results: 512, spend: 104.3, impressions: 27400, reach: 13000, clicks: 512, thruplays: 8600 },
+    { name: "Aksiya: 1+1",           campaign: "Konversiya · Xarid",    adset: "Retarget · 30 kun", seed: "ad14", isVideo: false, ctr: 2.75, cpm: 5.40, cpc: 0.22, frequency: 2.6, resultLabel: "Xaridlar",   results: 23, spend: 76.8,  impressions: 14200, reach: 6100,  clicks: 390, thruplays: 0 },
+    { name: "Karusel — mahsulotlar", campaign: "Trafik · Katalog",      adset: "Lookalike 2%",      seed: "ad15", isVideo: false, ctr: 1.48, cpm: 2.90, cpc: 0.19, frequency: 1.4, resultLabel: "Havola bosishlari", results: 305, spend: 58.2,  impressions: 20100, reach: 14300, clicks: 305, thruplays: 0 },
+    { name: "Reels — sharh videosi", campaign: "Xabarlar · Instagram",  adset: "18-35 · Reels",     seed: "ad16", isVideo: true,  ctr: 3.62, cpm: 2.60, cpc: 0.10, frequency: 1.3, resultLabel: "Yozishmalar", results: 58, spend: 63.5,  impressions: 24400, reach: 19700, clicks: 883, thruplays: 15600 },
+  ];
+
+  const r2 = (n) => Math.round(n * 100) / 100;
+  const ads = base.map((a, i) => ({
+    id: "23851" + (100000 + i),
+    name: a.name,
+    status: "ACTIVE",
+    account: "act_9988776655",
+    campaign: a.campaign,
+    objective: "OUTCOME_LEADS",
+    adset: a.adset,
+    isVideo: a.isVideo,
+    thumbnail: `https://picsum.photos/seed/${a.seed}/480/300`,
+    videoId: a.isVideo ? "video_" + a.seed : "",
+    impressions: Math.round(a.impressions * scale),
+    reach: Math.round(a.reach * scale),
+    clicks: Math.round(a.clicks * scale),
+    ctr: a.ctr,
+    cpm: a.cpm,
+    cpc: a.cpc,
+    frequency: a.frequency,
+    spend: r2(a.spend * scale),
+    results: Math.round(a.results * scale),
+    resultLabel: a.resultLabel,
+    thruplays: Math.round(a.thruplays * scale),
+  }));
+
+  ads.sort((x, y) => y.spend - x.spend);
+
+  const summary = ads.reduce((s, ad) => {
+    s.activeAds += 1;
+    s.spend += ad.spend;
+    s.impressions += ad.impressions;
+    s.reach += ad.reach;
+    s.results += ad.results;
+    return s;
+  }, { activeAds: 0, spend: 0, impressions: 0, reach: 0, results: 0 });
+  summary.spend = r2(summary.spend);
+
+  return { ads, summary, currency };
+}
+
+// Namuna kunlik trend (grafik uchun)
+export function demoTrend(range) {
+  const days = ({ today: 1, yesterday: 1, last_7d: 7, last_14d: 14,
+    last_30d: 30, this_month: 30, lifetime: 30 })[range] || 7;
+  if (days < 2) return [];
+  const out = [];
+  const now = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const wave = 55 + 35 * Math.sin((i / 3.2)) + (i % 4) * 6;
+    const spend = Math.round(wave * 100) / 100;
+    const results = Math.round(spend / 2.1);
+    out.push({
+      date: d.toISOString().slice(0, 10),
+      spend,
+      results,
+      impressions: Math.round(spend * 240),
+    });
+  }
+  return out;
+}
+
 // ─────────────────────────────────────────────────────────────
 //  CORS + JSON javob yordamchilari
 // ─────────────────────────────────────────────────────────────

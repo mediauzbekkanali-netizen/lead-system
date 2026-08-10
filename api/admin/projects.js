@@ -3,7 +3,8 @@
 //   POST   {project}  → yangi loyiha yaratish
 //   PUT    {id,...}   → tahrirlash
 //   DELETE ?id=       → o'chirish
-import { setCors, json, readBody, verifyToken, bearer, hashPassword, callGas } from "../_lib.js";
+import { setCors, json, readBody, verifyToken, bearer, hashPassword, callGas,
+  DEMO, demoListProjects, demoCreateProject, demoUpdateProject, demoDeleteProject } from "../_lib.js";
 
 function requireAdmin(req, res) {
   const claims = verifyToken(bearer(req));
@@ -26,6 +27,7 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === "GET") {
+      if (DEMO) return json(res, 200, { ok: true, projects: demoListProjects(), demo: true });
       const data = await callGas("listProjects");
       return json(res, 200, { ok: true, projects: data.projects || [] });
     }
@@ -45,6 +47,7 @@ export default async function handler(req, res) {
         adAccounts: normAccounts(adAccounts),
         active: true,
       };
+      if (DEMO) return json(res, 200, { ok: true, project: demoCreateProject(project), demo: true });
       const data = await callGas("createProject", { project });
       return json(res, 200, { ok: true, project: data.project });
     }
@@ -61,6 +64,7 @@ export default async function handler(req, res) {
       if (body.adAccounts !== undefined) patch.adAccounts = normAccounts(body.adAccounts);
       if (body.active !== undefined) patch.active = !!body.active;
 
+      if (DEMO) return json(res, 200, { ok: true, project: demoUpdateProject(id, patch), demo: true });
       const data = await callGas("updateProject", { id, patch });
       return json(res, 200, { ok: true, project: data.project });
     }
@@ -68,6 +72,7 @@ export default async function handler(req, res) {
     if (req.method === "DELETE") {
       const id = (req.query && req.query.id) || (await readBody(req)).id;
       if (!id) return json(res, 400, { ok: false, error: "id majburiy" });
+      if (DEMO) { demoDeleteProject(id); return json(res, 200, { ok: true, demo: true }); }
       await callGas("deleteProject", { id });
       return json(res, 200, { ok: true });
     }

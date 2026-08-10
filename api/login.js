@@ -1,5 +1,5 @@
 // POST /api/login  → loyiha (biznes) o'z login/paroli bilan kiradi
-import { setCors, json, readBody, verifyPassword, signToken, callGas } from "./_lib.js";
+import { setCors, json, readBody, verifyPassword, signToken, callGas, DEMO, demoLoginProject } from "./_lib.js";
 
 export default async function handler(req, res) {
   setCors(res);
@@ -9,6 +9,16 @@ export default async function handler(req, res) {
   const { login, password } = await readBody(req);
   if (!login || !password) {
     return json(res, 400, { ok: false, error: "Login va parol kiriting" });
+  }
+
+  // ── DEMO REJIM ──
+  if (DEMO) {
+    const p = demoLoginProject(login, password);
+    if (!p) {
+      return json(res, 401, { ok: false, error: "Login yoki parol noto'g'ri (demo: demo / demo123)" });
+    }
+    const token = signToken({ sub: p.id, login: p.login, name: p.name, role: "project" });
+    return json(res, 200, { ok: true, token, project: p });
   }
 
   try {

@@ -148,6 +148,12 @@
       <button class="primary" id="loginBtn" type="submit">Kirish</button>
       <div class="msg err" id="loginMsg"></div>
     </form>
+    <div id="demoHint" class="hidden" style="margin-top:18px;padding:12px 14px;border-radius:12px;
+      background:rgba(91,140,255,.10);border:1px solid rgba(91,140,255,.35);font-size:13px;color:#c3cdf0">
+      🎬 <b>Demo rejim</b> — sinab ko'rish uchun:<br>
+      Login: <b style="color:#eef2ff">demo</b> &nbsp;·&nbsp; Parol: <b style="color:#eef2ff">demo123</b><br>
+      <span style="color:#93a0c4">Haqiqiy ma'lumot ulangach bu yozuv yo'qoladi.</span>
+    </div>
     <p class="foot" style="margin-top:22px">Login/parol yo'qmi? Admin bilan bog'laning.</p>
   </div>
 </div>
@@ -380,6 +386,11 @@ function closeModal(){ $("modal").classList.add("hidden"); }
 $("modalX").addEventListener("click", closeModal);
 $("modal").addEventListener("click", (e)=>{ if(e.target.id==="modal") closeModal(); });
 document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeModal(); });
+
+// ── Demo ishorasi (faqat demo rejimda) ──
+fetch(API+"/api/status").then(r=>r.json()).then(d=>{
+  if(d && d.demo){ $("demoHint").classList.remove("hidden"); }
+}).catch(()=>{});
 
 // ── Boshlash ──
 if(token()) startDashboard(); else showLogin();
