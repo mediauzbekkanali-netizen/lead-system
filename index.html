@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Reklama Dashboard</title>
+<title>Global Targeting</title>
 <style>
   :root{
     --bg:#0b1020; --bg2:#111832; --card:#151d3b; --card2:#1b2547;
@@ -11,46 +11,61 @@
     --green:#28c76f; --amber:#ffb547; --red:#ff5d6c;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:
+  body{font-family:'Inter','Segoe UI Variable Display','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter-spacing:-0.1px;background:
     radial-gradient(1200px 600px at 80% -10%, #1a2550 0%, transparent 60%), var(--bg);
     color:var(--text);min-height:100vh}
   a{color:var(--brand)}
   .hidden{display:none!important}
 
-  /* ── Login ── */
+  /* ── Yorug' (light) mavzu — mijoz tomoni ── */
+  body.light{--bg:#eef2fb;--bg2:#ffffff;--card:#ffffff;--card2:#f2f6fd;--line:#d8e0f2;--text:#0f1e3d;--muted:#5b6b8c;--brand:#2563eb;--green:#1a9e5f;--amber:#d98a1a;--red:#e0384a;
+    background:radial-gradient(1200px 600px at 80% -10%, #dbe6ff 0%, transparent 60%), var(--bg)}
+  body.light input[type=date]{color-scheme:light}
+  body.light .tile,body.light .ad,body.light .chart-card,body.light .m{box-shadow:0 2px 10px rgba(15,42,99,.05)}
+  body.light .topbar{background:rgba(255,255,255,.9)}
+
   .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-  .login-card{background:var(--card);border:1px solid var(--line);border-radius:20px;
-    padding:40px 34px;width:100%;max-width:400px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
-  .logo{font-size:15px;font-weight:800;letter-spacing:.5px;color:var(--brand);margin-bottom:22px}
-  .login-card h1{font-size:23px;margin-bottom:6px}
+  .login-card{background:var(--card);border:1px solid var(--line);border-radius:22px;
+    padding:44px 38px;width:100%;max-width:410px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+  .logo{font-size:15px;font-weight:800;letter-spacing:1.2px;color:var(--brand);margin-bottom:24px}
+  .login-card h1{font-size:27px;font-weight:800;letter-spacing:-0.5px;margin-bottom:7px}
   .login-card p.sub{color:var(--muted);font-size:14px;margin-bottom:26px}
   label{display:block;font-size:13px;font-weight:600;color:#c3cdf0;margin:0 0 6px}
-  input,select{width:100%;padding:13px 14px;background:var(--bg2);border:1px solid var(--line);
-    border-radius:11px;font-size:15px;color:var(--text);outline:none;transition:border-color .15s}
-  input:focus,select:focus{border-color:var(--brand)}
+  input,select,textarea{width:100%;padding:13px 14px;background:var(--bg2);border:1px solid var(--line);
+    border-radius:11px;font-size:15px;color:var(--text);outline:none;transition:border-color .15s;font-family:inherit}
+  input:focus,select:focus,textarea:focus{border-color:var(--brand)}
   .field{margin-bottom:16px}
   button.primary{width:100%;padding:14px;background:linear-gradient(135deg,#5b8cff,#3f6fe0);
     color:#fff;font-size:15px;font-weight:700;border:none;border-radius:11px;cursor:pointer;transition:opacity .15s}
   button.primary:hover{opacity:.92}
-  button.primary:disabled{opacity:.55;cursor:not-allowed}
   .msg{font-size:13px;margin-top:14px;padding:11px 13px;border-radius:10px;display:none}
   .msg.err{display:block;background:rgba(255,93,108,.12);color:#ff9aa4;border:1px solid rgba(255,93,108,.3)}
+  .msg.ok{display:block;background:rgba(40,199,111,.12);color:#7ff0b0;border:1px solid rgba(40,199,111,.3)}
+  .demoHint{margin-top:18px;padding:12px 14px;border-radius:12px;background:rgba(91,140,255,.10);
+    border:1px solid rgba(91,140,255,.35);font-size:13px;color:#c3cdf0;line-height:1.6}
+  .demoHint b{color:#eef2ff}
+  .switch{margin-top:20px;text-align:center;font-size:13px}
+  .switch a{cursor:pointer;font-weight:600}
 
-  /* ── App shell ── */
   .topbar{position:sticky;top:0;z-index:20;background:rgba(11,16,32,.85);backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .topbar .brand{font-weight:800;color:var(--brand);font-size:15px}
   .topbar .who{color:var(--muted);font-size:13px}
   .topbar .who b{color:var(--text)}
   .spacer{flex:1}
-  .ctrl{display:flex;align-items:center;gap:8px}
+  .ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   select.range{width:auto;padding:8px 12px;font-size:13px}
+  .dt{width:auto;padding:8px 10px;font-size:13px}
+  input[type=date]{color-scheme:dark}
+  .lg-wrap{width:100%;overflow-x:auto}
   button.ghost{background:var(--card2);border:1px solid var(--line);color:var(--text);
-    padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
+    padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
   button.ghost:hover{border-color:var(--brand)}
   .wrap{max-width:1200px;margin:0 auto;padding:22px 20px 60px}
 
-  /* ── Summary tiles ── */
+  .demo-banner{max-width:1200px;margin:14px auto 0;padding:10px 16px;border-radius:12px;
+    background:rgba(255,181,71,.12);border:1px solid rgba(255,181,71,.35);color:#ffd79a;font-size:13px;text-align:center}
+
   .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
   .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
   .tile .t-label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
@@ -61,14 +76,12 @@
   .section-title .count{background:var(--card2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;padding:2px 9px;border-radius:20px}
 
-  /* ── Ad cards ── */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
   .ad{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
-    display:flex;flex-direction:column;transition:transform .12s,border-color .12s}
+    display:flex;flex-direction:column;transition:transform .12s,border-color .12s;cursor:pointer}
   .ad:hover{transform:translateY(-3px);border-color:var(--brand)}
   .thumb{position:relative;aspect-ratio:16/10;background:var(--bg2);overflow:hidden}
   .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .thumb .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#4b5680;font-size:34px}
   .badge{position:absolute;top:10px;left:10px;background:rgba(40,199,111,.95);color:#04240f;
     font-size:11px;font-weight:800;padding:4px 9px;border-radius:20px;display:flex;align-items:center;gap:5px}
   .badge .dot{width:7px;height:7px;border-radius:50%;background:#04240f;animation:pulse 1.4s infinite}
@@ -84,7 +97,6 @@
   .m .v{font-size:16px;font-weight:800;margin-top:2px}
   .m.hl .v{color:var(--green)}
 
-  /* ── Trend chart ── */
   .chart-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin-bottom:24px}
   .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
   .chart-head .title{font-size:14px;font-weight:700}
@@ -101,7 +113,6 @@
   .bar:hover .tip{opacity:1}
   .bar-lbl{font-size:10px;color:var(--muted);white-space:nowrap}
 
-  /* ── Modal ── */
   .modal-back{position:fixed;inset:0;background:rgba(4,7,17,.72);backdrop-filter:blur(4px);
     display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
   .modal{background:var(--card);border:1px solid var(--line);border-radius:18px;width:100%;max-width:520px;
@@ -110,7 +121,6 @@
     width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:14px;z-index:2}
   .modal-thumb{aspect-ratio:16/9;background:var(--bg2);overflow:hidden}
   .modal-thumb img{width:100%;height:100%;object-fit:cover}
-  .modal-thumb .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;color:#4b5680}
   .modal-in{padding:20px}
   .modal-in h3{font-size:18px;margin-bottom:4px}
   .modal-in .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
@@ -118,50 +128,141 @@
   .mgrid .m .v{font-size:18px}
   .btn-fb{display:inline-block;width:100%;text-align:center;padding:12px;background:var(--card2);
     border:1px solid var(--line);border-radius:11px;color:var(--brand);font-weight:700;text-decoration:none;font-size:14px}
-  .btn-fb:hover{border-color:var(--brand)}
 
   .state{text-align:center;padding:70px 20px;color:var(--muted)}
-  .state .big{font-size:44px;margin-bottom:14px}
-  .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--brand);
-    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-  @keyframes spin{to{transform:rotate(360deg)}}
   .foot{color:var(--muted);font-size:12px;margin-top:26px;text-align:center}
+  .empty-chart{padding:38px 20px;text-align:center;color:var(--muted);font-weight:700;font-size:13px}
+  .empty-state{text-align:center;padding:52px 22px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:16px}
+  .empty-state .es-ic{font-size:40px;margin-bottom:12px;opacity:.85}
+  .empty-state .es-t{font-weight:800;font-size:17px;color:var(--text);margin-bottom:7px;letter-spacing:-0.3px}
+  .empty-state .es-s{font-size:13px;max-width:400px;margin:0 auto;line-height:1.65;font-weight:600}
+
+  /* admin */
+  .grid2{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .panel h2{font-size:16px;margin-bottom:16px}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+  .pill.on{background:rgba(40,199,111,.15);color:#7ff0b0}
+  .pill.off{background:rgba(255,93,108,.15);color:#ff9aa4}
+  .mono{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap}
+  .hint{font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:14px}
+  .danger{background:rgba(255,93,108,.15);border:1px solid rgba(255,93,108,.4);color:#ff9aa4;padding:7px 12px;font-size:12px;border:none;border-radius:8px;cursor:pointer;font-weight:700}
+  button.sm{padding:7px 12px;font-size:12px}
+
+  /* ═══════════ ADMIN — to'q ko'k + oq dizayn ═══════════ */
+  .adm{--a-navy:#0f2a63;--a-navy2:#0a1f4d;--a-blue:#2563eb;--a-blue2:#1d4ed8;
+    --a-bg:#eef2fb;--a-card:#ffffff;--a-field:#fbfcff;--a-line:#dbe3f4;--a-text:#0f1e3d;--a-head:#0f2a63;--a-muted:#5b6b8c;--a-blueSoft:#e8eefc;
+    background:var(--a-bg);color:var(--a-text);min-height:100vh;font-weight:700}
+  /* ── Tungi (dark) mavzu — admin tomoni ── */
+  body.dark .adm{--a-navy:#0b1a40;--a-bg:#0b1020;--a-card:#151d3b;--a-field:#1b2547;--a-line:#26304f;--a-text:#eef2ff;--a-head:#eef2ff;--a-muted:#93a0c4;--a-blueSoft:#1b2547}
+  body.dark .adm .adm-range input[type=date]{color-scheme:dark}
+  .adm .adm-top{background:linear-gradient(90deg,#0f2a63,#1d4ed8);color:#fff;padding:15px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;flex-wrap:wrap;box-shadow:0 4px 18px rgba(15,42,99,.25)}
+  .adm .adm-brand{font-weight:800;color:#fff;font-size:17px;letter-spacing:.3px}
+  .adm .adm-top .spacer{flex:1}
+  .adm .a-ghost{background:var(--a-card);border:2px solid var(--a-line);color:var(--a-text);padding:9px 15px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer}
+  .adm .a-ghost:hover{border-color:var(--a-blue);color:var(--a-blue)}
+  .adm .adm-top .a-ghost{background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.4);color:#fff}
+  .adm .adm-top .a-ghost:hover{background:rgba(255,255,255,.26);color:#fff}
+  .adm .a-primary{background:var(--a-blue);color:#fff;border:none;padding:13px 20px;border-radius:11px;font-weight:800;font-size:14px;cursor:pointer}
+  .adm .a-primary:hover{background:var(--a-blue2)}
+  .adm .adm-layout{display:grid;grid-template-columns:284px 1fr;max-width:1440px;margin:0 auto;align-items:stretch}
+  @media(max-width:820px){.adm .adm-layout{grid-template-columns:1fr}}
+  .adm .sidebar{background:var(--a-navy);min-height:calc(100vh - 62px);padding:18px 14px;display:flex;flex-direction:column;gap:5px}
+  .adm .side-title{font-size:12px;font-weight:800;letter-spacing:.7px;color:rgba(255,255,255,.55);text-transform:uppercase;padding:6px 10px 12px}
+  .adm .proj{display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:11px;cursor:pointer;font-weight:700;font-size:14px;color:#e9f0ff;border:2px solid transparent}
+  .adm .proj:hover{background:rgba(255,255,255,.10)}
+  .adm .proj.active{background:#fff;color:var(--a-navy);font-weight:800}
+  .adm .proj .dotp{width:8px;height:8px;border-radius:50%;background:#3ddc84;flex:none}
+  .adm .proj.off .dotp{background:#93a3c9}
+  .adm .proj .pname{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adm .grp-head{display:flex;align-items:center;gap:8px;padding:12px 13px;border-radius:11px;cursor:pointer;font-weight:800;font-size:14px;color:#dbe5ff;background:rgba(255,255,255,.08);margin-top:8px}
+  .adm .grp-head:hover{background:rgba(255,255,255,.14)}
+  .adm .grp-head .uni-count{margin-left:auto;background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:800;padding:1px 8px;border-radius:10px}
+  .adm .grp-head .car{font-size:11px;transition:transform .15s;color:#bcd0ff}
+  .adm .grp-head.open .car{transform:rotate(90deg)}
+  .adm .grp-items{display:none;flex-direction:column;gap:4px;padding-left:6px;margin-top:4px;border-left:2px solid rgba(255,255,255,.15);margin-left:10px}
+  .adm .grp-items.open{display:flex}
+  .adm .grp-items .proj{font-size:13px;padding:10px 12px}
+  .adm .add-btn{margin-top:auto;background:#fff;color:var(--a-navy);border:none;border-radius:12px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .adm .add-btn:hover{background:#eaf0ff}
+  .adm .main{padding:26px 28px 60px;background:var(--a-bg)}
+  .adm .m-head{font-size:22px;font-weight:800;margin-bottom:5px;color:var(--a-head)}
+  .adm .m-sub{color:var(--a-muted);font-weight:700;font-size:13px;margin-bottom:22px;line-height:1.7}
+  .adm .m-sub b{color:var(--a-text)}
+  .adm .a-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+  .adm .a-tile{background:var(--a-card);border:2px solid var(--a-line);border-radius:14px;padding:17px;box-shadow:0 2px 10px rgba(15,42,99,.05)}
+  .adm .a-tile .l{font-size:12px;font-weight:800;color:var(--a-muted);text-transform:uppercase;letter-spacing:.4px}
+  .adm .a-tile .v{font-size:25px;font-weight:800;margin-top:6px;color:var(--a-blue2)}
+  .adm .a-tile .s{font-size:12px;color:var(--a-muted);font-weight:700;margin-top:2px}
+  .adm .a-chart{background:var(--a-card);border:2px solid var(--a-line);border-radius:14px;padding:18px 18px 8px;margin-bottom:22px;box-shadow:0 2px 10px rgba(15,42,99,.05)}
+  .adm .a-chart .ct{font-weight:800;margin-bottom:8px;color:var(--a-head)}
+  .adm .lg-wrap{width:100%;overflow-x:auto}
+  .adm .lg{display:block}
+  .adm .lg-x{fill:#5b6b8c;font-size:11px;font-weight:700}
+  .adm .lg-v{fill:#1d4ed8;font-size:11px;font-weight:800}
+  .adm .lg-dot{fill:#fff;stroke:#1d4ed8;stroke-width:3}
+  .adm .a-secTitle{font-weight:800;margin-bottom:12px;color:var(--a-head);font-size:15px}
+  .adm .adm-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+  .adm .adm-actions .adm-del{color:#c0293b;border-color:#f0c2c9}
+  .adm .empty-chart{color:var(--a-muted)}
+  .adm .empty-state{background:var(--a-card);border:1px dashed var(--a-line);color:var(--a-muted)}
+  .adm .empty-state .es-t{color:var(--a-text)}
+  .adm .adm-range{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;background:var(--a-card);border:2px solid var(--a-line);border-radius:12px;padding:11px 14px;box-shadow:0 2px 10px rgba(15,42,99,.05)}
+  .adm .adm-range select,.adm .adm-range input{padding:9px 11px;border:2px solid var(--a-line);border-radius:9px;font-weight:700;font-size:13px;color:var(--a-text);background:var(--a-field);font-family:inherit;width:auto}
+  .adm .adm-range input[type=date]{color-scheme:light}
+  .adm .adm-range span{color:var(--a-muted);font-weight:800}
+  .adm .a-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .adm .a-ad{background:var(--a-card);border:2px solid var(--a-line);border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(15,42,99,.05)}
+  .adm .a-ad .a-thumb{aspect-ratio:16/10;position:relative}
+  .adm .a-ad .a-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .adm .a-ad .a-badge{position:absolute;top:9px;left:9px;background:#20b268;color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:12px}
+  .adm .a-ad .a-in{padding:12px 13px}
+  .adm .a-ad .a-nm{font-weight:800;font-size:13px;margin-bottom:8px}
+  .adm .a-ad .a-mm{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .adm .a-ad .a-mm .c{background:var(--a-blueSoft);border-radius:8px;padding:7px 9px}
+  .adm .a-ad .a-mm .c .k{font-size:10px;color:var(--a-muted);font-weight:800}
+  .adm .a-ad .a-mm .c .v{font-size:14px;font-weight:800;color:var(--a-text)}
+  .adm .form-card{background:var(--a-card);border:2px solid var(--a-line);border-radius:16px;padding:26px;max-width:520px;box-shadow:0 8px 30px rgba(15,42,99,.10)}
+  .adm .form-card h3{font-weight:800;font-size:18px;margin-bottom:18px;color:var(--a-head)}
+  .adm .fld{margin-bottom:15px}
+  .adm .fld label{display:block;font-size:13px;font-weight:800;margin-bottom:6px;color:var(--a-text)}
+  .adm .fld input,.adm .fld textarea{width:100%;padding:12px 13px;border:2px solid var(--a-line);border-radius:10px;font-size:14px;font-weight:700;color:var(--a-text);background:var(--a-field);font-family:inherit}
+  .adm .fld input:focus,.adm .fld textarea:focus{outline:none;border-color:var(--a-blue)}
+  .adm .a-msg{font-size:13px;font-weight:700;margin-top:10px;padding:10px 12px;border-radius:9px;display:none}
+  .adm .a-msg.err{display:block;background:#ffe6e9;color:#c0293b}
+  .adm .a-msg.ok{display:block;background:#e3f8ee;color:#127a45}
+  .adm.a-login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
 </style>
 </head>
 <body>
 
-<!-- ═══════════ LOGIN ═══════════ -->
-<div id="loginView" class="login-wrap">
+<!-- ═══════════ MIJOZ LOGIN ═══════════ -->
+<div id="login" class="login-wrap">
   <div class="login-card">
-    <div class="logo">📊 REKLAMA DASHBOARD</div>
-    <h1>Kabinetga kirish</h1>
-    <p class="sub">Biznesingizga berilgan login va parolni kiriting.</p>
+    <div class="logo">📊 GLOBAL TARGETING</div>
+    <h1>Tizimga kirish</h1>
+    <p class="sub">Hisobingizga kirish uchun login va parolni kiriting.</p>
     <form id="loginForm">
-      <div class="field">
-        <label for="login">Login</label>
-        <input id="login" autocomplete="username" placeholder="biznes_login" />
-      </div>
-      <div class="field">
-        <label for="password">Parol</label>
-        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" />
-      </div>
-      <button class="primary" id="loginBtn" type="submit">Kirish</button>
-      <div class="msg err" id="loginMsg"></div>
+      <div class="field"><label>Login</label>
+        <input id="l_login" autocomplete="username" placeholder="login" /></div>
+      <div class="field"><label>Parol</label>
+        <input id="l_pass" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
+      <button class="primary" type="submit">Kirish</button>
+      <div class="msg err" id="l_msg"></div>
     </form>
-    <div id="demoHint" class="hidden" style="margin-top:18px;padding:12px 14px;border-radius:12px;
-      background:rgba(91,140,255,.10);border:1px solid rgba(91,140,255,.35);font-size:13px;color:#c3cdf0">
-      🎬 <b>Demo rejim</b> — sinab ko'rish uchun:<br>
-      Login: <b style="color:#eef2ff">demo</b> &nbsp;·&nbsp; Parol: <b style="color:#eef2ff">demo123</b><br>
-      <span style="color:#93a0c4">Haqiqiy ma'lumot ulangach bu yozuv yo'qoladi.</span>
-    </div>
-    <p class="foot" style="margin-top:22px">Login/parol yo'qmi? Admin bilan bog'laning.</p>
+    <div class="switch"><a class="theme-toggle" onclick="toggleTheme()">🌙 Tungi</a></div>
   </div>
 </div>
 
-<!-- ═══════════ DASHBOARD ═══════════ -->
-<div id="appView" class="hidden">
+<!-- ═══════════ MIJOZ DASHBOARD ═══════════ -->
+<div id="clientApp" class="hidden">
   <div class="topbar">
-    <span class="brand">📊 Dashboard</span>
+    <span class="brand">📊 Global Targeting</span>
     <span class="who">Biznes: <b id="bizName">—</b></span>
     <span class="spacer"></span>
     <div class="ctrl">
@@ -173,12 +274,16 @@
         <option value="last_30d">So'nggi 30 kun</option>
         <option value="this_month">Shu oy</option>
         <option value="lifetime">Butun davr</option>
+        <option value="custom">📅 Kunlarni tanlash</option>
       </select>
-      <button class="ghost" id="refreshBtn">↻ Yangilash</button>
-      <button class="ghost" id="logoutBtn">Chiqish</button>
+      <input type="date" id="fromDate" class="dt" />
+      <span style="color:var(--muted);font-weight:700">—</span>
+      <input type="date" id="toDate" class="dt" />
+      <button class="ghost" onclick="applyCustom()">Ko'rish</button>
+      <button class="ghost theme-toggle" onclick="toggleTheme()">🌙 Tungi</button>
+      <button class="ghost" onclick="clientLogout()">Chiqish</button>
     </div>
   </div>
-
   <div class="wrap">
     <div class="tiles" id="tiles"></div>
     <div id="trendBox"></div>
@@ -188,212 +293,417 @@
   </div>
 </div>
 
-<!-- Reklama batafsil oynasi -->
+<!-- ═══════════ ADMIN PANEL ═══════════ -->
+<div id="adminApp" class="adm hidden">
+  <div class="adm-top">
+    <span class="adm-brand">🔐 Global Targeting — Admin</span>
+    <span class="spacer"></span>
+    <button class="a-ghost theme-toggle" onclick="toggleTheme()">🌙 Tungi</button>
+    <button class="a-ghost" onclick="adminLogout()">Chiqish</button>
+  </div>
+  <div class="adm-layout">
+    <aside class="sidebar">
+      <div class="side-title">Loyihalar</div>
+      <div id="projList"></div>
+      <button class="add-btn" onclick="showAddForm()">＋ Yangi loyiha</button>
+    </aside>
+    <main class="main">
+      <div id="admRangeBar" class="hidden"></div>
+      <div id="adminDash"></div>
+      <div id="addFormWrap" class="hidden"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Batafsil oyna -->
 <div id="modal" class="modal-back hidden">
   <div class="modal">
-    <button class="modal-x" id="modalX">✕</button>
+    <button class="modal-x" onclick="closeModal()">✕</button>
     <div id="modalBody"></div>
   </div>
 </div>
 
 <script>
-const API = "";                         // shu domen
-const TOKEN_KEY = "dash_token";
-const NAME_KEY  = "dash_name";
+/* ═══════════ Global Targeting — production frontend ═══════════ */
+const $=id=>document.getElementById(id);
 
-const $ = (id) => document.getElementById(id);
-const token = () => localStorage.getItem(TOKEN_KEY);
+/* ── Sana yordamchilari ── */
+function today0(){const d=new Date();d.setHours(0,0,0,0);return d;}
+function addDays(d,n){const x=new Date(d);x.setDate(d.getDate()+n);return x;}
+function fmtD(d){return d.getDate()+"."+(d.getMonth()+1);}
+function ymd(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function parseYmd(s){const p=String(s).split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function daysBetween(a,b){return Math.round((b-a)/86400000)+1;}
+function presetRange(mode){
+  const t=today0();
+  switch(mode){
+    case "today": return [t,t];
+    case "yesterday": return [addDays(t,-1),addDays(t,-1)];
+    case "last_7d": return [addDays(t,-6),t];
+    case "last_14d": return [addDays(t,-13),t];
+    case "last_30d": return [addDays(t,-29),t];
+    case "this_month": return [new Date(t.getFullYear(),t.getMonth(),1),t];
+    case "lifetime": return [addDays(t,-89),t];
+    default: return [addDays(t,-6),t];
+  }
+}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function fmtNum(n){n=Number(n||0);return n>=1000?n.toLocaleString("ru-RU"):String(Math.round(n));}
+function fmtMoney(n,c){n=Number(n||0);return n.toLocaleString("ru-RU",{maximumFractionDigits:2})+(c?" "+c:"");}
 
-function fmtNum(n){ n=Number(n||0); return n>=1000? n.toLocaleString("ru-RU") : String(Math.round(n)); }
-function fmtMoney(n,cur){ n=Number(n||0); return n.toLocaleString("ru-RU",{maximumFractionDigits:2}) + (cur? " "+cur : ""); }
+/* ── SVG placeholder (rasm bo'lmasa) ── */
+function thumbSvg(seed,isVideo){
+  const pal=[["#5b8cff","#3f6fe0"],["#28c76f","#12a45a"],["#ff5d6c","#e0384a"],["#ffb547","#f08a1d"],["#a78bfa","#7c5cf0"],["#22d3ee","#0891b2"]];
+  let h=0;for(const c of String(seed)) h=(h*31+c.charCodeAt(0))>>>0;
+  const [a,b]=pal[h%pal.length];
+  const play=isVideo?`<circle cx='240' cy='150' r='34' fill='rgba(255,255,255,.92)'/><path d='M230 132 L230 168 L260 150 Z' fill='#111'/>`:`<rect x='195' y='110' width='90' height='70' rx='8' fill='rgba(255,255,255,.85)'/><circle cx='218' cy='133' r='9' fill='#ffb547'/><path d='M205 178 L235 145 L260 170 L275 158 L275 178 Z' fill='#3a4668'/>`;
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='480' height='300'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${a}'/><stop offset='1' stop-color='${b}'/></linearGradient></defs><rect width='480' height='300' fill='url(#g)'/>${play}</svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
 
-// ── Auth flow ──
-function showApp(){ $("loginView").classList.add("hidden"); $("appView").classList.remove("hidden"); }
-function showLogin(){ $("appView").classList.add("hidden"); $("loginView").classList.remove("hidden"); }
-function logout(){ localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(NAME_KEY); showLogin(); }
+/* ── Universal chiziqli grafik ── */
+function lineChart(data,opts){
+  opts=opts||{};
+  const cL=opts.line||"#1d4ed8",cF=opts.fill||"#2563eb",cG=opts.grid||"#e6ecf9",cX=opts.x||"#5b6b8c",cV=opts.v||"#1d4ed8",cD=opts.dot||"#fff";
+  const W=720,H=210,padL=46,padR=18,padT=22,padB=30;
+  const vals=data.map(d=>d.value),n=vals.length;
+  if(n<2) return `<div class="empty-chart">Kamida 2 kunlik oraliq kerak</div>`;
+  const max=Math.max(...vals)*1.18||1;
+  const X=i=>padL+i*(W-padL-padR)/(n-1), Y=v=>padT+(1-v/max)*(H-padT-padB);
+  const pts=vals.map((v,i)=>[X(i),Y(v)]);
+  const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const area=`M ${X(0).toFixed(1)} ${Y(0).toFixed(1)} `+pts.map(p=>"L "+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L ${X(n-1).toFixed(1)} ${Y(0).toFixed(1)} Z`;
+  let grid="";
+  for(let g=0;g<=3;g++){const gy=(padT+g/3*(H-padT-padB)).toFixed(1);grid+=`<line x1="${padL}" y1="${gy}" x2="${W-padR}" y2="${gy}" stroke="${cG}" stroke-width="1"/>`;}
+  const step=Math.ceil(n/12);
+  const dots=pts.map((p,i)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4" fill="${cD}" stroke="${cL}" stroke-width="2.5"><title>${esc(data[i].label)}: ${fmtMoney(vals[i],"USD")}</title></circle>`).join("");
+  const vlabs=n<=15?pts.map((p,i)=>`<text x="${p[0].toFixed(1)}" y="${(p[1]-11).toFixed(1)}" text-anchor="middle" fill="${cV}" font-size="11" font-weight="800">${Math.round(vals[i])}</text>`).join(""):"";
+  const xlabs=data.map((d,i)=>(i%step===0||i===n-1)?`<text x="${X(i).toFixed(1)}" y="${H-10}" text-anchor="middle" fill="${cX}" font-size="11" font-weight="700">${esc(d.label)}</text>`:"").join("");
+  const uid="lg"+Math.random().toString(36).slice(2,7);
+  return `<div class="lg-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">
+    <defs><linearGradient id="${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${cF}" stop-opacity="0.26"/><stop offset="1" stop-color="${cF}" stop-opacity="0"/></linearGradient></defs>
+    ${grid}<path d="${area}" fill="url(#${uid})"/>
+    <path d="${line}" fill="none" stroke="${cL}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dots}${vlabs}${xlabs}</svg></div>`;
+}
 
-$("loginForm").addEventListener("submit", async (e)=>{
+/* ── Mavzu ── */
+function currentTheme(){return document.body.classList.contains("light")?"light":"dark";}
+function chartOpts(){
+  return currentTheme()==="light"
+    ? {line:"#1d4ed8",fill:"#2563eb",grid:"#e6ecf9",x:"#5b6b8c",v:"#1d4ed8",dot:"#fff"}
+    : {line:"#5b8cff",fill:"#5b8cff",grid:"rgba(255,255,255,.10)",x:"#93a0c4",v:"#cbd6ff",dot:"#0b1020"};
+}
+function updateThemeBtns(){const light=currentTheme()==="light";document.querySelectorAll(".theme-toggle").forEach(b=>{b.textContent=light?"🌙 Tungi":"☀️ Kunduzgi";});}
+function toggleTheme(){
+  const light=!document.body.classList.contains("light");
+  document.body.classList.toggle("light",light);
+  document.body.classList.toggle("dark",!light);
+  try{localStorage.setItem("gt_theme",light?"light":"dark");}catch(e){}
+  updateThemeBtns();
+  if(!$("clientApp").classList.contains("hidden")) loadAds();
+  if(!$("adminApp").classList.contains("hidden")&&_selProj&&!$("adminDash").classList.contains("hidden")) loadAdminDash();
+}
+
+/* ── Ko'rinishlar ── */
+function hideAll(){["login","clientApp","adminApp"].forEach(v=>$(v).classList.add("hidden"));closeModal();}
+function showLogin(){hideAll();$("login").classList.remove("hidden");$("l_login").value="";$("l_pass").value="";const m=$("l_msg");if(m)m.style.display="none";}
+
+/* ── Auth / API ── */
+let authToken=null, authRole=null, _clientProj=null;
+function saveAuth(){try{localStorage.setItem("gt_auth",JSON.stringify({t:authToken,r:authRole,p:_clientProj}));}catch(e){}}
+function logoutAll(){authToken=null;authRole=null;_clientProj=null;try{localStorage.removeItem("gt_auth");}catch(e){}showLogin();}
+async function api(path,opts){
+  opts=opts||{};
+  const headers=Object.assign({},opts.headers||{});
+  if(authToken) headers["Authorization"]="Bearer "+authToken;
+  if(opts.body && !headers["Content-Type"]) headers["Content-Type"]="application/json";
+  const res=await fetch(path,Object.assign({},opts,{headers}));
+  let d={};try{d=await res.json();}catch(e){}
+  if(res.status===401){logoutAll();throw new Error("Sessiya tugadi — qayta kiring");}
+  if(!res.ok||d.ok===false) throw new Error((d&&d.error)||("Xatolik ("+res.status+")"));
+  return d;
+}
+
+$("loginForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const btn=$("loginBtn"), msg=$("loginMsg");
-  msg.style.display="none";
-  const login=$("login").value.trim(), password=$("password").value;
-  if(!login||!password){ msg.textContent="Login va parolni kiriting"; msg.classList.add("err"); msg.style.display="block"; return; }
-  btn.disabled=true; btn.textContent="Kirilmoqda...";
+  const m=$("l_msg");m.style.display="none";
+  const login=$("l_login").value.trim(), password=$("l_pass").value;
+  if(!login||!password){m.textContent="Login va parolni kiriting";m.className="msg err";m.style.display="block";return;}
+  const btn=e.submitter||$("loginForm").querySelector("button");btn.disabled=true;const bt=btn.textContent;btn.textContent="Kirilmoqda...";
   try{
-    const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({login,password})});
-    const d=await r.json();
-    if(!r.ok||!d.ok) throw new Error(d.error||"Kirishda xatolik");
-    localStorage.setItem(TOKEN_KEY,d.token);
-    localStorage.setItem(NAME_KEY,d.project.name||d.project.login);
-    startDashboard();
-  }catch(err){ msg.textContent=err.message; msg.classList.add("err"); msg.style.display="block"; }
-  finally{ btn.disabled=false; btn.textContent="Kirish"; }
+    const d=await api("/api/login",{method:"POST",body:JSON.stringify({login,password})});
+    authToken=d.token; authRole=d.role;
+    if(d.role==="admin"){ _clientProj=null; saveAuth(); openAdmin(); }
+    else { _clientProj=d.project; saveAuth(); openClient(); }
+  }catch(err){m.textContent=err.message;m.className="msg err";m.style.display="block";}
+  finally{btn.disabled=false;btn.textContent=bt;}
 });
 
-$("logoutBtn").addEventListener("click", logout);
-$("refreshBtn").addEventListener("click", loadAds);
-$("rangeSel").addEventListener("change", loadAds);
+function openClient(){hideAll();$("clientApp").classList.remove("hidden");loadAds();}
+async function openAdmin(){hideAll();$("adminApp").classList.remove("hidden");await loadProjects();if(adminProjects[0])selectProject(adminProjects[0].id);else $("adminDash").innerHTML="<div class='empty-state'><div class='es-t'>Hozircha loyiha yo'q</div><div class='es-s'>Chapdagi «＋ Yangi loyiha» tugmasi orqali birinchi loyihani qo'shing.</div></div>";}
+function clientLogout(){logoutAll();}
+function adminLogout(){logoutAll();}
 
-// ── Dashboard ──
-function startDashboard(){
-  showApp();
-  $("bizName").textContent = localStorage.getItem(NAME_KEY) || "—";
-  loadAds();
+/* ═══════════ MIJOZ DASHBOARD ═══════════ */
+let _ads=[],_cur="";
+function currentRange(){
+  const mode=$("rangeSel").value; let from,to;
+  if(mode==="custom"){
+    const fv=$("fromDate").value,tv=$("toDate").value;
+    if(fv&&tv){from=parseYmd(fv);to=parseYmd(tv);if(from>to){const x=from;from=to;to=x;}}
+    else {[from,to]=presetRange("last_7d");}
+  } else {[from,to]=presetRange(mode);$("fromDate").value=ymd(from);$("toDate").value=ymd(to);}
+  return {from,to,days:daysBetween(from,to)};
 }
-
-function skeleton(){
-  $("tiles").innerHTML="";
-  $("content").innerHTML = `<div class="state"><div class="spinner"></div>Reklamalar Facebook'dan yuklanmoqda...</div>`;
-  $("updated").textContent="";
-}
-
+function applyCustom(){$("rangeSel").value="custom";loadAds();}
 async function loadAds(){
-  if(!token()){ showLogin(); return; }
-  skeleton();
-  const range=$("rangeSel").value;
+  if(!_clientProj){showLogin();return;}
+  $("bizName").textContent=_clientProj.name||"—";
+  const r=currentRange();_cur="USD";
+  $("content").innerHTML=`<div class="empty-chart">Yuklanmoqda…</div>`;
   try{
-    const r=await fetch(API+"/api/ads?range="+encodeURIComponent(range),{
-      headers:{ "Authorization":"Bearer "+token() }});
-    if(r.status===401){ logout(); return; }
-    const d=await r.json();
-    if(!r.ok||!d.ok) throw new Error(d.error||"Ma'lumot olinmadi");
-    render(d);
+    const d=await api(`/api/ads?from=${ymd(r.from)}&to=${ymd(r.to)}`);
+    renderClient(d,r);
   }catch(err){
-    $("tiles").innerHTML="";
-    $("content").innerHTML=`<div class="state"><div class="big">⚠️</div>${err.message}</div>`;
-    $("adCount").textContent="0";
+    $("tiles").innerHTML="";$("trendBox").innerHTML="";
+    $("content").innerHTML=`<div class="empty-state"><div class="es-ic">⚠️</div><div class="es-t">${esc(err.message)}</div></div>`;
   }
 }
-
-let _ads=[], _cur="";
-function render(d){
-  const cur=d.currency||""; _cur=cur;
-  const s=d.summary||{};
-  $("adCount").textContent = s.activeAds||0;
-
-  $("tiles").innerHTML = [
-    tile("Aktiv reklamalar", fmtNum(s.activeAds), "hozir ishlayapti"),
-    tile("Sarflangan", fmtMoney(s.spend,cur), "tanlangan davr"),
-    tile("Natijalar", fmtNum(s.results), "lid / yozishma / xarid"),
-    tile("Ko'rsatishlar", fmtNum(s.impressions), "impressions"),
-    tile("Qamrov", fmtNum(s.reach), "reach"),
+function renderClient(d,r){
+  const s=d.summary||{},cur=d.currency||"USD";_cur=cur;
+  $("adCount").textContent=fmtNum(s.activeAds||0);
+  $("tiles").innerHTML=[
+    tile("Aktiv reklamalar",fmtNum(s.activeAds||0),"hozir ishlayapti"),
+    tile("Sarflangan",fmtMoney(s.spend||0,cur),r.days+" kun"),
+    tile("Natijalar",fmtNum(s.results||0),"lid / yozishma / xarid"),
+    tile("Ko'rsatishlar",fmtNum(s.impressions||0),"impressions"),
+    tile("Qamrov",fmtNum(s.reach||0),"reach")
   ].join("");
-
-  renderTrend(d.trend||[], cur);
-
-  const ads=d.ads||[]; _ads=ads;
-  if(!ads.length){
-    $("content").innerHTML=`<div class="state"><div class="big">😴</div>
-      Bu davrda aktiv ishlayotgan reklama topilmadi.</div>`;
+  const trend=d.trend||[];
+  $("trendBox").innerHTML=`<div class="chart-card"><div class="chart-head"><span class="title">📈 Kunlik sarf</span><span class="legend">${fmtD(r.from)} — ${fmtD(r.to)} · ${r.days} kun</span></div>${trend.length>=2?lineChart(trend,chartOpts()):`<div class="empty-chart">${d.configured===false?esc(d.note||"Facebook token ulanmagan"):"Bu davrda ma'lumot yo'q"}</div>`}</div>`;
+  _ads=d.ads||[];
+  if(!_ads.length){
+    $("content").innerHTML=`<div class="empty-state"><div class="es-ic">🎬</div><div class="es-t">${d.configured===false?"Ulanish sozlanmagan":"Aktiv reklama yo'q"}</div><div class="es-s">${d.configured===false?esc(d.note||"Facebook token biriktirilmagan")+". Administrator token ulagach ko'rinadi.":"Bu davrda aktiv ishlayotgan reklama topilmadi."}</div></div>`;
   } else {
-    $("content").innerHTML = `<div class="grid">${ads.map((a,i)=>adCard(a,cur,i)).join("")}</div>`;
+    $("content").innerHTML=`<div class="grid">${_ads.map((a,i)=>adCard(a,cur,i)).join("")}</div>`;
     document.querySelectorAll("[data-ad]").forEach(el=>el.onclick=()=>openModal(+el.getAttribute("data-ad")));
   }
-  const t=new Date(d.updatedAt||Date.now());
-  $("updated").textContent = "So'nggi yangilanish: "+t.toLocaleString("ru-RU");
+  $("updated").textContent="Davr: "+fmtD(r.from)+" — "+fmtD(r.to)+" ("+r.days+" kun) · yangilandi: "+new Date().toLocaleString("ru-RU");
 }
-
-function renderTrend(trend,cur){
-  const box=$("trendBox");
-  if(!trend || trend.length<2){ box.innerHTML=""; return; }
-  const max=Math.max(...trend.map(x=>x.spend),1);
-  const bars=trend.map(x=>{
-    const h=Math.round((x.spend/max)*100);
-    const d=new Date(x.date);
-    const lbl=isNaN(d)? x.date : (d.getDate()+"."+(d.getMonth()+1));
-    return `<div class="bar-col">
-      <div class="bar-wrap"><div class="bar" style="height:${Math.max(h,2)}%">
-        <span class="tip">${fmtMoney(x.spend,cur)} · ${fmtNum(x.results)} natija</span>
-      </div></div>
-      <div class="bar-lbl">${lbl}</div>
-    </div>`;
-  }).join("");
-  box.innerHTML=`<div class="chart-card">
-    <div class="chart-head"><span class="title">📈 Kunlik sarf</span>
-      <span class="legend">ustunga bosing/hovering — sarf va natija</span></div>
-    <div class="bars">${bars}</div>
-  </div>`;
-}
-
-function tile(label,value,sub){
-  return `<div class="tile"><div class="t-label">${label}</div>
-    <div class="t-value">${value}</div><div class="t-sub">${sub}</div></div>`;
-}
-
-function esc(s){ return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-
+function tile(l,v,s){return `<div class="tile"><div class="t-label">${l}</div><div class="t-value">${v}</div><div class="t-sub">${s}</div></div>`;}
 function adCard(a,cur,i){
-  const thumb = a.thumbnail
-    ? `<img src="${esc(a.thumbnail)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=&quot;ph&quot;>🖼️</div>'" />`
-    : `<div class="ph">🖼️</div>`;
-  const vbadge = a.isVideo ? `<span class="vbadge">▶ Video</span>` : "";
-  return `<div class="ad" data-ad="${i}">
-    <div class="thumb">
-      ${thumb}
-      <span class="badge"><span class="dot"></span> Ishlayapti</span>
-      ${vbadge}
-    </div>
-    <div class="ad-body">
-      <div class="ad-name">${esc(a.name)}</div>
-      <div class="ad-camp">${esc(a.campaign||"")}</div>
-      <div class="metrics">
-        <div class="m hl"><div class="k">${esc(a.resultLabel||"Natija")}</div><div class="v">${fmtNum(a.results)}</div></div>
-        <div class="m"><div class="k">Sarf</div><div class="v">${fmtMoney(a.spend,cur)}</div></div>
-        <div class="m"><div class="k">Ko'rsatish</div><div class="v">${fmtNum(a.impressions)}</div></div>
-        <div class="m"><div class="k">CTR</div><div class="v">${(Number(a.ctr||0)).toFixed(2)}%</div></div>
-        ${a.isVideo?`<div class="m"><div class="k">Video ko'rish</div><div class="v">${fmtNum(a.thruplays)}</div></div>`:""}
-        <div class="m"><div class="k">CPM</div><div class="v">${fmtMoney(a.cpm,cur)}</div></div>
-      </div>
-    </div>
-  </div>`;
+  const vbadge=a.isVideo?`<span class="vbadge">▶ Video</span>`:"";
+  const src=a.thumbnail||thumbSvg(a.id,a.isVideo);
+  return `<div class="ad" data-ad="${i}"><div class="thumb"><img src="${esc(src)}" loading="lazy" onerror="this.src='${thumbSvg(a.id,a.isVideo)}'" />
+    <span class="badge"><span class="dot"></span> Ishlayapti</span>${vbadge}</div>
+    <div class="ad-body"><div class="ad-name">${esc(a.name)}</div><div class="ad-camp">${esc(a.campaign||"")}</div>
+    <div class="metrics">
+      <div class="m hl"><div class="k">${esc(a.resultLabel||"Natija")}</div><div class="v">${fmtNum(a.results)}</div></div>
+      <div class="m"><div class="k">Sarf</div><div class="v">${fmtMoney(a.spend,cur)}</div></div>
+      <div class="m"><div class="k">Ko'rsatish</div><div class="v">${fmtNum(a.impressions)}</div></div>
+      <div class="m"><div class="k">CTR</div><div class="v">${Number(a.ctr||0).toFixed(2)}%</div></div>
+      ${a.isVideo?`<div class="m"><div class="k">Video ko'rish</div><div class="v">${fmtNum(a.thruplays)}</div></div>`:""}
+      <div class="m"><div class="k">CPM</div><div class="v">${fmtMoney(a.cpm,cur)}</div></div>
+    </div></div></div>`;
 }
-
-// ── Batafsil oyna ──
 function openModal(i){
-  const a=_ads[i]; if(!a) return;
-  const cur=_cur;
-  const thumb = a.thumbnail
-    ? `<img src="${esc(a.thumbnail)}" onerror="this.parentNode.innerHTML='<div class=&quot;ph&quot;>🖼️</div>'" />`
-    : `<div class="ph">🖼️</div>`;
+  const a=_ads[i];if(!a)return;const cur=_cur;
+  const src=a.thumbnail||thumbSvg(a.id,a.isVideo);
   const acct=String(a.account||"").replace("act_","");
-  const fbLink = acct && a.id
-    ? `https://www.facebook.com/adsmanager/manage/ads?act=${encodeURIComponent(acct)}&selected_ad_ids=${encodeURIComponent(a.id)}`
-    : "";
+  const fbLink=acct&&a.id?`https://www.facebook.com/adsmanager/manage/ads?act=${encodeURIComponent(acct)}&selected_ad_ids=${encodeURIComponent(a.id)}`:"";
   const m=(k,v)=>`<div class="m"><div class="k">${k}</div><div class="v">${v}</div></div>`;
-  $("modalBody").innerHTML=`
-    <div class="modal-thumb">${thumb}</div>
-    <div class="modal-in">
-      <h3>${esc(a.name)}</h3>
-      <div class="sub">${esc(a.campaign||"")}${a.adset?" · "+esc(a.adset):""}${a.isVideo?" · ▶ Video":""}</div>
-      <div class="mgrid">
-        ${m(esc(a.resultLabel||"Natija"), fmtNum(a.results))}
-        ${m("Sarf", fmtMoney(a.spend,cur))}
-        ${m("Ko'rsatishlar", fmtNum(a.impressions))}
-        ${m("Qamrov", fmtNum(a.reach))}
-        ${m("Bosishlar", fmtNum(a.clicks))}
-        ${m("CTR", (Number(a.ctr||0)).toFixed(2)+"%")}
-        ${m("CPC", fmtMoney(a.cpc,cur))}
-        ${m("CPM", fmtMoney(a.cpm,cur))}
-        ${a.isVideo?m("Video ko'rish (ThruPlay)", fmtNum(a.thruplays)):""}
-        ${m("Chastota", (Number(a.frequency||0)).toFixed(2))}
-      </div>
-      ${fbLink?`<a class="btn-fb" href="${fbLink}" target="_blank" rel="noopener">Ads Manager'da ochish ↗</a>`:""}
+  $("modalBody").innerHTML=`<div class="modal-thumb"><img src="${esc(src)}" onerror="this.src='${thumbSvg(a.id,a.isVideo)}'" /></div>
+    <div class="modal-in"><h3>${esc(a.name)}</h3>
+    <div class="sub">${esc(a.campaign||"")}${a.adset?" · "+esc(a.adset):""}${a.isVideo?" · ▶ Video":""}</div>
+    <div class="mgrid">
+      ${m(esc(a.resultLabel||"Natija"),fmtNum(a.results))}${m("Sarf",fmtMoney(a.spend,cur))}
+      ${m("Ko'rsatishlar",fmtNum(a.impressions))}${m("Qamrov",fmtNum(a.reach))}
+      ${m("Bosishlar",fmtNum(a.clicks))}${m("CTR",Number(a.ctr||0).toFixed(2)+"%")}
+      ${m("CPC",fmtMoney(a.cpc,cur))}${m("CPM",fmtMoney(a.cpm,cur))}
+      ${a.isVideo?m("Video ko'rish (ThruPlay)",fmtNum(a.thruplays)):""}${m("Chastota",Number(a.frequency||0).toFixed(2))}
+    </div>
+    ${fbLink?`<a class="btn-fb" href="${fbLink}" target="_blank" rel="noopener">Ads Manager'da ochish ↗</a>`:""}
     </div>`;
   $("modal").classList.remove("hidden");
 }
-function closeModal(){ $("modal").classList.add("hidden"); }
-$("modalX").addEventListener("click", closeModal);
-$("modal").addEventListener("click", (e)=>{ if(e.target.id==="modal") closeModal(); });
-document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeModal(); });
+function closeModal(){const md=$("modal");if(md)md.classList.add("hidden");}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
 
-// ── Demo ishorasi (faqat demo rejimda) ──
-fetch(API+"/api/status").then(r=>r.json()).then(d=>{
-  if(d && d.demo){ $("demoHint").classList.remove("hidden"); }
-}).catch(()=>{});
+/* ═══════════ ADMIN ═══════════ */
+let adminProjects=[], _selProj=null, _admReport=null;
+let _admRange={mode:"last_7d",from:null,to:null};
 
-// ── Boshlash ──
-if(token()) startDashboard(); else showLogin();
+async function loadProjects(){
+  try{const d=await api("/api/admin/projects");adminProjects=d.projects||[];}
+  catch(err){adminProjects=[];$("projList").innerHTML=`<div style="color:#ff9aa4;padding:12px;font-size:13px">${esc(err.message)}</div>`;return;}
+  renderProjList();
+}
+function projItem(p){
+  return `<div class="proj ${p.active?'':'off'}" data-pid="${esc(p.id)}" onclick="selectProject('${esc(p.id)}')">
+    <span class="dotp"></span><span class="pname">${esc(p.name)}</span></div>`;
+}
+function renderProjList(){
+  const flat=adminProjects.filter(p=>!p.group);
+  const groups={};
+  adminProjects.filter(p=>p.group).forEach(p=>{(groups[p.group]=groups[p.group]||[]).push(p);});
+  let html=flat.map(projItem).join("");
+  Object.keys(groups).forEach((g,gi)=>{
+    const gid="grp"+gi;
+    html+=`<div class="grp-head" onclick="toggleGrp('${gid}')" id="${gid}_h">🎓 ${esc(g)}<span class="uni-count">${groups[g].length}</span><span class="car">▶</span></div>
+      <div class="grp-items" id="${gid}_i">${groups[g].map(projItem).join("")}</div>`;
+  });
+  $("projList").innerHTML=html||`<div style="color:rgba(255,255,255,.6);padding:12px;font-size:13px">Loyiha yo'q</div>`;
+  highlightActive();
+}
+function toggleGrp(gid){$(gid+"_h").classList.toggle("open");$(gid+"_i").classList.toggle("open");}
+function highlightActive(){document.querySelectorAll(".adm .proj").forEach(el=>el.classList.toggle("active",el.getAttribute("data-pid")===_selProj));}
+
+function admDates(){
+  if(_admRange.mode==="custom"&&_admRange.from&&_admRange.to) return [_admRange.from,_admRange.to];
+  return presetRange(_admRange.mode);
+}
+function renderAdmRangeBar(){
+  const [f,t]=admDates();
+  $("admRangeBar").classList.remove("hidden");
+  $("admRangeBar").innerHTML=`<div class="adm-range">
+    <b style="color:var(--a-head)">🗓 Hisobot davri:</b>
+    <select id="admMode" onchange="admModeChange()">
+      <option value="today">Bugun</option><option value="yesterday">Kecha</option>
+      <option value="last_7d">So'nggi 7 kun</option><option value="last_14d">So'nggi 14 kun</option>
+      <option value="last_30d">So'nggi 30 kun</option><option value="this_month">Shu oy</option>
+      <option value="lifetime">Butun davr</option><option value="custom">📅 Kunlarni tanlash</option>
+    </select>
+    <input type="date" id="admFrom" value="${ymd(f)}"/><span>—</span><input type="date" id="admTo" value="${ymd(t)}"/>
+    <button class="a-primary" style="padding:9px 16px" onclick="admApply()">Ko'rish</button>
+  </div>`;
+  $("admMode").value=_admRange.mode;
+}
+function admModeChange(){
+  _admRange.mode=$("admMode").value;
+  if(_admRange.mode!=="custom"){const [f,t]=presetRange(_admRange.mode);_admRange.from=f;_admRange.to=t;$("admFrom").value=ymd(f);$("admTo").value=ymd(t);}
+  loadAdminDash();
+}
+function admApply(){
+  const fv=$("admFrom").value,tv=$("admTo").value;
+  if(fv&&tv){let f=parseYmd(fv),t=parseYmd(tv);if(f>t){const x=f;f=t;t=x;}_admRange.mode="custom";_admRange.from=f;_admRange.to=t;$("admMode").value="custom";}
+  loadAdminDash();
+}
+
+function selectProject(id){
+  _selProj=id;
+  $("addFormWrap").classList.add("hidden");
+  $("adminDash").classList.remove("hidden");
+  const p=adminProjects.find(x=>x.id===id);
+  renderAdmRangeBar();highlightActive();
+  loadAdminDash();
+}
+async function loadAdminDash(){
+  const p=adminProjects.find(x=>x.id===_selProj);if(!p)return;
+  const [from,to]=admDates(), days=daysBetween(from,to);
+  $("adminDash").innerHTML=renderAdminHead(p)+`<div class="empty-chart">Yuklanmoqda…</div>`;
+  try{
+    const d=await api(`/api/ads?projectId=${encodeURIComponent(p.id)}&from=${ymd(from)}&to=${ymd(to)}`);
+    _admReport=d; renderAdminDash(p,d,from,to,days);
+  }catch(err){
+    $("adminDash").innerHTML=renderAdminHead(p)+`<div class="empty-state"><div class="es-ic">⚠️</div><div class="es-t">${esc(err.message)}</div></div>`;
+  }
+}
+function renderAdminHead(p){
+  const tokenState=p.hasToken?`<b style="color:#127a45">ulangan (${esc(p.tokenMasked||"")})</b>`:`<b style="color:#c0293b">ulanmagan</b>`;
+  return `<div class="m-head">${esc(p.name)}</div>
+    <div class="m-sub">Login: <b>${p.login?esc(p.login):"(o'rnatilmagan)"}</b> · Ad Account: <b>${p.adAccounts?esc(p.adAccounts):"(o'rnatilmagan)"}</b> · Token: ${tokenState} · Holat: <b style="color:${p.active?'#127a45':'#c0293b'}">${p.active?"Faol":"O'chiq"}</b></div>
+    <div class="adm-actions">
+      <button class="a-primary" style="padding:9px 15px" onclick="showEditForm('${esc(p.id)}')">${p.login?"✏️ Login/parol o'zgartirish":"🔑 Login/parol o'rnatish"}</button>
+      <button class="a-ghost" onclick="toggleActiveP('${esc(p.id)}')">${p.active?"⏸ Nofaol qilish":"▶ Faollashtirish"}</button>
+      <button class="a-ghost adm-del" onclick="delProjectP('${esc(p.id)}')">🗑 O'chirish</button>
+    </div>`;
+}
+function renderAdminDash(p,d,from,to,days){
+  const s=d.summary||{};
+  const tiles=[
+    ["Aktiv reklamalar",fmtNum(s.activeAds||0),"hozir ishlayapti"],
+    ["Sarflangan",fmtMoney(s.spend||0,d.currency||"USD"),days+" kun"],
+    ["Natijalar",fmtNum(s.results||0),"lid / yozishma / xarid"],
+    ["Ko'rsatishlar",fmtNum(s.impressions||0),"impressions"],
+    ["Qamrov",fmtNum(s.reach||0),"reach"]
+  ].map(t=>`<div class="a-tile"><div class="l">${t[0]}</div><div class="v">${t[1]}</div><div class="s">${t[2]}</div></div>`).join("");
+  const trend=d.trend||[];
+  const chart=trend.length>=2?lineChart(trend,chartOpts()):`<div class="empty-chart">${d.configured===false?esc(d.note||"Facebook token ulanmagan"):"Bu davrda ma'lumot yo'q"}</div>`;
+  const ads=d.ads||[];
+  const adsHtml=ads.length
+    ? `<div class="a-grid">${ads.slice(0,8).map(a=>{const src=a.thumbnail||thumbSvg(a.id,a.isVideo);return `<div class="a-ad"><div class="a-thumb"><img src="${esc(src)}" onerror="this.src='${thumbSvg(a.id,a.isVideo)}'"/><span class="a-badge">● Ishlayapti</span></div><div class="a-in"><div class="a-nm">${esc(a.name)}</div><div class="a-mm"><div class="c"><div class="k">${esc(a.resultLabel||"Natija")}</div><div class="v">${fmtNum(a.results)}</div></div><div class="c"><div class="k">Sarf</div><div class="v">${fmtMoney(a.spend,d.currency||"USD")}</div></div></div></div></div>`;}).join("")}</div>`
+    : `<div class="empty-state"><div class="es-ic">🎬</div><div class="es-t">${d.configured===false?"Ulanish sozlanmagan":"Aktiv reklama yo'q"}</div><div class="es-s">${d.configured===false?esc(d.note||"Facebook token biriktirilmagan"):"Bu davrda aktiv reklama topilmadi."}</div></div>`;
+  $("adminDash").innerHTML=renderAdminHead(p)+`
+    <div class="a-tiles">${tiles}</div>
+    <div class="a-chart"><div class="ct">📈 Kunlik sarf · ${fmtD(from)} — ${fmtD(to)}</div>${chart}</div>
+    <div class="a-secTitle">🎬 Aktiv reklamalar</div>${adsHtml}`;
+}
+
+/* ── Loyiha formasi (qo'shish / tahrirlash) ── */
+function openProjectForm(mode,id){
+  $("adminDash").classList.add("hidden");
+  $("admRangeBar").classList.add("hidden");
+  document.querySelectorAll(".adm .proj").forEach(el=>el.classList.remove("active"));
+  const p=(mode==="edit")?adminProjects.find(x=>x.id===id):null;
+  const w=$("addFormWrap");w.classList.remove("hidden");
+  w.innerHTML=`<div class="form-card">
+    <h3>${p?"✏️ Loyihani tahrirlash":"➕ Yangi loyiha qo'shish"}</h3>
+    <input type="hidden" id="n_eid" value="${p?esc(p.id):""}"/>
+    <div class="fld"><label>Loyiha (biznes) nomi</label><input id="n_name" value="${p?esc(p.name):""}" placeholder="Masalan: Mono Mebel"/></div>
+    <div class="fld"><label>Loyiha egasi — Login</label><input id="n_login" value="${p?esc(p.login):""}" placeholder="mono_mebel" autocomplete="off"/></div>
+    <div class="fld"><label>Parol ${p?"— yangi parol (bo'sh = o'zgarmaydi)":""}</label><input id="n_pass" type="text" placeholder="${p?"(o'zgarmaydi)":"kuchli-parol"}" autocomplete="off"/></div>
+    <div class="fld"><label>Facebook token ${p?"(bo'sh = o'zgarmaydi)":""}</label><textarea id="n_token" rows="2" placeholder="${p&&p.hasToken?"(ulangan — o'zgartirish uchun yangisini yozing)":"EAAG..."}"></textarea></div>
+    <div class="fld"><label>Ad Account ID(lar)</label><input id="n_id" value="${p?esc(p.adAccounts||""):""}" placeholder="1234567890, 9876543210"/></div>
+    <div class="fld"><label>Guruh (ixtiyoriy — masalan «Universitetlar»)</label><input id="n_group" value="${p?esc(p.group||""):""}" placeholder="bo'sh qoldirsangiz — guruhsiz"/></div>
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="a-primary" id="n_save" onclick="saveProjectForm()">Saqlash</button>
+      <button class="a-ghost" onclick="cancelForm()">Bekor qilish</button>
+    </div>
+    <div class="a-msg" id="n_msg"></div>
+  </div>`;
+}
+function showAddForm(){openProjectForm("add");}
+function showEditForm(id){openProjectForm("edit",id);}
+function cancelForm(){if(_selProj){selectProject(_selProj);}else{$("addFormWrap").classList.add("hidden");$("adminDash").classList.remove("hidden");}}
+async function saveProjectForm(){
+  const eid=$("n_eid").value;
+  const body={name:$("n_name").value.trim(),login:$("n_login").value.trim(),password:$("n_pass").value.trim(),
+    fbToken:$("n_token").value.trim(),adAccounts:$("n_id").value.trim(),group:$("n_group").value.trim()};
+  const msg=$("n_msg"),btn=$("n_save");
+  if(!body.name||!body.login||(!eid&&!body.password)){msg.className="a-msg err";msg.textContent="Nom, login va parol majburiy";return;}
+  btn.disabled=true;const bt=btn.textContent;btn.textContent="Saqlanmoqda...";
+  try{
+    let pid;
+    if(eid){const d=await api("/api/admin/projects",{method:"PUT",body:JSON.stringify(Object.assign({id:eid},body))});pid=eid;}
+    else {const d=await api("/api/admin/projects",{method:"POST",body:JSON.stringify(body)});pid=d.project&&d.project.id;}
+    await loadProjects();
+    if(pid&&adminProjects.find(x=>x.id===pid))selectProject(pid);
+    else if(adminProjects[0])selectProject(adminProjects[0].id);
+  }catch(err){msg.className="a-msg err";msg.textContent=err.message;btn.disabled=false;btn.textContent=bt;}
+}
+async function toggleActiveP(id){
+  const p=adminProjects.find(x=>x.id===id);if(!p)return;
+  try{await api("/api/admin/projects",{method:"PUT",body:JSON.stringify({id,active:!p.active})});await loadProjects();selectProject(id);}
+  catch(err){alert(err.message);}
+}
+async function delProjectP(id){
+  const p=adminProjects.find(x=>x.id===id);if(!p)return;
+  if(!confirm(`"${p.name}" loyihasini butunlay o'chirasizmi?`))return;
+  try{await api("/api/admin/projects?id="+encodeURIComponent(id),{method:"DELETE"});_selProj=null;await loadProjects();const n=adminProjects[0];if(n)selectProject(n.id);else{$("adminDash").innerHTML="<div class='empty-state'><div class='es-t'>Loyiha yo'q</div></div>";$("admRangeBar").classList.add("hidden");}}
+  catch(err){alert(err.message);}
+}
+
+/* ── Boshlash ── */
+try{document.body.classList.add(localStorage.getItem("gt_theme")||"dark");}catch(e){document.body.classList.add("dark");}
+updateThemeBtns();
+(function boot(){
+  let a=null;try{a=JSON.parse(localStorage.getItem("gt_auth")||"null");}catch(e){}
+  if(a&&a.t){authToken=a.t;authRole=a.r;_clientProj=a.p;
+    if(a.r==="admin")openAdmin();else openClient();
+  } else showLogin();
+})();
+
 </script>
 </body>
 </html>

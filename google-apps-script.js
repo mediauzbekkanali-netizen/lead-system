@@ -19,7 +19,7 @@ const ADMIN_SECRET = "CHANGE_ME_TO_A_LONG_RANDOM_SECRET";
 
 const SHEET_LEADS = "Leads";
 const SHEET_PROJECTS = "Projects";
-const PROJECT_HEADERS = ["id", "name", "login", "passwordHash", "fbToken", "adAccounts", "active", "createdAt", "updatedAt"];
+const PROJECT_HEADERS = ["id", "name", "login", "passwordHash", "fbToken", "adAccounts", "group", "active", "createdAt", "updatedAt"];
 
 function doPost(e) {
   try {
@@ -103,6 +103,7 @@ function listProjects() {
     name: p.name,
     login: p.login,
     adAccounts: p.adAccounts,
+    group: p.group,
     active: p.active,
     hasToken: !!p.fbToken,
     tokenMasked: p.fbToken ? "••••" + String(p.fbToken).slice(-4) : "",
@@ -119,7 +120,7 @@ function findProject(field, value) {
   return {
     id: p.id, name: p.name, login: p.login,
     passwordHash: p.passwordHash, fbToken: p.fbToken,
-    adAccounts: p.adAccounts, active: p.active,
+    adAccounts: p.adAccounts, group: p.group, active: p.active,
   };
 }
 

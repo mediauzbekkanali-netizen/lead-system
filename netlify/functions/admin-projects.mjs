@@ -1,72 +1,62 @@
-// /api/admin/projects → loyihalarni boshqarish (faqat admin)
+// /api/admin/projects  → loyihalarni boshqarish (faqat admin token)
 //   GET               → ro'yxat (parol/token yashirilgan)
-//   POST   {project}  → yangi loyiha yaratish
-//   PUT    {id,...}   → tahrirlash
+//   POST   {project}  → yaratish (login+parol+token o'rnatish)
+//   PUT    {id,patch} → tahrirlash (login/parol/token/holat o'zgartirish)
 //   DELETE ?id=       → o'chirish
-import { jsonResponse, readJson, getBearer, query, verifyToken, hashPassword, callGas,
-  isDemo, demoListProjects, demoCreateProject, demoUpdateProject, demoDeleteProject } from "./lib.mjs";
+import { jsonResponse, readJson, getBearer, query, verifyToken, hashPassword, callGas } from "./lib.mjs";
 
+function requireAdmin(req) {
+  const claims = verifyToken(getBearer(req));
+  return claims && claims.role === "admin" ? claims : null;
+}
 function normAccounts(v) {
   if (Array.isArray(v)) return v.map((s) => String(s).trim()).filter(Boolean).join(",");
   return String(v || "").split(",").map((s) => s.trim()).filter(Boolean).join(",");
 }
 
 export default async (req) => {
-  const claims = verifyToken(getBearer(req));
-  if (!claims || claims.role !== "admin") {
-    return jsonResponse({ ok: false, error: "Admin avtorizatsiyasi kerak" }, 401);
-  }
-
-  const demo = isDemo();
-
+  if (!requireAdmin(req)) return jsonResponse({ ok: false, error: "Admin avtorizatsiyasi kerak" }, 401);
   try {
     if (req.method === "GET") {
-      if (demo) return jsonResponse({ ok: true, projects: demoListProjects(), demo: true });
       const data = await callGas("listProjects");
       return jsonResponse({ ok: true, projects: data.projects || [] });
     }
 
     if (req.method === "POST") {
-      const body = await readJson(req);
-      const { name, login, password, fbToken, adAccounts } = body;
-      if (!name || !login || !password) {
-        return jsonResponse({ ok: false, error: "Nom, login va parol majburiy" }, 400);
-      }
+      const b = await readJson(req);
+      if (!b.name || !b.login || !b.password) return jsonResponse({ ok: false, error: "Nom, login va parol majburiy" }, 400);
       const project = {
         id: "p_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-        name: String(name).trim(),
-        login: String(login).trim(),
-        passwordHash: hashPassword(password),
-        fbToken: String(fbToken || "").trim(),
-        adAccounts: normAccounts(adAccounts),
+        name: String(b.name).trim(),
+        login: String(b.login).trim(),
+        passwordHash: hashPassword(b.password),
+        fbToken: String(b.fbToken || "").trim(),
+        adAccounts: normAccounts(b.adAccounts),
+        group: String(b.group || "").trim(),
         active: true,
       };
-      if (demo) return jsonResponse({ ok: true, project: demoCreateProject(project), demo: true });
       const data = await callGas("createProject", { project });
       return jsonResponse({ ok: true, project: data.project });
     }
 
     if (req.method === "PUT") {
-      const body = await readJson(req);
-      const { id } = body;
-      if (!id) return jsonResponse({ ok: false, error: "id majburiy" }, 400);
+      const b = await readJson(req);
+      if (!b.id) return jsonResponse({ ok: false, error: "id majburiy" }, 400);
       const patch = {};
-      if (body.name !== undefined) patch.name = String(body.name).trim();
-      if (body.login !== undefined) patch.login = String(body.login).trim();
-      if (body.password) patch.passwordHash = hashPassword(body.password);
-      if (body.fbToken !== undefined && body.fbToken !== "") patch.fbToken = String(body.fbToken).trim();
-      if (body.adAccounts !== undefined) patch.adAccounts = normAccounts(body.adAccounts);
-      if (body.active !== undefined) patch.active = !!body.active;
-
-      if (demo) return jsonResponse({ ok: true, project: demoUpdateProject(id, patch), demo: true });
-      const data = await callGas("updateProject", { id, patch });
+      if (b.name !== undefined) patch.name = String(b.name).trim();
+      if (b.login !== undefined) patch.login = String(b.login).trim();
+      if (b.password) patch.passwordHash = hashPassword(b.password);
+      if (b.fbToken !== undefined && b.fbToken !== "") patch.fbToken = String(b.fbToken).trim();
+      if (b.adAccounts !== undefined) patch.adAccounts = normAccounts(b.adAccounts);
+      if (b.group !== undefined) patch.group = String(b.group).trim();
+      if (b.active !== undefined) patch.active = !!b.active;
+      const data = await callGas("updateProject", { id: b.id, patch });
       return jsonResponse({ ok: true, project: data.project });
     }
 
     if (req.method === "DELETE") {
       const id = query(req, "id") || (await readJson(req)).id;
       if (!id) return jsonResponse({ ok: false, error: "id majburiy" }, 400);
-      if (demo) { demoDeleteProject(id); return jsonResponse({ ok: true, demo: true }); }
       await callGas("deleteProject", { id });
       return jsonResponse({ ok: true });
     }

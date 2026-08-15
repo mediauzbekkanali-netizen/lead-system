@@ -1,103 +1,73 @@
-# 📋 O'rnatish Qo'llanmasi (Uzbekcha)
+# Global Targeting — o'rnatish qo'llanmasi
 
-> ℹ️ **Reklama Dashboard** (har bir biznes o'z login/paroli bilan kirib, aktiv
-> Facebook reklamalarini ko'radi) uchun **[DASHBOARD.md](DASHBOARD.md)** ni o'qing.
-> Quyidagi hujjat eski **lead-forma** (`lead.html`) uchun.
+Har bir biznes o'z login/paroli bilan kiradi va **faqat o'zining** aktiv
+Facebook reklamalarini ko'radi. Admin (`globaltargeting`) barcha loyihalarni
+boshqaradi: login/parol, Facebook token va Ad Account biriktiradi.
 
-
-## Papka Tuzilishi
-
-```
-lead-system/
-├── index.html              ← Frontend forma
-├── api/
-│   └── lead.js             ← Vercel serverless endpoint
-├── google-apps-script.js   ← Google Sheets skripti
-├── vercel.json             ← Vercel konfiguratsiyasi
-├── .env.example            ← Muhit o'zgaruvchilari namunasi
-└── QOLLANMA.md             ← Shu fayl
-```
+Arxitektura: **Netlify** (frontend + serverless funksiyalar) + **Google Sheets**
+(ma'lumotlar bazasi). Token faqat serverda saqlanadi — brauzerga chiqmaydi.
 
 ---
 
-## 1-QADAM: Google Apps Script ni Sozlash
+## 1-qadam — Google Sheets (baza)
 
-1. **Google Sheets ochish**
-   - sheets.google.com → Yangi jadval yarating
-   - Nom bering, masalan: `Leadlar`
+1. [sheets.google.com](https://sheets.google.com) da yangi jadval oching.
+2. **Kengaytmalar → Apps Script** → `google-apps-script.js` faylidagi kodni
+   to'liq joylang.
+3. Yuqoridagi `ADMIN_SECRET` ni uzun tasodifiy satrga o'zgartiring
+   (masalan `openssl rand -hex 24` natijasi). Buni eslab qoling.
+4. **Deploy → New deployment → Web app** →
+   *Execute as: Me*, *Who has access: Anyone* → **Deploy**.
+5. Chiqqan **Web app URL** ni nusxalang (`.../exec` bilan tugaydi).
 
-2. **Apps Script ochish**
-   - Jadvalda: `Kengaytmalar → Apps Script`
+## 2-qadam — Netlify'ga joylash
 
-3. **Kod qo'shish**
-   - `Code.gs` fayliga `google-apps-script.js` ichidagi kodni to'liq ko'chiring
-   - `Ctrl+S` bilan saqlang
+**A) Drag-and-drop (eng oson):** `global-targeting.zip` ni yuklab, Netlify
+sayt sahifasidagi *Deploys* bo'limiga sudrab tashlang.
 
-4. **Deploy qilish**
-   - Yuqoridan `Deploy → Yangi deployment`
-   - Tur: `Web ilovasi`
-   - Kimga ruxsat: `Hamma (anonim)`
-   - `Deploy` bosing
-   - ⚠️ **Manzilni (URL) nusxalab oling** — kerak bo'ladi
+**B) GitHub orqali:** repozitoriyani Netlify'ga import qiling (auto-deploy).
 
----
+## 3-qadam — Muhit sozlamalari (Netlify → Environment variables)
 
-## 2-QADAM: Vercel ga Deploy Qilish
+| Kalit | Qiymat |
+|-------|--------|
+| `GAS_WEBHOOK_URL` | 1-qadamdagi Web app URL |
+| `GAS_ADMIN_SECRET` | Apps Script'dagi `ADMIN_SECRET` bilan **bir xil** |
+| `JWT_SECRET` | uzun tasodifiy satr |
+| `ADMIN_PASSWORD` | admin uchun kuchli parol |
 
-### Usul A — GitHub orqali (tavsiya etiladi)
+Sozlamalarni qo'ygach — **Redeploy** qiling.
 
-1. GitHub da yangi repo yarating
-2. `lead-system/` papkasini repo ga yuklang
-3. vercel.com → `Add New → Project`
-4. GitHub reponi tanlang → `Import`
-5. **Environment Variables** bo'limiga:
-   - `GAS_WEBHOOK_URL` = GAS deployment URL (1-qadamdan)
-6. `Deploy` bosing
+## 4-qadam — Ishlatish
 
-### Usul B — Vercel CLI
-
-```bash
-npm install -g vercel
-cd lead-system
-vercel
-# So'rovlarga javob bering
-vercel env add GAS_WEBHOOK_URL
-# GAS URL ni kiriting
-vercel --prod
-```
+1. Saytga kiring → **Login: `globaltargeting`**, parol: `ADMIN_PASSWORD`.
+2. Admin panelda **＋ Yangi loyiha** → biznes nomi, **login**, **parol**,
+   **Facebook token**, **Ad Account ID** ni kiriting.
+3. Chiqing → o'sha biznes o'zining login/paroli bilan kirsa — faqat o'zining
+   reklamalarini ko'radi (istalgan kundan-kungacha hisobot bilan).
 
 ---
 
-## 3-QADAM: Frontend ni Ulash
+## Facebook token (System User — tavsiya etiladi)
 
-`index.html` faylida bu qatorni toping:
+1. **business.facebook.com → Business Settings → Users → System Users**
+2. Yangi System User yarating → reklama akkauntini unga biriktiring
+   (*Assign assets → Ad accounts → Manage*).
+3. **Generate token** → ruxsatlar: `ads_read`, `read_insights`,
+   `business_management` → tokenни nusxalang.
+4. Bu tokenni admin panelda o'sha loyihaga qo'ying. System User token
+   muddatsiz va xavfsiz.
 
-```javascript
-const GAS_URL = "YOUR_GAS_WEBHOOK_URL";
-```
-
-Agar Vercel ishlatmasangiz va to'g'ridan GAS ga yubormoqchi bo'lsangiz,
-bu qatorga GAS URL ni qo'ying.
-
-Agar Vercel ishlatayotgan bo'lsangiz — bu qatorni o'zgartirish shart emas,
-chunki forma `/api/lead` ga yuboradi, u yerda URL muhit o'zgaruvchisidan olinadi.
-
----
-
-## 4-QADAM: Tekshirish
-
-1. Vercel URL ni brauzerda oching
-2. Formaga ism va telefon kiriting
-3. `Ariza Yuborish` bosing
-4. Google Sheets da yangi qator paydo bo'lishi kerak ✅
+**Ad Account ID** — Ads Manager'da `act_` dan keyingi raqam. Bir nechta
+akkaunt bo'lsa, vergul bilan yozing.
 
 ---
 
-## Muammolar va Yechimlar
+## Xavfsizlik
 
-| Muammo | Yechim |
-|--------|--------|
-| GAS 401 xatolik | Deploy → "Hamma" ga ruxsat berilganini tekshiring |
-| CORS xatolik | `api/lead.js` da CORS headerlar to'g'ri o'rnatilgan |
-| Vercel 502 | `GAS_WEBHOOK_URL` muhit o'zgaruvchisi to'g'ri kiritilganini tekshiring |
-| Sheet yangilanmaydi | GAS skriptda `SHEET_NAME` to'g'ri ekanligini tekshiring |
+- Parollar PBKDF2 bilan hash qilinadi (Sheets'da ochiq parol saqlanmaydi).
+- Facebook token faqat serverda ishlatiladi, hech qachon brauzerga
+  yuborilmaydi.
+- Sessiyalar JWT bilan imzolanadi (`JWT_SECRET`).
+- Har login o'z tokeni → o'z Ad Account'iga bog'langan: loyihalar bir-birining
+  ma'lumotini ko'ra olmaydi.
