@@ -1,6 +1,7 @@
 // Umumiy backend kutubxonasi — Netlify Functions (production)
-// Tashqi paketlarsiz: Node "crypto" + global "fetch".
+// Storage: Netlify Blobs (tashqi baza kerak emas).
 import crypto from "node:crypto";
+import { getStore } from "@netlify/blobs";
 
 // ─────────────────────────────────────────────────────────────
 //  Web Request/Response yordamchilari (Netlify Functions v2)
@@ -79,23 +80,54 @@ export function verifyToken(token) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Google Apps Script (Sheets) — ma'lumotlar bazasi
+//  Ma'lumotlar bazasi — Netlify Blobs (tashqi sozlashsiz)
+//  Barcha loyihalar bitta "all" kalitida JSON ro'yxat sifatida saqlanadi.
 // ─────────────────────────────────────────────────────────────
-export function gasConfigured() { return !!process.env.GAS_WEBHOOK_URL; }
-export async function callGas(action, payload = {}) {
-  const url = process.env.GAS_WEBHOOK_URL;
-  if (!url) throw new Error("GAS_WEBHOOK_URL sozlanmagan");
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, secret: process.env.GAS_ADMIN_SECRET, ...payload }),
-    redirect: "follow",
-  });
-  const text = await res.text();
-  let data;
-  try { data = JSON.parse(text); } catch { throw new Error(`GAS noto'g'ri javob (${res.status})`); }
-  if (data.ok === false) throw new Error(data.error || "GAS xatolik");
-  return data;
+function pstore() { return getStore({ name: "gt-projects", consistency: "strong" }); }
+
+export async function allProjects() {
+  try {
+    const v = await pstore().get("all", { type: "json" });
+    return Array.isArray(v) ? v : [];
+  } catch { return []; }
+}
+async function saveAll(list) { await pstore().set("all", JSON.stringify(list)); }
+
+export async function projectByLogin(login) {
+  const v = String(login || "").trim().toLowerCase();
+  return (await allProjects()).find((p) => String(p.login || "").trim().toLowerCase() === v) || null;
+}
+export async function projectById(id) {
+  return (await allProjects()).find((p) => String(p.id) === String(id)) || null;
+}
+export function maskProject(p) {
+  return {
+    id: p.id, name: p.name, login: p.login, adAccounts: p.adAccounts,
+    group: p.group || "", active: p.active !== false,
+    hasToken: !!p.fbToken, tokenMasked: p.fbToken ? "••••" + String(p.fbToken).slice(-4) : "",
+  };
+}
+export async function listProjectsMasked() { return (await allProjects()).map(maskProject); }
+export async function createProjectRec(project) {
+  const list = await allProjects();
+  list.push(project);
+  await saveAll(list);
+  return maskProject(project);
+}
+export async function updateProjectRec(id, patch) {
+  const list = await allProjects();
+  const p = list.find((x) => String(x.id) === String(id));
+  if (!p) throw new Error("Loyiha topilmadi");
+  Object.assign(p, patch);
+  await saveAll(list);
+  return maskProject(p);
+}
+export async function deleteProjectRec(id) {
+  let list = await allProjects();
+  const before = list.length;
+  list = list.filter((x) => String(x.id) !== String(id));
+  await saveAll(list);
+  return before !== list.length;
 }
 
 // ─────────────────────────────────────────────────────────────

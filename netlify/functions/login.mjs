@@ -1,8 +1,8 @@
 // POST /api/login  → BITTA kirish nuqtasi (admin yoki loyiha egasi)
 //   login="globaltargeting" + ADMIN_PASSWORD  → admin token
 //   loyiha login + parol (Sheets'dan)          → loyiha token
-import { jsonResponse, readJson, signToken, verifyPassword, callGas,
-  ADMIN_LOGIN, adminPassword, gasConfigured } from "./lib.mjs";
+import { jsonResponse, readJson, signToken, verifyPassword, projectByLogin,
+  ADMIN_LOGIN, adminPassword } from "./lib.mjs";
 import crypto from "node:crypto";
 
 function safeEq(a, b) {
@@ -25,10 +25,8 @@ export default async (req) => {
   }
 
   // — Loyiha egasi (mijoz) —
-  if (!gasConfigured()) return jsonResponse({ ok: false, error: "Server bazasi (Google Sheets) hali ulanmagan" }, 503);
   try {
-    const data = await callGas("getProjectByLogin", { login: String(login).trim() });
-    const p = data.project;
+    const p = await projectByLogin(String(login).trim());
     if (!p || !p.id) return jsonResponse({ ok: false, error: "Login yoki parol noto'g'ri" }, 401);
     if (p.active === false) return jsonResponse({ ok: false, error: "Bu hisob nofaol. Administrator bilan bog'laning." }, 403);
     if (!verifyPassword(password, p.passwordHash)) return jsonResponse({ ok: false, error: "Login yoki parol noto'g'ri" }, 401);

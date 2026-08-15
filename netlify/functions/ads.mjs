@@ -1,7 +1,7 @@
 // GET /api/ads?from=YYYY-MM-DD&to=YYYY-MM-DD[&projectId=]  → aktiv reklamalar (real Facebook)
 //   loyiha tokeni → o'z ma'lumoti (izolyatsiya)
 //   admin tokeni  → ?projectId bilan istalgan loyihani ko'radi
-import { jsonResponse, getBearer, query, verifyToken, callGas, fbReport, resolveRange, gasConfigured } from "./lib.mjs";
+import { jsonResponse, getBearer, query, verifyToken, projectById, fbReport, resolveRange } from "./lib.mjs";
 
 export default async (req) => {
   if (req.method !== "GET") return jsonResponse({ ok: false, error: "Faqat GET" }, 405);
@@ -19,11 +19,8 @@ export default async (req) => {
     return jsonResponse({ ok: false, error: "Ruxsat yo'q" }, 403);
   }
 
-  if (!gasConfigured()) return jsonResponse({ ok: false, error: "Server bazasi ulanmagan" }, 503);
-
   try {
-    const data = await callGas("getProjectById", { id: projectId });
-    const p = data.project;
+    const p = await projectById(projectId);
     if (!p || !p.id) return jsonResponse({ ok: false, error: "Loyiha topilmadi" }, 404);
 
     const base = { ok: true, project: { id: p.id, name: p.name }, from: since, to: until, updatedAt: new Date().toISOString() };

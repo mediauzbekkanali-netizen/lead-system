@@ -3,7 +3,8 @@
 //   POST   {project}  → yaratish (login+parol+token o'rnatish)
 //   PUT    {id,patch} → tahrirlash (login/parol/token/holat o'zgartirish)
 //   DELETE ?id=       → o'chirish
-import { jsonResponse, readJson, getBearer, query, verifyToken, hashPassword, callGas } from "./lib.mjs";
+import { jsonResponse, readJson, getBearer, query, verifyToken, hashPassword,
+  listProjectsMasked, createProjectRec, updateProjectRec, deleteProjectRec, projectByLogin } from "./lib.mjs";
 
 function requireAdmin(req) {
   const claims = verifyToken(getBearer(req));
@@ -18,30 +19,35 @@ export default async (req) => {
   if (!requireAdmin(req)) return jsonResponse({ ok: false, error: "Admin avtorizatsiyasi kerak" }, 401);
   try {
     if (req.method === "GET") {
-      const data = await callGas("listProjects");
-      return jsonResponse({ ok: true, projects: data.projects || [] });
+      return jsonResponse({ ok: true, projects: await listProjectsMasked() });
     }
 
     if (req.method === "POST") {
       const b = await readJson(req);
       if (!b.name || !b.login || !b.password) return jsonResponse({ ok: false, error: "Nom, login va parol majburiy" }, 400);
+      const login = String(b.login).trim();
+      const dup = await projectByLogin(login);
+      if (dup) return jsonResponse({ ok: false, error: "Bu login band — boshqa login tanlang" }, 409);
       const project = {
         id: "p_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         name: String(b.name).trim(),
-        login: String(b.login).trim(),
+        login,
         passwordHash: hashPassword(b.password),
         fbToken: String(b.fbToken || "").trim(),
         adAccounts: normAccounts(b.adAccounts),
         group: String(b.group || "").trim(),
         active: true,
       };
-      const data = await callGas("createProject", { project });
-      return jsonResponse({ ok: true, project: data.project });
+      return jsonResponse({ ok: true, project: await createProjectRec(project) });
     }
 
     if (req.method === "PUT") {
       const b = await readJson(req);
       if (!b.id) return jsonResponse({ ok: false, error: "id majburiy" }, 400);
+      if (b.login !== undefined) {
+        const dup = await projectByLogin(String(b.login).trim());
+        if (dup && String(dup.id) !== String(b.id)) return jsonResponse({ ok: false, error: "Bu login band" }, 409);
+      }
       const patch = {};
       if (b.name !== undefined) patch.name = String(b.name).trim();
       if (b.login !== undefined) patch.login = String(b.login).trim();
@@ -50,14 +56,13 @@ export default async (req) => {
       if (b.adAccounts !== undefined) patch.adAccounts = normAccounts(b.adAccounts);
       if (b.group !== undefined) patch.group = String(b.group).trim();
       if (b.active !== undefined) patch.active = !!b.active;
-      const data = await callGas("updateProject", { id: b.id, patch });
-      return jsonResponse({ ok: true, project: data.project });
+      return jsonResponse({ ok: true, project: await updateProjectRec(b.id, patch) });
     }
 
     if (req.method === "DELETE") {
       const id = query(req, "id") || (await readJson(req)).id;
       if (!id) return jsonResponse({ ok: false, error: "id majburiy" }, 400);
-      await callGas("deleteProject", { id });
+      await deleteProjectRec(id);
       return jsonResponse({ ok: true });
     }
 
