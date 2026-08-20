@@ -10,26 +10,27 @@ function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
 
-    const name  = (data.name  || "").toString().trim();
-    const phone = (data.phone || "").toString().trim();
+    const name      = (data.name      || "").toString().trim();
+    const phone     = (data.phone     || "").toString().trim();
+    const mebelType = (data.mebelType || "").toString().trim();
 
-    if (!name || !phone) {
-      return jsonResponse({ success: false, error: "name yoki phone bo'sh" });
+    if (!name || !phone || !mebelType) {
+      return jsonResponse({ success: false, error: "name, phone yoki mebelType bo'sh" });
     }
 
     const sheet = getOrCreateSheet(SHEET_NAME);
 
     // Birinchi marta header qo'shish
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Vaqt", "Ism", "Telefon"]);
-      sheet.getRange(1, 1, 1, 3).setFontWeight("bold");
+      sheet.appendRow(["Vaqt", "Ism", "Telefon", "Mebel turi"]);
+      sheet.getRange(1, 1, 1, 4).setFontWeight("bold");
     }
 
     const timestamp = new Date().toLocaleString("uz-UZ", {
       timeZone: "Asia/Tashkent",
     });
 
-    sheet.appendRow([timestamp, name, phone]);
+    sheet.appendRow([timestamp, name, phone, mebelType]);
 
     return jsonResponse({ success: true });
 
@@ -57,7 +58,7 @@ function jsonResponse(obj) {
 function testDoPost() {
   const fakeEvent = {
     postData: {
-      contents: JSON.stringify({ name: "Test User", phone: "+998901234567" }),
+      contents: JSON.stringify({ name: "Test User", phone: "+998901234567", mebelType: "Divan" }),
     },
   };
   const result = doPost(fakeEvent);

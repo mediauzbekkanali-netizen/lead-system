@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: "Faqat POST qabul qilinadi" });
   }
 
-  const { name, phone } = req.body || {};
+  const { name, phone, mebelType } = req.body || {};
 
   // --- Validatsiya ---
   if (!name || typeof name !== "string" || name.trim().length < 2) {
@@ -35,9 +35,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ success: false, error: "Telefon raqami noto'g'ri" });
   }
 
+  if (!mebelType || typeof mebelType !== "string" || mebelType.trim().length < 2) {
+    return res.status(400).json({ success: false, error: "Mebel turi noto'g'ri yoki bo'sh" });
+  }
+
   const payload = {
-    name:  name.trim(),
-    phone: phone.trim(),
+    name:      name.trim(),
+    phone:     phone.trim(),
+    mebelType: mebelType.trim(),
   };
 
   // --- Google Apps Script ga yuborish ---
