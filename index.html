@@ -24,6 +24,17 @@
   <!-- End Meta Pixel Code -->
 
   <style>
+    :root {
+      --cream:   #F5EAD8;
+      --card:    #FFFAF4;
+      --copper:  #C47B30;
+      --copper2: #A8611A;
+      --dark:    #2C1A0E;
+      --muted:   #8B6B4A;
+      --input-bg:#EDE4D5;
+      --placeholder: #B09070;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -32,23 +43,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f0efec;
+      background: var(--cream);
       padding: 20px;
     }
 
     .card {
-      background: #fff;
+      background: var(--card);
       border-radius: 24px;
       padding: 40px 32px;
       width: 100%;
       max-width: 460px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+      box-shadow: 0 10px 40px rgba(44,26,14,0.10);
     }
 
     h1 {
       font-size: 28px;
       font-weight: 800;
-      color: #111;
+      color: var(--dark);
       margin-bottom: 28px;
       line-height: 1.25;
     }
@@ -57,34 +68,34 @@
       display: block;
       font-size: 15px;
       font-weight: 600;
-      color: #111;
+      color: var(--dark);
       margin-bottom: 10px;
     }
 
-    label .req { color: #e53935; }
+    label .req { color: var(--copper); }
 
     input {
       width: 100%;
       padding: 16px 18px;
       border: none;
-      background: #f2f1ee;
+      background: var(--input-bg);
       border-radius: 14px;
       font-size: 16px;
-      color: #111;
+      color: var(--dark);
       outline: none;
       transition: box-shadow 0.2s;
       margin-bottom: 22px;
     }
 
-    input::placeholder { color: #a8a6a1; }
+    input::placeholder { color: var(--placeholder); }
 
-    input:focus { box-shadow: 0 0 0 2px #111; }
+    input:focus { box-shadow: 0 0 0 2px var(--copper); }
 
-    input.error { box-shadow: 0 0 0 2px #e53935; }
+    input.error { box-shadow: 0 0 0 2px #c0392b; }
 
     .error-msg {
       font-size: 12px;
-      color: #e53935;
+      color: #c0392b;
       margin-top: -16px;
       margin-bottom: 16px;
       display: none;
@@ -93,19 +104,19 @@
     .phone-wrap {
       display: flex;
       align-items: center;
-      background: #f2f1ee;
+      background: var(--input-bg);
       border-radius: 14px;
       padding: 0 18px;
       margin-bottom: 22px;
     }
 
-    .phone-wrap:focus-within { box-shadow: 0 0 0 2px #111; }
-    .phone-wrap.error { box-shadow: 0 0 0 2px #e53935; }
+    .phone-wrap:focus-within { box-shadow: 0 0 0 2px var(--copper); }
+    .phone-wrap.error { box-shadow: 0 0 0 2px #c0392b; }
 
     .phone-prefix {
       font-size: 16px;
       font-weight: 700;
-      color: #111;
+      color: var(--dark);
       padding: 16px 8px 16px 0;
       white-space: nowrap;
     }
@@ -120,7 +131,7 @@
     button {
       width: 100%;
       padding: 18px;
-      background: #111;
+      background: linear-gradient(135deg, var(--copper) 0%, var(--copper2) 100%);
       color: #fff;
       font-size: 17px;
       font-weight: 700;
@@ -142,18 +153,18 @@
     }
 
     .success .icon { font-size: 52px; margin-bottom: 12px; }
-    .success h2 { font-size: 22px; color: #111; margin-bottom: 8px; }
-    .success p { color: #555; font-size: 14px; }
+    .success h2 { font-size: 22px; color: var(--copper); margin-bottom: 8px; }
+    .success p { color: var(--muted); font-size: 14px; }
 
     .footnote {
       text-align: center;
       font-size: 13px;
-      color: #8a8a8a;
+      color: var(--muted);
       margin-top: 18px;
       line-height: 1.5;
     }
 
-    .footnote a { color: #4a63e0; text-decoration: none; }
+    .footnote a { color: var(--copper); text-decoration: none; }
     .footnote a:hover { text-decoration: underline; }
   </style>
 </head>
