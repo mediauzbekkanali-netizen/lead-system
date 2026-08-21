@@ -193,6 +193,7 @@
 
   <script>
     const INSTAGRAM_URL = "https://www.instagram.com/status_mebell/";
+    const WEBHOOK_URL = "https://yuboraman.uz/api/v1/sites/webhook/c2768d01-d21f-4bf3-9e5a-effc1739ceea-1787311864/";
 
     const form  = document.getElementById("leadForm");
     const btn   = document.getElementById("submitBtn");
@@ -239,15 +240,13 @@
       const fullPhone = "+998" + phoneVal.replace(/\D/g, "");
 
       try {
-        const res = await fetch("/api/lead", {
+        const res = await fetch(WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, phone: fullPhone, mebelType }),
+          body: JSON.stringify({ name, phone: fullPhone, mebel_turi: mebelType }),
         });
 
-        const data = await res.json();
-
-        if (res.ok && data.success) {
+        if (res.ok) {
           if (typeof fbq === "function") {
             fbq("track", "Lead");
           }
@@ -258,7 +257,7 @@
             window.location.href = INSTAGRAM_URL;
           }, 1800);
         } else {
-          throw new Error(data.error || "Xatolik yuz berdi");
+          throw new Error("Server javobi: " + res.status);
         }
       } catch (err) {
         alert("❌ " + err.message + "\nQayta urinib ko'ring.");
