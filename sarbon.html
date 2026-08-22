@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sarbon Universiteti — Ariza</title>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1700328221083050');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1700328221083050&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #1a4dd4 0%, #2563eb 50%, #60a5fa 100%);
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px 32px 32px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(20, 60, 180, 0.25);
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    label .req { color: #2563eb; }
+
+    input {
+      width: 100%;
+      padding: 15px 18px;
+      border: none;
+      background: #e8f0fe;
+      border-radius: 12px;
+      font-size: 15px;
+      color: #0f172a;
+      outline: none;
+      transition: box-shadow 0.2s;
+      margin-bottom: 20px;
+    }
+
+    input::placeholder { color: #94a3b8; }
+    input:focus { box-shadow: 0 0 0 2px #2563eb; }
+    input.error { box-shadow: 0 0 0 2px #dc2626; }
+
+    .error-msg {
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: -14px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .phone-wrap {
+      display: flex;
+      align-items: center;
+      background: #e8f0fe;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    .phone-wrap:focus-within { box-shadow: 0 0 0 2px #2563eb; }
+    .phone-wrap.error { box-shadow: 0 0 0 2px #dc2626; }
+
+    .phone-prefix {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+      background: #d1e0fd;
+      padding: 15px 14px;
+      white-space: nowrap;
+      border-right: 1px solid #bfcffc;
+      flex-shrink: 0;
+    }
+
+    .phone-wrap input {
+      background: transparent;
+      padding: 15px 16px;
+      margin-bottom: 0;
+      box-shadow: none !important;
+    }
+
+    button {
+      width: 100%;
+      padding: 17px;
+      background: #1e3a8a;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    button:hover { background: #1e40af; }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .footnote {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    /* Success */
+    .success {
+      display: none;
+      text-align: center;
+      padding: 24px 0 8px;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: #dbeafe;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+
+    .success h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+    }
+
+    .success p {
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <!-- FORM -->
+    <div id="form-section">
+      <h1>Sarbon Universiteti haqida ma'lumot olish uchun ma'lumotlaringizni qoldiring</h1>
+      <p class="subtitle">Qabul jarayoni, yo'nalishlar va shartlar haqida mutaxassisimiz siz bilan bog'lanadi.</p>
+
+      <form id="leadForm" novalidate>
+
+        <label for="name">Ismingizni yozing <span class="req">*</span></label>
+        <input type="text" id="name" placeholder="Masalan: Jasur" autocomplete="name" />
+        <div class="error-msg" id="nameErr">Ismingizni kiriting</div>
+
+        <label>Telefon raqamingizni yozing <span class="req">*</span></label>
+        <div class="phone-wrap" id="phoneWrap">
+          <span class="phone-prefix">+998</span>
+          <input type="tel" id="phone" placeholder="91 234 56 78" inputmode="numeric" maxlength="12" autocomplete="tel" />
+        </div>
+        <div class="error-msg" id="phoneErr">To'g'ri telefon raqam kiriting</div>
+
+        <label for="region">Qayerdansiz? (qayerda tug'ilgansiz) <span class="req">*</span></label>
+        <input type="text" id="region" placeholder="Masalan: Toshkent, Farg'ona..." />
+        <div class="error-msg" id="regionErr">Manzilingizni kiriting</div>
+
+        <label for="direction">Qanday yo'nalishda o'qimoqchisiz? <span class="req">*</span></label>
+        <input type="text" id="direction" placeholder="Masalan: Kompyuter injiniringi, Menejment..." />
+        <div class="error-msg" id="directionErr">Yo'nalishni kiriting</div>
+
+        <button type="submit" id="submitBtn">Yuborish</button>
+      </form>
+
+      <p class="footnote">Ma'lumotlaringiz faqat Sarbon Universiteti qabul komissiyasi bilan bog'lanish uchun ishlatiladi.</p>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success" id="success-section">
+      <div class="success-icon">🎓</div>
+      <h2>Arizangiz qabul qilindi!</h2>
+      <p>Tez orada mutaxassisimiz siz bilan bog'lanadi.<br/>Telefoningizni yonida tutib turing.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // === Webhook URL ni shu yerga qo'ying ===
+    const WEBHOOK_URL = "YOUR_WEBHOOK_URL";
+    // ========================================
+
+    const form = document.getElementById("leadForm");
+    const btn  = document.getElementById("submitBtn");
+
+    document.getElementById("phone").addEventListener("input", function () {
+      this.value = this.value.replace(/[^\d\s]/g, "");
+    });
+
+    function setError(el, errId, show) {
+      el.classList.toggle("error", show);
+      document.getElementById(errId).style.display = show ? "block" : "none";
+    }
+
+    function validatePhone(p) {
+      return p.replace(/\D/g, "").length === 9;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name      = document.getElementById("name").value.trim();
+      const phoneVal  = document.getElementById("phone").value.trim();
+      const region    = document.getElementById("region").value.trim();
+      const direction = document.getElementById("direction").value.trim();
+      const phoneWrap = document.getElementById("phoneWrap");
+
+      let valid = true;
+
+      setError(document.getElementById("name"), "nameErr", !name);
+      if (!name) valid = false;
+
+      setError(phoneWrap, "phoneErr", !validatePhone(phoneVal));
+      if (!validatePhone(phoneVal)) valid = false;
+
+      setError(document.getElementById("region"), "regionErr", !region);
+      if (!region) valid = false;
+
+      setError(document.getElementById("direction"), "directionErr", !direction);
+      if (!direction) valid = false;
+
+      if (!valid) return;
+
+      btn.disabled = true;
+      btn.textContent = "Yuborilmoqda...";
+
+      const fullPhone = "+998" + phoneVal.replace(/\D/g, "");
+
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            phone: fullPhone,
+            region,
+            direction,
+          }),
+        });
+
+        if (res.ok) {
+          if (typeof fbq === "function") fbq("track", "Lead");
+          document.getElementById("form-section").style.display = "none";
+          document.getElementById("success-section").style.display = "block";
+        } else {
+          throw new Error("Server javobi: " + res.status);
+        }
+      } catch (err) {
+        alert("❌ Xatolik yuz berdi. Qayta urinib ko'ring.");
+        btn.disabled = false;
+        btn.textContent = "Yuborish";
+      }
+    });
+  </script>
+</body>
+</html>
