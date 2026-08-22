@@ -1,8 +1,8 @@
 // POST /api/login  → BITTA kirish nuqtasi (admin yoki loyiha egasi)
 //   login="globaltargeting" + ADMIN_PASSWORD  → admin token
 //   loyiha login + parol (Sheets'dan)          → loyiha token
-import { jsonResponse, readJson, signToken, verifyPassword, projectByLogin,
-  ADMIN_LOGIN, adminPassword } from "./lib.mjs";
+import { jsonResponse, readJson, signToken, verifyPassword, hashPassword, projectByLogin,
+  ADMIN_LOGIN, adminPassword, getAdminHash, setAdminHash } from "./lib.mjs";
 import crypto from "node:crypto";
 
 function safeEq(a, b) {
@@ -17,11 +17,22 @@ export default async (req) => {
 
   // — Administrator —
   if (String(login).toLowerCase() === ADMIN_LOGIN) {
-    const expected = adminPassword();
-    if (!expected) return jsonResponse({ ok: false, error: "ADMIN_PASSWORD sozlanmagan (server sozlamasi)" }, 500);
-    if (!safeEq(password, expected)) return jsonResponse({ ok: false, error: "Login yoki parol noto'g'ri" }, 401);
+    const stored = await getAdminHash();
+    let setup = false;
+    if (stored) {
+      // Parol Blobs'da saqlangan
+      if (!verifyPassword(password, stored)) return jsonResponse({ ok: false, error: "Login yoki parol noto'g'ri" }, 401);
+    } else if (adminPassword()) {
+      // Env orqali bootstrap (ixtiyoriy)
+      if (!safeEq(password, adminPassword())) return jsonResponse({ ok: false, error: "Login yoki parol noto'g'ri" }, 401);
+    } else {
+      // Birinchi kirish — kiritilgan parol o'rnatiladi
+      if (String(password).length < 4) return jsonResponse({ ok: false, error: "Admin parol kamida 4 belgi bo'lsin" }, 400);
+      await setAdminHash(hashPassword(password));
+      setup = true;
+    }
     const token = signToken({ role: "admin", sub: "admin" }, 60 * 60 * 8);
-    return jsonResponse({ ok: true, role: "admin", token });
+    return jsonResponse({ ok: true, role: "admin", token, setup });
   }
 
   // — Loyiha egasi (mijoz) —

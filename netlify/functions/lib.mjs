@@ -131,6 +131,18 @@ export async function deleteProjectRec(id) {
 }
 
 // ─────────────────────────────────────────────────────────────
+//  Admin sozlamalari (parol) — Blobs'da saqlanadi (sayt ichidan o'zgartiriladi)
+// ─────────────────────────────────────────────────────────────
+function cstore() { return getStore({ name: "gt-config", consistency: "strong" }); }
+export async function getAdminHash() {
+  try { return (await cstore().get("adminHash")) || ""; } catch { return ""; }
+}
+export async function setAdminHash(hash) { await cstore().set("adminHash", hash); }
+export async function adminConfigured() {
+  return !!(await getAdminHash()) || !!adminPassword();
+}
+
+// ─────────────────────────────────────────────────────────────
 //  Sana yordamchilari
 // ─────────────────────────────────────────────────────────────
 function pad(n) { return String(n).padStart(2, "0"); }

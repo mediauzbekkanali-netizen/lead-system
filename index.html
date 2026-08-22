@@ -255,6 +255,7 @@
       <button class="primary" type="submit">Kirish</button>
       <div class="msg err" id="l_msg"></div>
     </form>
+    <div id="setupHint" class="demoHint hidden">🔧 <b>Birinchi sozlash</b> — admin hisobi hali yaratilmagan.<br>Login <b>globaltargeting</b> bilan <b>xohlagan parolingizni</b> yozing — o'sha parol o'rnatiladi.</div>
     <div class="switch"><a class="theme-toggle" onclick="toggleTheme()">🌙 Tungi</a></div>
   </div>
 </div>
@@ -298,6 +299,7 @@
   <div class="adm-top">
     <span class="adm-brand">🔐 Global Targeting — Admin</span>
     <span class="spacer"></span>
+    <button class="a-ghost" onclick="showAdminPassForm()">🔑 Admin parol</button>
     <button class="a-ghost theme-toggle" onclick="toggleTheme()">🌙 Tungi</button>
     <button class="a-ghost" onclick="adminLogout()">Chiqish</button>
   </div>
@@ -694,14 +696,49 @@ async function delProjectP(id){
   catch(err){alert(err.message);}
 }
 
+/* ── Admin parolini o'zgartirish (sayt ichidan) ── */
+function showAdminPassForm(){
+  $("adminDash").classList.add("hidden");
+  $("admRangeBar").classList.add("hidden");
+  document.querySelectorAll(".adm .proj").forEach(el=>el.classList.remove("active"));
+  const w=$("addFormWrap");w.classList.remove("hidden");
+  w.innerHTML=`<div class="form-card">
+    <h3>🔑 Admin parolini o'zgartirish</h3>
+    <div class="fld"><label>Joriy parol</label><input id="ap_cur" type="password" placeholder="hozirgi parol" autocomplete="off"/></div>
+    <div class="fld"><label>Yangi parol</label><input id="ap_new" type="password" placeholder="yangi parol (kamida 4 belgi)" autocomplete="off"/></div>
+    <div class="fld"><label>Yangi parol (takror)</label><input id="ap_new2" type="password" placeholder="yana bir marta" autocomplete="off"/></div>
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="a-primary" id="ap_save" onclick="saveAdminPass()">Saqlash</button>
+      <button class="a-ghost" onclick="cancelForm()">Bekor qilish</button>
+    </div>
+    <div class="a-msg" id="ap_msg"></div>
+  </div>`;
+}
+async function saveAdminPass(){
+  const cur=$("ap_cur").value, np=$("ap_new").value, np2=$("ap_new2").value, msg=$("ap_msg"), btn=$("ap_save");
+  if(!np||np.length<4){msg.className="a-msg err";msg.textContent="Yangi parol kamida 4 belgi bo'lsin";return;}
+  if(np!==np2){msg.className="a-msg err";msg.textContent="Parollar mos kelmadi";return;}
+  btn.disabled=true;const bt=btn.textContent;btn.textContent="Saqlanmoqda...";
+  try{
+    await api("/api/admin/password",{method:"PUT",body:JSON.stringify({currentPassword:cur,newPassword:np})});
+    msg.className="a-msg ok";msg.textContent="✅ Parol o'zgartirildi. Keyingi kirishда yangi parolni ishlating.";
+    setTimeout(()=>cancelForm(),1500);
+  }catch(err){msg.className="a-msg err";msg.textContent=err.message;btn.disabled=false;btn.textContent=bt;}
+}
+
 /* ── Boshlash ── */
 try{document.body.classList.add(localStorage.getItem("gt_theme")||"dark");}catch(e){document.body.classList.add("dark");}
 updateThemeBtns();
+async function checkSetup(){
+  try{const r=await fetch("/api/status");const d=await r.json();
+    if(d&&d.adminConfigured===false){$("setupHint").classList.remove("hidden");if(!$("l_login").value)$("l_login").value="globaltargeting";}
+  }catch(e){}
+}
 (function boot(){
   let a=null;try{a=JSON.parse(localStorage.getItem("gt_auth")||"null");}catch(e){}
   if(a&&a.t){authToken=a.t;authRole=a.r;_clientProj=a.p;
     if(a.r==="admin")openAdmin();else openClient();
-  } else showLogin();
+  } else { showLogin(); checkSetup(); }
 })();
 
 </script>
