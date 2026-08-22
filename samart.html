@@ -23,21 +23,9 @@
   /></noscript>
   <!-- End Meta Pixel Code -->
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
-    :root {
-      --bg:       #0f0f0f;
-      --card:     #1a1a1a;
-      --surface:  #252525;
-      --border:   #333;
-      --gold:     #D4A853;
-      --gold2:    #B8882A;
-      --white:    #F5F0E8;
-      --muted:    #888;
-      --error:    #e05555;
-    }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -46,117 +34,114 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
+      background: linear-gradient(145deg, #E65C00 0%, #F9A825 60%, #FFD54F 100%);
       padding: 24px 16px;
     }
 
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 44px 36px 36px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 40px 32px 32px;
       width: 100%;
       max-width: 460px;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+      box-shadow: 0 24px 80px rgba(230, 92, 0, 0.30);
     }
 
-    .logo-area {
+    /* Brand header */
+    .brand-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
+      text-align: center;
     }
 
-    .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--gold), var(--gold2));
-      border-radius: 12px;
+    .brand-logo {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #E65C00, #F9A825);
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
+      font-size: 28px;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 24px rgba(230,92,0,0.3);
     }
 
-    .logo-text {
+    .brand-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
       line-height: 1.1;
     }
 
-    .logo-text .brand {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--white);
-      letter-spacing: -0.3px;
-    }
-
-    .logo-text .tagline {
-      font-size: 11px;
-      color: var(--gold);
-      font-weight: 600;
-      letter-spacing: 1.5px;
+    .brand-city {
+      font-size: 12px;
+      font-weight: 700;
+      color: #E65C00;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
+      margin-top: 4px;
     }
 
     .divider {
       height: 1px;
-      background: var(--border);
-      margin-bottom: 28px;
+      background: #f0f0f0;
+      margin-bottom: 24px;
     }
 
     h1 {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
-      color: var(--white);
-      line-height: 1.3;
-      margin-bottom: 8px;
+      color: #1a1a1a;
+      line-height: 1.35;
+      margin-bottom: 6px;
     }
-
-    h1 span { color: var(--gold); }
 
     .subtitle {
       font-size: 14px;
-      color: var(--muted);
+      color: #888;
       line-height: 1.6;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #aaa;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
       margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    label .req { color: var(--gold); }
+    label .req { color: #E65C00; }
 
     input {
       width: 100%;
       padding: 15px 18px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      border-radius: 12px;
+      border: 2px solid #f0f0f0;
+      background: #fafafa;
+      border-radius: 14px;
       font-size: 15px;
       font-family: inherit;
-      color: var(--white);
+      color: #1a1a1a;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
       margin-bottom: 20px;
     }
 
-    input::placeholder { color: #555; }
+    input::placeholder { color: #bbb; }
     input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(212,168,83,0.12);
+      border-color: #E65C00;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(230,92,0,0.08);
     }
-    input.error { border-color: var(--error); }
+    input.error { border-color: #e53935; background: #fff8f8; }
 
     .error-msg {
       font-size: 12px;
-      color: var(--error);
+      color: #e53935;
       margin-top: -14px;
       margin-bottom: 14px;
       display: none;
@@ -165,28 +150,29 @@
     .phone-wrap {
       display: flex;
       align-items: center;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      border-radius: 12px;
+      border: 2px solid #f0f0f0;
+      background: #fafafa;
+      border-radius: 14px;
       margin-bottom: 20px;
       overflow: hidden;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .phone-wrap:focus-within {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(212,168,83,0.12);
+      border-color: #E65C00;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(230,92,0,0.08);
     }
-    .phone-wrap.error { border-color: var(--error); }
+    .phone-wrap.error { border-color: #e53935; }
 
     .phone-prefix {
       font-size: 15px;
-      font-weight: 700;
-      color: var(--gold);
+      font-weight: 800;
+      color: #E65C00;
       padding: 15px 14px;
-      border-right: 1.5px solid var(--border);
+      border-right: 2px solid #f0f0f0;
       flex-shrink: 0;
-      background: rgba(212,168,83,0.07);
+      background: #fff7f0;
     }
 
     .phone-wrap input {
@@ -199,28 +185,29 @@
 
     button {
       width: 100%;
-      padding: 17px;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
-      color: #111;
-      font-size: 16px;
+      padding: 18px;
+      background: linear-gradient(135deg, #E65C00 0%, #F9A825 100%);
+      color: #fff;
+      font-size: 17px;
       font-weight: 800;
       font-family: inherit;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
       transition: opacity 0.2s, transform 0.1s;
       margin-top: 4px;
+      box-shadow: 0 8px 24px rgba(230,92,0,0.35);
       letter-spacing: 0.3px;
     }
 
-    button:hover { opacity: 0.9; }
+    button:hover { opacity: 0.93; }
     button:active { transform: scale(0.98); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
 
     .footnote {
       text-align: center;
       font-size: 12px;
-      color: #555;
+      color: #aaa;
       margin-top: 16px;
       line-height: 1.6;
     }
@@ -229,41 +216,41 @@
     .success {
       display: none;
       text-align: center;
-      padding: 16px 0 8px;
+      padding: 12px 0 8px;
     }
 
     .success-icon {
       width: 80px;
       height: 80px;
-      background: rgba(212,168,83,0.1);
-      border: 2px solid var(--gold);
+      background: linear-gradient(135deg, #E65C00, #F9A825);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 24px;
+      margin: 0 auto 20px;
       font-size: 38px;
+      box-shadow: 0 12px 32px rgba(230,92,0,0.3);
     }
 
     .success h2 {
       font-size: 22px;
       font-weight: 800;
-      color: var(--white);
+      color: #1a1a1a;
       margin-bottom: 10px;
     }
 
     .success p {
       font-size: 14px;
-      color: var(--muted);
+      color: #888;
       line-height: 1.7;
+      margin-bottom: 6px;
     }
 
-    .success .gold-line {
-      width: 48px;
-      height: 2px;
-      background: var(--gold);
-      margin: 16px auto;
-      border-radius: 2px;
+    .success .redirect-note {
+      font-size: 13px;
+      color: #E65C00;
+      font-weight: 600;
+      margin-top: 12px;
     }
   </style>
 </head>
@@ -272,56 +259,53 @@
 
     <!-- FORM -->
     <div id="form-section">
-      <div class="logo-area">
-        <div class="logo-icon">🪑</div>
-        <div class="logo-text">
-          <div class="brand">SMART MEBEL</div>
-          <div class="tagline">Buxoro</div>
-        </div>
+      <div class="brand-header">
+        <div class="brand-logo">🪑</div>
+        <div class="brand-name">SMART MEBEL</div>
+        <div class="brand-city">БУХОРО</div>
       </div>
 
       <div class="divider"></div>
 
-      <h1>Mebellarimiz haqida <span>ma'lumot</span> olish uchun raqamingizni qoldiring</h1>
-      <p class="subtitle">Mutaxassisimiz siz bilan bog'lanib, narxlar va modellar haqida to'liq ma'lumot beradi.</p>
+      <h1>Мебелларимиз ҳақида маълумот олиш учун рақамингизни қолдиринг</h1>
+      <p class="subtitle">Мутахассисимиз сиз билан боғланиб, нархлар ва моделлар ҳақида тўлиқ маълумот беради.</p>
 
       <form id="leadForm" novalidate>
 
-        <label for="name">Ismingiz <span class="req">*</span></label>
-        <input type="text" id="name" placeholder="Masalan: Jasur" autocomplete="name" />
-        <div class="error-msg" id="nameErr">Ismingizni kiriting</div>
+        <label for="name">Исмингиз <span class="req">*</span></label>
+        <input type="text" id="name" placeholder="Масалан: Жасур" autocomplete="name" />
+        <div class="error-msg" id="nameErr">Исмингизни киритинг</div>
 
-        <label>Telefon raqam <span class="req">*</span></label>
+        <label>Телефон рақам <span class="req">*</span></label>
         <div class="phone-wrap" id="phoneWrap">
           <span class="phone-prefix">+998</span>
           <input type="tel" id="phone" placeholder="91 234 56 78" inputmode="numeric" maxlength="12" autocomplete="tel" />
         </div>
-        <div class="error-msg" id="phoneErr">To'g'ri telefon raqam kiriting</div>
+        <div class="error-msg" id="phoneErr">Тўғри телефон рақам киритинг</div>
 
-        <label for="mebelType">Qanday mebel kerak? <span class="req">*</span></label>
-        <input type="text" id="mebelType" placeholder="Masalan: Divan, shkaf, oshxona garniturasi..." />
-        <div class="error-msg" id="mebelTypeErr">Mebel turini yozing</div>
+        <label for="mebelType">Қандай мебел керак? <span class="req">*</span></label>
+        <input type="text" id="mebelType" placeholder="Масалан: Диван, шкаф, ошхона гарнитураси..." />
+        <div class="error-msg" id="mebelTypeErr">Мебел турини ёзинг</div>
 
-        <button type="submit" id="submitBtn">Yuborish</button>
+        <button type="submit" id="submitBtn">Юбориш</button>
       </form>
 
-      <p class="footnote">Ma'lumotlaringiz faqat siz bilan bog'lanish uchun ishlatiladi va uchinchi shaxslarga berilmaydi.</p>
+      <p class="footnote">Маълумотларингиз фақат сиз билан боғланиш учун ишлатилади.</p>
     </div>
 
     <!-- SUCCESS -->
     <div class="success" id="success-section">
       <div class="success-icon">✅</div>
-      <h2>Ariza qabul qilindi!</h2>
-      <div class="gold-line"></div>
-      <p>Tez orada mutaxassisimiz siz bilan bog'lanadi.<br/>Telefoningizni yonida tutib turing.</p>
+      <h2>Ариза қабул қилинди!</h2>
+      <p>Тез орада мутахассисимиз сиз билан боғланади.<br/>Телефонингизни ёнида тутиб туринг.</p>
+      <p class="redirect-note">Телеграм гуруҳимизга ўтказилмоқдасиз...</p>
     </div>
 
   </div>
 
   <script>
-    // === Webhook URL ni shu yerga qo'ying ===
-    const WEBHOOK_URL = "https://yuboraman.uz/api/v1/sites/webhook/748ee24d-a841-4308-b890-114609a60165-1787428292/";
-    // ========================================
+    const WEBHOOK_URL  = "https://yuboraman.uz/api/v1/sites/webhook/748ee24d-a841-4308-b890-114609a60165-1787428292/";
+    const TELEGRAM_URL = "https://t.me/smart_mebel_uzbekistan";
 
     const form = document.getElementById("leadForm");
     const btn  = document.getElementById("submitBtn");
@@ -361,7 +345,7 @@
       if (!valid) return;
 
       btn.disabled = true;
-      btn.textContent = "Yuborilmoqda...";
+      btn.textContent = "Юборилмоқда...";
 
       const fullPhone = "+998" + phoneVal.replace(/\D/g, "");
 
@@ -376,13 +360,14 @@
           if (typeof fbq === "function") fbq("track", "Lead");
           document.getElementById("form-section").style.display = "none";
           document.getElementById("success-section").style.display = "block";
+          setTimeout(() => { window.location.href = TELEGRAM_URL; }, 2000);
         } else {
-          throw new Error("Server xatosi: " + res.status);
+          throw new Error("Xato: " + res.status);
         }
       } catch (err) {
-        alert("❌ Xatolik yuz berdi. Qayta urinib ko'ring.");
+        alert("❌ Хатолик юз берди. Қайта уриниб кўринг.");
         btn.disabled = false;
-        btn.textContent = "Yuborish";
+        btn.textContent = "Юбориш";
       }
     });
   </script>
