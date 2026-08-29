@@ -204,7 +204,7 @@
 
   <script>
     const INSTAGRAM_URL = "https://t.me/status_mebel_Baxrom";
-    const WEBHOOK_URL = "https://yuboraman.uz/api/v1/sites/webhook/b98606c4-5cd2-42fe-ac04-475e5683dee9-1787395005/";
+    const WEBHOOK_URL = "https://yuboraman.uz/api/v1/sites/webhook/37294dce-72c9-47b0-96bc-b8440851e786-1788019255/";
 
     const form  = document.getElementById("leadForm");
     const btn   = document.getElementById("submitBtn");
@@ -254,7 +254,7 @@
         await fetch(WEBHOOK_URL, {
           method: "POST",
           mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify({ name, phone: fullPhone, mebel_turi: mebelType }),
         });
       } catch (err) {
