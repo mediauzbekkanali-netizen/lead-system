@@ -253,12 +253,11 @@
       try {
         await fetch(WEBHOOK_URL, {
           method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, phone: fullPhone, mebel_turi: mebelType }),
         });
       } catch (err) {
-        // no-cors da xatolik bo'lsa ham davom etamiz
+        // webhook xatoligi bo'lsa ham davom etamiz
       }
 
       if (typeof fbq === "function") fbq("track", "Lead");
