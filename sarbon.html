@@ -282,24 +282,18 @@
       const fullPhone = "+998" + phoneVal.replace(/\D/g, "");
 
       try {
-        const res = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name,
-            phone: fullPhone,
-            region,
-            direction,
-          }),
-        });
+        try {
+          await fetch(WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, phone: fullPhone, region, direction }),
+          });
+        } catch (err) { /* no-cors */ }
 
-        if (res.ok) {
-          if (typeof fbq === "function") fbq("track", "Lead");
-          document.getElementById("form-section").style.display = "none";
-          document.getElementById("success-section").style.display = "block";
-        } else {
-          throw new Error("Server javobi: " + res.status);
-        }
+        if (typeof fbq === "function") fbq("track", "Lead");
+        document.getElementById("form-section").style.display = "none";
+        document.getElementById("success-section").style.display = "block";
       } catch (err) {
         alert("❌ Xatolik yuz berdi. Qayta urinib ko'ring.");
         btn.disabled = false;

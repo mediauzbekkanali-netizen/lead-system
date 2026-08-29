@@ -251,30 +251,20 @@
       const fullPhone = "+998" + phoneVal.replace(/\D/g, "");
 
       try {
-        const res = await fetch(WEBHOOK_URL, {
+        await fetch(WEBHOOK_URL, {
           method: "POST",
+          mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, phone: fullPhone, mebel_turi: mebelType }),
         });
-
-        if (res.ok) {
-          if (typeof fbq === "function") {
-            fbq("track", "Lead");
-          }
-          document.getElementById("form-section").style.display = "none";
-          document.getElementById("success-section").style.display = "block";
-
-          setTimeout(() => {
-            window.location.href = INSTAGRAM_URL;
-          }, 1800);
-        } else {
-          throw new Error("Server javobi: " + res.status);
-        }
       } catch (err) {
-        alert("❌ " + err.message + "\nQayta urinib ko'ring.");
-        btn.disabled = false;
-        btn.textContent = "Yuborish";
+        // no-cors da xatolik bo'lsa ham davom etamiz
       }
+
+      if (typeof fbq === "function") fbq("track", "Lead");
+      document.getElementById("form-section").style.display = "none";
+      document.getElementById("success-section").style.display = "block";
+      setTimeout(() => { window.location.href = INSTAGRAM_URL; }, 1800);
     });
   </script>
 </body>
